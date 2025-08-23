@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>SPÖ OÖ: Die Solidaritäts-Schlange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+        }
+        .game-canvas {
+            background-color: #f0f0f0;
+            border: 2px solid #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .control-button {
+            -webkit-tap-highlight-color: transparent;
+        }
+        #message-popup {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        #message-popup.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Haupt-Container, der den gesamten Bildschirm ausfüllt -->
+    <main class="w-full h-full flex flex-col items-center justify-between p-2">
+        
+        <!-- Oberer Bereich: Titel, Info & Anleitung -->
+        <div class="w-full max-w-sm text-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-red-600">Die Solidaritäts-Schlange</h1>
+            <div class="grid grid-cols-3 gap-2 bg-white p-2 rounded-lg shadow-md mt-2 text-sm md:text-base">
+                <div class="font-semibold">Stärke: <span id="score" class="text-red-600">0</span></div>
+                <div class="font-semibold">Zeit: <span id="timer" class="text-gray-800">00:00</span></div>
+                <div class="font-semibold">Highscore: <span id="highscore" class="text-blue-600">0</span></div>
+            </div>
+            <!-- NEU: Spielanleitung -->
+            <p class="text-sm text-gray-700 mt-2 px-1">
+                Steuere die Schlange mit den Pfeilen. Sammle Gutes, um zu wachsen und meide Schlechtes, um nicht zu schrumpfen!
+            </p>
+        </div>
+
+        <!-- Mittlerer Bereich: Spiel-Canvas -->
+        <div class="relative my-1">
+            <canvas id="gameCanvas" class="rounded-lg game-canvas"></canvas>
+            <div id="message-popup" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-lg shadow-xl font-bold text-lg text-center"></div>
+        </div>
+
+        <!-- Unterer Bereich: Steuerung, Legende & Botschaft -->
+        <div class="w-full max-w-sm">
+            <div class="grid grid-cols-3 gap-2 w-48 mx-auto">
+                <div></div>
+                <button id="btn-up" class="control-button bg-gray-300 rounded-lg p-3 transform active:scale-90 transition-transform">
+                    <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                </button>
+                <div></div>
+                <button id="btn-left" class="control-button bg-gray-300 rounded-lg p-3 transform active:scale-90 transition-transform">
+                    <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </button>
+                <div></div>
+                <button id="btn-right" class="control-button bg-gray-300 rounded-lg p-3 transform active:scale-90 transition-transform">
+                    <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <div></div>
+                <button id="btn-down" class="control-button bg-gray-300 rounded-lg p-3 transform active:scale-90 transition-transform">
+                    <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                </button>
+                <div></div>
+            </div>
+            
+            <!-- NEU: Dauerhaft sichtbare Legende -->
+            <div class="w-full mt-2 p-2 bg-white rounded-lg shadow-md">
+                <div class="flex justify-around text-center text-xs">
+                    <div>
+                        <p class="font-semibold text-green-600">Stärkt dich:</p>
+                        <p title="Solidarität, Zusammenhalt, Wohnen, Löhne">🌹 ❤️ 🏠 💶</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-red-600">Schwächt dich:</p>
+                        <p title="Hass, Sozialabbau, Rassismus, Neoliberalismus">💀 ✂️ 💣 🔥</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEU: Politische Botschaft -->
+            <p class="text-xs text-gray-800 font-semibold text-center mt-2 px-2">
+                Unser Landesrat Martin Winkler kämpft für dich! Martin Winkler ist Landesparteivorsitzender der SPÖ OÖ.
+            </p>
+        </div>
+    </main>
+
+    <div id="gameOverScreen" class="hidden absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center text-white text-center p-4">
+        <h2 class="text-5xl font-bold text-red-500">Verloren!</h2>
+        <p class="text-2xl mt-4">Deine finale Stärke: <span id="finalScore">0</span></p>
+        <button id="restartButton" class="mt-8 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-transform transform hover:scale-105">
+            Nochmal!
+        </button>
+    </div>
+
+    <script>
+        // Der JavaScript-Code bleibt unverändert, da die Logik dieselbe ist.
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const highscoreElement = document.getElementById('highscore');
+        const timerElement = document.getElementById('timer');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const finalScoreElement = document.getElementById('finalScore');
+        const restartButton = document.getElementById('restartButton');
+        const messagePopup = document.getElementById('message-popup');
+
+        const gridSize = 20;
+        const availableHeight = window.innerHeight * 0.35; // Etwas weniger Platz für Canvas
+        let canvasSize = Math.min(window.innerWidth - 20, 360, availableHeight);
+        canvasSize = Math.floor(canvasSize / gridSize) * gridSize;
+        canvas.width = canvasSize;
+        canvas.height = canvasSize;
+        const tileCount = canvas.width / gridSize;
+
+        let snake, food, badItems, direction, score, highscore, gameLoop, gameSpeed, isGameOver;
+        let timerInterval, startTime, messageTimeout;
+
+        const goodItems = [
+            { emoji: '🌹', text: 'Mehr Solidarität!' },
+            { emoji: '❤️', text: 'Starker Zusammenhalt!' },
+            { emoji: '🏠', text: 'Leistbares Wohnen!' },
+            { emoji: '💶', text: 'Faire Löhne!' },
+            { emoji: '📚', text: 'Beste Bildung für alle!' },
+            { emoji: '🤝', text: 'Gerechte Chancen!' }
+        ];
+        const badItemsData = [
+            { emoji: '💀', text: 'Gegen Hass & Hetze!' },
+            { emoji: '✂️', text: 'Sozialabbau stoppen!' },
+            { emoji: '💣', text: 'Kein Platz für Rassismus!' },
+            { emoji: '🔥', text: 'Nein zum Neoliberalismus!' }
+        ];
+
+        function initializeGame() {
+            snake = [{ x: Math.floor(tileCount/2), y: Math.floor(tileCount/2) }];
+            direction = { x: 0, y: 0 };
+            badItems = [];
+            food = generateFood();
+            badItems.push(generateBadItem(), generateBadItem());
+            score = 1;
+            scoreElement.textContent = snake.length;
+            gameSpeed = 200;
+            isGameOver = false;
+            
+            gameOverScreen.classList.add('hidden');
+            
+            if (timerInterval) clearInterval(timerInterval);
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+            
+            if (gameLoop) clearInterval(gameLoop);
+            gameLoop = setInterval(mainLoop, gameSpeed);
+        }
+        
+        function mainLoop() {
+            if (isGameOver) return;
+            update();
+            draw();
+        }
+
+        function update() {
+            let head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+            if (head.x < 0) head.x = tileCount - 1;
+            if (head.x >= tileCount) head.x = 0;
+            if (head.y < 0) head.y = tileCount - 1;
+            if (head.y >= tileCount) head.y = 0;
+
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) return gameOver();
+            }
+            
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                showMessage(food.text, 'good');
+                food = generateFood();
+                if (snake.length > 1 && (snake.length - 1) % 12 === 0 && gameSpeed > 60) {
+                    gameSpeed -= 20;
+                    clearInterval(gameLoop);
+                    gameLoop = setInterval(mainLoop, gameSpeed);
+                }
+            } else {
+                snake.pop();
+            }
+
+            badItems.forEach((item, index) => {
+                if (head.x === item.x && head.y === item.y) {
+                    showMessage(item.text, 'bad');
+                    if(snake.length > 1) snake.pop();
+                    score--;
+                    if (snake.length <= 0) {
+                        gameOver();
+                    }
+                    badItems[index] = generateBadItem();
+                }
+            });
+            scoreElement.textContent = snake.length;
+        }
+
+        function draw() {
+            ctx.fillStyle = '#f7fafc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            snake.forEach((segment, index) => {
+                ctx.fillStyle = index === 0 ? '#dc2626' : '#ef4444';
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
+            });
+
+            ctx.font = `${gridSize * 0.9}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(food.emoji, food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2);
+            badItems.forEach(item => {
+                ctx.fillText(item.emoji, item.x * gridSize + gridSize / 2, item.y * gridSize + gridSize / 2);
+            });
+        }
+        
+        function showMessage(text, type) {
+            clearTimeout(messageTimeout);
+            messagePopup.textContent = text;
+            messagePopup.className = 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-lg shadow-xl font-bold text-lg text-center';
+            
+            if (type === 'good') {
+                messagePopup.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                messagePopup.classList.add('bg-red-100', 'text-red-800');
+            }
+            
+            messagePopup.classList.add('show');
+
+            messageTimeout = setTimeout(() => {
+                messagePopup.classList.remove('show');
+            }, 1500);
+        }
+
+        function updateTimer() {
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+            const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+            timerElement.textContent = `${minutes}:${seconds}`;
+        }
+
+        function generateRandomPosition() {
+            let position;
+            do {
+                position = {
+                    x: Math.floor(Math.random() * tileCount),
+                    y: Math.floor(Math.random() * tileCount),
+                };
+            } while (isPositionOnSnake(position) || isPositionOnFood(position) || isPositionOnBadItem(position));
+            return position;
+        }
+        
+        function isPositionOnSnake(pos) { return snake.some(s => s.x === pos.x && s.y === pos.y); }
+        function isPositionOnFood(pos) { return food && food.x === pos.x && food.y === pos.y; }
+        function isPositionOnBadItem(pos) { return badItems.some(i => i.x === pos.x && i.y === pos.y); }
+
+        function generateFood() {
+            const itemData = goodItems[Math.floor(Math.random() * goodItems.length)];
+            const position = generateRandomPosition();
+            return { ...position, ...itemData };
+        }
+
+        function generateBadItem() {
+            const itemData = badItemsData[Math.floor(Math.random() * badItemsData.length)];
+            const position = generateRandomPosition();
+            return { ...position, ...itemData };
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            clearInterval(gameLoop);
+            clearInterval(timerInterval);
+            if (snake.length > highscore) {
+                highscore = snake.length;
+                localStorage.setItem('snakeHighscore', highscore);
+                highscoreElement.textContent = highscore;
+            }
+            finalScoreElement.textContent = snake.length;
+            gameOverScreen.classList.remove('hidden');
+        }
+        
+        function loadHighscore() {
+            const savedHighscore = localStorage.getItem('snakeHighscore');
+            highscore = savedHighscore ? parseInt(savedHighscore, 10) : 0;
+            highscoreElement.textContent = highscore;
+        }
+
+        function setupControls() {
+            document.addEventListener('keydown', e => {
+                switch (e.key) {
+                    case 'ArrowUp': if (direction.y === 0) direction = { x: 0, y: -1 }; break;
+                    case 'ArrowDown': if (direction.y === 0) direction = { x: 0, y: 1 }; break;
+                    case 'ArrowLeft': if (direction.x === 0) direction = { x: -1, y: 0 }; break;
+                    case 'ArrowRight': if (direction.x === 0) direction = { x: 1, y: 0 }; break;
+                }
+            });
+            document.getElementById('btn-up').addEventListener('click', () => { if (direction.y === 0) direction = { x: 0, y: -1 }; });
+            document.getElementById('btn-down').addEventListener('click', () => { if (direction.y === 0) direction = { x: 0, y: 1 }; });
+            document.getElementById('btn-left').addEventListener('click', () => { if (direction.x === 0) direction = { x: -1, y: 0 }; });
+            document.getElementById('btn-right').addEventListener('click', () => { if (direction.x === 0) direction = { x: 1, y: 0 }; });
+        }
+
+        restartButton.addEventListener('click', initializeGame);
+        
+        loadHighscore();
+        setupControls();
+        initializeGame();
+    </script>
+
+</body>
+</html>
