@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unser Plan für Oberösterreich | Mit Martin Winkler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .spoe-red {
+            background-color: #E30613;
+        }
+        .spoe-red-text {
+            color: #E30613;
+        }
+        .spoe-gray-bg {
+            background-color: #f3f4f6;
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://placehold.co/1920x1080/cccccc/000000?text=Oberösterreichs+Zukunft');
+            background-size: cover;
+            background-position: center;
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <svg class="h-10 w-auto spoe-red-text" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm0 85c-19.3 0-35-15.7-35-35s15.7-35 35-35 35 15.7 35 35-15.7 35-35 35z"/><path d="M50 30c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 30c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z"/></svg>
+                <span class="ml-3 text-xl font-bold text-gray-800">SPÖ Oberösterreich</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 items-center">
+                <a href="#unser-plan" class="text-gray-600 hover:spoe-red-text font-semibold">Unser Plan</a>
+                <a href="#martin-winkler" class="text-gray-600 hover:spoe-red-text font-semibold">Martin Winkler</a>
+                <a href="#aktiv-werden" class="text-gray-600 hover:spoe-red-text font-semibold">Aktiv Werden</a>
+                <a href="#" class="spoe-red text-white font-bold py-2 px-4 rounded-full hover:bg-red-700 transition duration-300">Jetzt mitmachen!</a>
+            </nav>
+            <button class="md:hidden" id="mobile-menu-button">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#unser-plan" class="block py-2 text-gray-600 hover:spoe-red-text font-semibold">Unser Plan</a>
+            <a href="#martin-winkler" class="block py-2 text-gray-600 hover:spoe-red-text font-semibold">Martin Winkler</a>
+            <a href="#aktiv-werden" class="block py-2 text-gray-600 hover:spoe-red-text font-semibold">Aktiv Werden</a>
+            <a href="#" class="block mt-2 spoe-red text-white font-bold py-2 px-4 rounded-full text-center hover:bg-red-700 transition duration-300">Jetzt mitmachen!</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-bg text-white py-20 md:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Zeit für einen neuen Plan für Oberösterreich.</h1>
+                <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">Unser Bundesland kann mehr. Mehr Fairness, mehr Zusammenhalt und mehr Zukunftschancen für alle – in der Stadt und auf dem Land. Gemeinsam mit unserem Vorsitzenden Martin Winkler wollen wir OÖ an die Spitze führen. Dafür brauchen wir dich!</p>
+                <a href="#aktiv-werden" class="spoe-red text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-red-700 transition duration-300 transform hover:scale-105">Jetzt mitmachen & OÖ gestalten</a>
+            </div>
+        </section>
+
+        <!-- Martin Winkler Section -->
+        <section id="martin-winkler" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/3 text-center">
+                        <img src="https://placehold.co/400x400/E30613/FFFFFF?text=Martin+Winkler" alt="Martin Winkler" class="rounded-full shadow-2xl mx-auto w-64 h-64 md:w-80 md:h-80 object-cover">
+                    </div>
+                    <div class="md:w-2/3">
+                        <h2 class="text-3xl md:text-4xl font-bold spoe-red-text mb-4">Ein Landeshauptmann für alle Oberösterreicher:innen.</h2>
+                        <p class="text-lg text-gray-700 mb-4">"Ich bin in Oberösterreich aufgewachsen und tief verwurzelt. Ich kenne die Sorgen der Menschen in den Städten genauso wie die Herausforderungen im ländlichen Raum. Stillstand können wir uns nicht leisten. Es ist Zeit, die Ärmel hochzukrempeln und unser Land fair und modern zu gestalten. Ich will ein Oberösterreich, in dem der Zusammenhalt stärker ist als das, was uns trennt. Ein Land, in dem Leistung zählt und jeder eine faire Chance hat. Dafür trete ich an."</p>
+                        <p class="font-bold text-xl text-gray-800">- Martin Winkler</p>
+                        <p class="text-gray-600">Landesvorsitzender der SPÖ Oberösterreich</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- "Aktiv Werden" Section -->
+        <section id="aktiv-werden" class="py-16 md:py-24 spoe-gray-bg">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold spoe-red-text">Werde Teil unseres Teams für OÖ</h2>
+                    <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Jeder Beitrag bringt uns dem Ziel näher. Finde die passende Möglichkeit, die Zukunft unseres Bundeslandes mitzugestalten.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-8 rounded-lg shadow-lg text-center card-hover">
+                        <div class="flex justify-center mb-4"><div class="bg-red-100 p-4 rounded-full"><i data-lucide="map-pin" class="w-8 h-8 spoe-red-text"></i></div></div>
+                        <h3 class="text-xl font-bold mb-2">In deiner Region aktiv werden</h3>
+                        <p class="text-gray-600 mb-4">Ob im Mühlviertel oder in Linz – engagiere dich vor Ort, bringe Ideen für deine Gemeinde ein und stärke unsere Bewegung.</p>
+                        <a href="#" class="font-semibold spoe-red-text hover:text-red-700">Finde dein Team &rarr;</a>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg text-center card-hover">
+                        <div class="flex justify-center mb-4"><div class="bg-red-100 p-4 rounded-full"><i data-lucide="megaphone" class="w-8 h-8 spoe-red-text"></i></div></div>
+                        <h3 class="text-xl font-bold mb-2">Unsere Botschaft verbreiten</h3>
+                        <p class="text-gray-600 mb-4">Werde zum digitalen Multiplikator. Teile unsere Inhalte, diskutiere mit und hilf uns, noch mehr Menschen zu erreichen.</p>
+                        <a href="#" class="font-semibold spoe-red-text hover:text-red-700">Werde digital aktiv &rarr;</a>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg text-center card-hover">
+                        <div class="flex justify-center mb-4"><div class="bg-red-100 p-4 rounded-full"><i data-lucide="star" class="w-8 h-8 spoe-red-text"></i></div></div>
+                        <h3 class="text-xl font-bold mb-2">Dein Talent für OÖ</h3>
+                        <p class="text-gray-600 mb-4">Du kannst gut organisieren, schreiben oder designen? Bringe deine Fähigkeiten in unsere Kampagne ein!</p>
+                        <a href="#" class="font-semibold spoe-red-text hover:text-red-700">Zeig uns dein Talent &rarr;</a>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg text-center card-hover">
+                        <div class="flex justify-center mb-4"><div class="bg-red-100 p-4 rounded-full"><i data-lucide="users" class="w-8 h-8 spoe-red-text"></i></div></div>
+                        <h3 class="text-xl font-bold mb-2">Neue Mitglieder gewinnen</h3>
+                        <p class="text-gray-600 mb-4">Überzeuge deine Freunde, Familie und Kollegen von unserem Plan. Jedes neue Mitglied macht uns stärker.</p>
+                        <a href="#" class="font-semibold spoe-red-text hover:text-red-700">Jetzt Mitglied werden &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Themen-Check -->
+        <section id="unser-plan" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold spoe-red-text">Was ist dir für OÖ wichtig?</h2>
+                    <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Unser Plan lebt von den Ideen der Menschen. Wähle ein Thema und sieh, was wir vorhaben und wie du mitgestalten kannst.</p>
+                </div>
+                <div id="themen-check" class="flex flex-wrap justify-center gap-4">
+                    <button data-topic="land" class="themen-button bg-white border-2 border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-full hover:border-red-500 hover:text-red-500 transition duration-300">Starke ländliche Regionen</button>
+                    <button data-topic="wohnen" class="themen-button bg-white border-2 border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-full hover:border-red-500 hover:text-red-500 transition duration-300">Leistbares Wohnen</button>
+                    <button data-topic="gesundheit" class="themen-button bg-white border-2 border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-full hover:border-red-500 hover:text-red-500 transition duration-300">Gesundheit & Pflege</button>
+                    <button data-topic="arbeit" class="themen-button bg-white border-2 border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-full hover:border-red-500 hover:text-red-500 transition duration-300">Gute Arbeit</button>
+                    <button data-topic="umwelt" class="themen-button bg-white border-2 border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-full hover:border-red-500 hover:text-red-500 transition duration-300">Klima & Umwelt</button>
+                </div>
+                <div id="themen-feedback" class="mt-8 text-center max-w-3xl mx-auto hidden bg-red-50 p-8 rounded-lg">
+                    <h3 id="feedback-title" class="text-2xl font-bold spoe-red-text mb-2"></h3>
+                    <p id="feedback-text" class="text-gray-700 mb-4"></p>
+                    <a id="feedback-link" href="#" class="font-bold spoe-red-text hover:text-red-700">Mehr erfahren und mitmachen &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="py-16 md:py-24 spoe-gray-bg">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold spoe-red-text">Stimmen aus Oberösterreich</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <p class="text-gray-600 italic mb-4">"Endlich jemand, der die Anliegen von uns am Land ernst nimmt. Wir brauchen eine gute Busverbindung und einen Arzt im Ort, keine leeren Versprechen."</p>
+                        <div class="flex items-center"><img src="https://placehold.co/64x64/E30613/FFFFFF?text=J" alt="Josef K." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold">Josef K.</p><p class="text-sm text-gray-500">aus dem Mühlviertel</p></div></div>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <p class="text-gray-600 italic mb-4">"Als junge Familie ist leistbarer Wohnraum in der Stadt unsere größte Sorge. Der Plan von Martin Winkler gibt uns Hoffnung, dass sich hier endlich etwas bewegt."</p>
+                        <div class="flex items-center"><img src="https://placehold.co/64x64/E30613/FFFFFF?text=A" alt="Anna M." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold">Anna M.</p><p class="text-sm text-gray-500">aus Wels</p></div></div>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <p class="text-gray-600 italic mb-4">"Ich engagiere mich, weil ich will, dass meine Kinder in einem weltoffenen und sozialen Oberösterreich aufwachsen. Diese Kampagne gibt mir das Gefühl, wirklich etwas bewirken zu können."</p>
+                        <div class="flex items-center"><img src="https://placehold.co/64x64/E30613/FFFFFF?text=S" alt="Sandra E." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold">Sandra E.</p><p class="text-sm text-gray-500">aus dem Salzkammergut</p></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-bold text-lg mb-2">SPÖ Oberösterreich</p>
+            <p>Landstraße 36, 4020 Linz</p>
+            <p class="mt-4"><a href="#" class="text-gray-400 hover:text-white mx-2">Impressum</a> | <a href="#" class="text-gray-400 hover:text-white mx-2">Datenschutz</a> | <a href="#" class="text-gray-400 hover:text-white mx-2">Kontakt</a></p>
+            <div class="flex justify-center mt-6 space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Themen-Check Logic
+        const themenButtons = document.querySelectorAll('.themen-button');
+        const themenFeedback = document.getElementById('themen-feedback');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackLink = document.getElementById('feedback-link');
+
+        const feedbackData = {
+            land: {
+                title: "Für starke ländliche Regionen",
+                text: "Ein starkes OÖ braucht lebendige Gemeinden. Wir setzen uns für eine Top-Infrastruktur, Nahversorger, Ärzte vor Ort und schnelles Internet ein, damit das Leben am Land attraktiv bleibt.",
+                link: "#"
+            },
+            wohnen: {
+                title: "Für leistbares Wohnen",
+                text: "Ein gutes Zuhause darf kein Luxus sein. Wir kämpfen gegen Spekulation und für mehr kommunalen Wohnbau. Diskutiere mit uns über die besten Lösungen für Oberösterreich.",
+                link: "#"
+            },
+            gesundheit: {
+                title: "Für die beste Gesundheitsversorgung",
+                text: "Unsere Gesundheit ist unser höchstes Gut. Ob Hausarzt vor Ort oder modernes Spital – wir setzen uns für eine starke öffentliche Gesundheitsversorgung für alle Regionen ein.",
+                link: "#"
+            },
+            arbeit: {
+                title: "Für gute und faire Arbeit",
+                text: "Arbeit muss sich lohnen. Wir kämpfen für faire Löhne, sichere Arbeitsplätze in der Industrie und im Gewerbe und beste Ausbildungschancen für die Jugend in ganz OÖ.",
+                link: "#"
+            },
+            umwelt: {
+                title: "Für eine lebenswerte Umwelt",
+                text: "Klimaschutz und soziale Gerechtigkeit gehen Hand in Hand. Wir setzen uns für eine nachhaltige Wende ein, die Arbeitsplätze schafft und niemanden zurücklässt.",
+                link: "#"
+            }
+        };
+
+        themenButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const topic = button.dataset.topic;
+                const data = feedbackData[topic];
+
+                themenButtons.forEach(btn => {
+                    btn.classList.remove('spoe-red', 'text-white', 'border-red-500');
+                    btn.classList.add('bg-white', 'text-gray-700', 'border-gray-300');
+                });
+                button.classList.add('spoe-red', 'text-white', 'border-red-500');
+                button.classList.remove('bg-white', 'text-gray-700');
+
+                feedbackTitle.textContent = data.title;
+                feedbackText.textContent = data.text;
+                feedbackLink.href = data.link;
+                themenFeedback.classList.remove('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>
