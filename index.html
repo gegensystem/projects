@@ -28,21 +28,6 @@
             transform: translateY(-10px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        .progress-bar {
-            background-color: #e0e0e0;
-            border-radius: 9999px;
-            overflow: hidden;
-        }
-        .progress {
-            height: 100%;
-            background-color: #E30613;
-            border-radius: 9999px;
-            transition: width 0.5s ease-in-out;
-        }
-        .counter {
-            font-weight: 800;
-            color: #E30613;
-        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -54,19 +39,7 @@
                 <svg class="h-10 w-auto spoe-red-text" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm0 85c-19.3 0-35-15.7-35-35s15.7-35 35-35 35 15.7 35 35-15.7 35-35 35z"/><path d="M50 30c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 30c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z"/></svg>
                 <span class="ml-3 text-xl font-bold text-gray-800">Der OÖ-Plan</span>
             </div>
-            <nav class="hidden md:flex space-x-6 items-center">
-                <a href="#der-plan" class="text-gray-600 hover:spoe-red-text font-semibold">Der Plan</a>
-                <a href="#stimmen" class="text-gray-600 hover:spoe-red-text font-semibold">Stimmen</a>
-                <a href="#vision" class="text-gray-600 hover:spoe-red-text font-semibold">Meine Vision</a>
-                <a href="https://gegensystem.github.io/projects/veraenderung.html" target="_blank" class="spoe-red text-white font-bold py-2 px-4 rounded-full hover:bg-red-700 transition duration-300">Jetzt mitmachen!</a>
-            </nav>
-            <button class="md:hidden" id="mobile-menu-button"><i data-lucide="menu" class="w-6 h-6"></i></button>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-             <a href="#der-plan" class="block py-2 text-gray-600 hover:spoe-red-text font-semibold">Der Plan</a>
-             <a href="#stimmen" class="block py-2 text-gray-600 hover:spoe-red-text font-semibold">Stimmen</a>
-             <a href="#vision" class="block py-2 text-gray-600 hover:spoe-red-text font-semibold">Meine Vision</a>
-             <a href="https://gegensystem.github.io/projects/veraenderung.html" target="_blank" class="block mt-2 spoe-red text-white font-bold py-2 px-4 rounded-full text-center hover:bg-red-700 transition duration-300">Jetzt mitmachen!</a>
+            <a href="https://gegensystem.github.io/projects/veraenderung.html" target="_blank" class="spoe-red text-white font-bold py-2 px-4 rounded-full hover:bg-red-700 transition duration-300">Jetzt mitmachen!</a>
         </div>
     </header>
 
@@ -76,76 +49,6 @@
             <div class="container mx-auto px-6 text-center">
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Oberösterreichs Zukunft wird nicht beschlossen. Sie wird gemacht.</h1>
                 <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">Wir glauben an die Ideen der Menschen in unserem Land. Deshalb entwickeln wir den Plan für Oberösterreichs Zukunft nicht hinter verschlossenen Türen, sondern gemeinsam mit Ihnen. Bringen Sie Ihre Idee ein und werden Sie Teil der Veränderung!</p>
-                <a href="https://gegensystem.github.io/projects/veraenderung.html" target="_blank" class="spoe-red text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-red-700 transition duration-300 transform hover:scale-105">Zur Ideen-Plattform</a>
-            </div>
-        </section>
-
-        <!-- Erfolgs-Tracker Section -->
-        <section id="erfolge" class="py-12 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                    <div>
-                        <span id="counter-mitglieder" class="counter text-4xl md:text-5xl">0</span>
-                        <p class="text-gray-600 font-semibold mt-2">Neue Mitglieder</p>
-                    </div>
-                    <div>
-                        <span id="counter-ideen" class="counter text-4xl md:text-5xl">0</span>
-                        <p class="text-gray-600 font-semibold mt-2">Eingereichte Ideen</p>
-                    </div>
-                    <div>
-                        <span id="counter-projekte" class="counter text-4xl md:text-5xl">0</span>
-                        <p class="text-gray-600 font-semibold mt-2">Projekte in Umsetzung</p>
-                    </div>
-                     <div>
-                        <span id="counter-aktive" class="counter text-4xl md:text-5xl">0</span>
-                        <p class="text-gray-600 font-semibold mt-2">Aktivist:innen</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Der Plan Section -->
-        <section id="der-plan" class="py-16 md:py-24 spoe-gray-bg">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold spoe-red-text">Der Oberösterreich-Plan: Gestalten Sie mit!</h2>
-                    <p class="text-gray-600 mt-4 max-w-3xl mx-auto">Unsere Bewegung lebt von konkreten Vorschlägen. Hier sehen Sie die "Bausteine" unseres gemeinsamen Plans – eingereicht von Menschen wie Ihnen. Diskutieren, bewerten und ergänzen Sie die Ideen für Ihr Grätzl, Ihre Gemeinde, Ihr Viertel.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col card-hover">
-                        <span class="text-sm font-bold spoe-red-text">LÄNDLICHER RAUM</span>
-                        <h3 class="text-xl font-bold my-2">"Gemeindebus für Alle" in Rohrbach</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Einrichtung eines bedarfsorientierten E-Busses, der die Ortsteile verbindet und von Freiwilligen betrieben wird.</p>
-                        <div class="mb-2">
-                            <div class="flex justify-between text-sm font-semibold text-gray-600 mb-1"><span>Fortschritt</span><span>75%</span></div>
-                            <div class="progress-bar h-3 w-full"><div class="progress" style="width: 75%;"></div></div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
-                            <div class="flex space-x-4"><button class="flex items-center text-gray-500 hover:spoe-red-text"><i data-lucide="thumbs-up" class="w-5 h-5 mr-1"></i> 214</button><button class="flex items-center text-gray-500 hover:spoe-red-text"><i data-lucide="message-square" class="w-5 h-5 mr-1"></i> 32</button></div>
-                            <a href="#" class="font-semibold spoe-red-text hover:text-red-700 text-sm">Details & Mitmachen &rarr;</a>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col card-hover">
-                        <span class="text-sm font-bold spoe-red-text">LEISTBARES WOHNEN</span>
-                        <h3 class="text-xl font-bold my-2">"Leerstand nutzen" in Wels</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Ein kommunales Förderprogramm, um leerstehende Geschäftslokale und Wohnungen im Zentrum zu reaktivieren.</p>
-                        <div class="mb-2">
-                             <div class="flex justify-between text-sm font-semibold text-gray-600 mb-1"><span>Fortschritt</span><span>40%</span></div>
-                            <div class="progress-bar h-3 w-full"><div class="progress" style="width: 40%;"></div></div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
-                             <div class="flex space-x-4"><button class="flex items-center text-gray-500 hover:spoe-red-text"><i data-lucide="thumbs-up" class="w-5 h-5 mr-1"></i> 188</button><button class="flex items-center text-gray-500 hover:spoe-red-text"><i data-lucide="message-square" class="w-5 h-5 mr-1"></i> 51</button></div>
-                            <a href="#" class="font-semibold spoe-red-text hover:text-red-700 text-sm">Details & Mitmachen &rarr;</a>
-                        </div>
-                    </div>
-                    <div class="bg-red-50 border-2 border-dashed border-red-300 p-6 rounded-lg flex flex-col items-center justify-center text-center card-hover">
-                         <div class="bg-red-100 p-4 rounded-full mb-4"><i data-lucide="plus-circle" class="w-10 h-10 spoe-red-text"></i></div>
-                        <h3 class="text-xl font-bold mb-2 spoe-red-text">Ihre Idee für OÖ?</h3>
-                        <p class="text-gray-600 mb-4">Was brennt Ihnen unter den Nägeln? Reichen Sie jetzt Ihren Baustein für den OÖ-Plan ein!</p>
-                        <a href="https://gegensystem.github.io/projects/veraenderung.html" target="_blank" class="spoe-red text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300">Idee einreichen</a>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -204,6 +107,23 @@
             </div>
         </section>
         
+        <!-- Martin Winkler Vision Section -->
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="bg-gray-800 text-white rounded-lg shadow-2xl flex flex-col md:flex-row items-center p-8 md:p-12">
+                    <div class="md:w-1/3 text-center mb-8 md:mb-0">
+                        <img src="https://placehold.co/400x400/E30613/FFFFFF?text=Martin+Winkler" alt="Martin Winkler" class="rounded-full mx-auto w-48 h-48 md:w-64 md:h-64 object-cover border-4 border-white">
+                    </div>
+                    <div class="md:w-2/3 md:pl-12 text-center md:text-left">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Meine Vision für Oberösterreich</h2>
+                        <p class="text-lg text-gray-300 mb-4">"Gute Ideen sind der Anfang. Aber erst die Umsetzung verändert das Leben der Menschen. Mein Versprechen an Sie: Jede gute Idee, die auf unserer Plattform wächst, bekommt eine faire Chance. Ich will nicht nur Ihr Landeshauptmann sein, ich will der Umsetzer für Ihre Anliegen sein. Gemeinsam machen wir unser Bundesland jeden Tag ein Stück besser."</p>
+                        <p class="font-bold text-xl text-white">- Martin Winkler</p>
+                        <p class="text-gray-400">Unser nächster Landeshauptmann.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="bg-gray-800 text-white py-12">
@@ -216,46 +136,6 @@
 
     <script>
         lucide.createIcons();
-
-        // Mobile Menu Toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-
-        // Counter Animation
-        function animateCounter(element, target) {
-            let current = 0;
-            const step = target / 100;
-            const interval = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    clearInterval(interval);
-                    element.innerText = Math.floor(target).toLocaleString('de-DE');
-                } else {
-                    element.innerText = Math.floor(current).toLocaleString('de-DE');
-                }
-            }, 20);
-        }
-
-        const sixMonthGoals = {
-            mitglieder: 500,
-            ideen: 1200,
-            projekte: 75,
-            aktive: 2500
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                animateCounter(document.getElementById('counter-mitglieder'), sixMonthGoals.mitglieder);
-                animateCounter(document.getElementById('counter-ideen'), sixMonthGoals.ideen);
-                animateCounter(document.getElementById('counter-projekte'), sixMonthGoals.projekte);
-                animateCounter(document.getElementById('counter-aktive'), sixMonthGoals.aktive);
-                observer.disconnect();
-            }
-        }, { threshold: 0.5 });
-
-        observer.observe(document.getElementById('erfolge'));
-
     </script>
 
 </body>
