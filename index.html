@@ -28,6 +28,10 @@
             transform: translateY(-10px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+        .counter {
+            font-weight: 800;
+            color: #E30613;
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -52,27 +56,51 @@
             </div>
         </section>
 
+        <!-- Erfolgs-Tracker Section -->
+        <section id="erfolge" class="py-12 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div>
+                        <span id="counter-mitglieder" class="counter text-4xl md:text-5xl">0</span>
+                        <p class="text-gray-600 font-semibold mt-2">Neue Mitglieder</p>
+                    </div>
+                    <div>
+                        <span id="counter-ideen" class="counter text-4xl md:text-5xl">0</span>
+                        <p class="text-gray-600 font-semibold mt-2">Eingereichte Ideen</p>
+                    </div>
+                    <div>
+                        <span id="counter-projekte" class="counter text-4xl md:text-5xl">0</span>
+                        <p class="text-gray-600 font-semibold mt-2">Projekte in Umsetzung</p>
+                    </div>
+                     <div>
+                        <span id="counter-aktive" class="counter text-4xl md:text-5xl">0</span>
+                        <p class="text-gray-600 font-semibold mt-2">Aktivist:innen</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Testimonials Section -->
-        <section id="stimmen" class="py-16 md:py-24 bg-white">
+        <section id="stimmen" class="py-16 md:py-24 spoe-gray-bg">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold spoe-red-text">Stimmen aus der Bewegung</h2>
                     <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Unsere neue Plattform verändert, wie wir zusammenarbeiten. Das sagen unsere Mitglieder.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-gray-50 p-8 rounded-lg">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
                         <p class="text-gray-700 italic mb-4">"Endlich kein WhatsApp-Chaos mehr! In unserer Gruppe für das Sommerfest haben wir jetzt eigene Kanäle für Planung und Material. Aufgaben und Termine sind direkt integriert. So macht Organisation Spaß!"</p>
                         <div class="flex items-center"><img src="https://placehold.co/64x64/cccccc/000000?text=M" alt="Monika L." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold">Monika L.</p><p class="text-sm text-gray-500">Sektionsobfrau, Linz</p></div></div>
                     </div>
-                    <div class="bg-gray-50 p-8 rounded-lg">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
                         <p class="text-gray-700 italic mb-4">"Ich muss nicht mehr stundenlang nach Infos suchen. Die KI fasst mir die wichtigsten Wirtschaftsdaten für meine Rede im Gemeinderat zusammen und visualisiert sie. Das ist eine unglaubliche Arbeitserleichterung."</p>
                         <div class="flex items-center"><img src="https://placehold.co/64x64/cccccc/000000?text=T" alt="Thomas P." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold">Thomas P.</p><p class="text-sm text-gray-500">Gemeinderat, Wels</p></div></div>
                     </div>
-                    <div class="bg-gray-50 p-8 rounded-lg">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
                         <p class="text-gray-700 italic mb-4">"Ich hatte eine vage Idee für mehr Grünflächen in unserem Viertel. Der KI-Assistent hat mir geholfen, daraus einen strukturierten Vorschlag zu machen und hat mich sogar auf ein ähnliches, erfolgreiches Projekt in Steyr hingewiesen. Genial!"</p>
                         <div class="flex items-center"><img src="https://placehold.co/64x64/cccccc/000000?text=S" alt="Sabine H." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold">Sabine H.</p><p class="text-sm text-gray-500">Mitglied, Rohrbach</p></div></div>
                     </div>
-                    <div class="bg-gray-50 p-8 rounded-lg">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
                         <p class="text-gray-700 italic mb-4">"Nach unserer Sektionssitzung lädt unser Schriftführer das Protokoll hoch. Die KI extrahiert automatisch die To-Dos und weist sie den richtigen Personen zu. So wissen wir immer, was zu tun ist und können die Inhalte direkt für die Gemeindezeitung nutzen."</p>
                         <div class="flex items-center"><img src="https://placehold.co/64x64/cccccc/000000?text=J" alt="Josef K." class="w-12 h-12 rounded-full mr-4"><div><p class="font-bold">Josef K.</p><p class="text-sm text-gray-500">Schriftführer, Gmunden</p></div></div>
                     </div>
@@ -81,7 +109,7 @@
         </section>
 
         <!-- Vision & Links Section -->
-        <section id="vision" class="py-16 md:py-24 spoe-gray-bg">
+        <section id="vision" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold spoe-red-text">Meine Vision in Aktion</h2>
@@ -108,7 +136,7 @@
         </section>
         
         <!-- Martin Winkler Vision Section -->
-        <section class="py-16 md:py-24 bg-white">
+        <section class="py-16 md:py-24 spoe-gray-bg">
             <div class="container mx-auto px-6">
                 <div class="bg-gray-800 text-white rounded-lg shadow-2xl flex flex-col md:flex-row items-center p-8 md:p-12">
                     <div class="md:w-1/3 text-center mb-8 md:mb-0">
@@ -136,6 +164,40 @@
 
     <script>
         lucide.createIcons();
+
+        // Counter Animation
+        function animateCounter(element, target) {
+            let current = 0;
+            const step = target / 100;
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    clearInterval(interval);
+                    element.innerText = Math.floor(target).toLocaleString('de-DE');
+                } else {
+                    element.innerText = Math.floor(current).toLocaleString('de-DE');
+                }
+            }, 20);
+        }
+
+        const sixMonthGoals = {
+            mitglieder: 500,
+            ideen: 1200,
+            projekte: 75,
+            aktive: 2500
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                animateCounter(document.getElementById('counter-mitglieder'), sixMonthGoals.mitglieder);
+                animateCounter(document.getElementById('counter-ideen'), sixMonthGoals.ideen);
+                animateCounter(document.getElementById('counter-projekte'), sixMonthGoals.projekte);
+                animateCounter(document.getElementById('counter-aktive'), sixMonthGoals.aktive);
+                observer.disconnect();
+            }
+        }, { threshold: 0.5 });
+
+        observer.observe(document.getElementById('erfolge'));
     </script>
 
 </body>
