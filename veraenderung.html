@@ -15,12 +15,15 @@
         .spoe-red-text { color: #E30613; }
         .btn-primary { background-color: #E30613; color: white; font-weight: 600; border-radius: 8px; padding: 10px 20px; transition: background-color 0.3s; }
         .btn-primary:hover { background-color: #c00511; }
+        .btn-primary:disabled { background-color: #9ca3af; cursor: not-allowed; }
         .card { background-color: white; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         .feed-icon { width: 20px; height: 20px; }
         .nav-link.active { background-color: #fee2e2; color: #E30613; }
         .filter-btn.active { background-color: #E30613; color: white; border-color: #E30613; }
         .progress-bar { background-color: #e0e0e0; border-radius: 9999px; overflow: hidden; height: 1.5rem; }
         .progress { transition: width 0.5s ease-in-out; }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -29,7 +32,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, increment, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, increment, query, orderBy, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -222,6 +225,15 @@
         const commentForm = document.getElementById('comment-form');
         const commentTextarea = document.getElementById('comment-textarea');
         const aiCommentHelperBtn = document.getElementById('ai-comment-helper-btn');
+        const voteProBtn = document.getElementById('vote-pro-btn');
+        const voteConBtn = document.getElementById('vote-con-btn');
+
+        // Check if voting document exists, if not, create it
+        getDoc(votingRef).then((docSnap) => {
+            if (!docSnap.exists()) {
+                setDoc(votingRef, { proVotes: 0, conVotes: 0 });
+            }
+        });
 
         onSnapshot(votingRef, (doc) => {
             if (doc.exists() && proBar) {
@@ -264,9 +276,18 @@
                 commentsContainer.appendChild(commentEl);
             });
         });
+        
+        function handleVote(type) {
+            const updateData = type === 'pro' ? { proVotes: increment(1) } : { conVotes: increment(1) };
+            updateDoc(votingRef, updateData);
+            voteProBtn.disabled = true;
+            voteConBtn.disabled = true;
+            voteProBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            voteConBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
 
-        document.getElementById('vote-pro-btn')?.addEventListener('click', () => updateDoc(votingRef, { proVotes: increment(1) }));
-        document.getElementById('vote-con-btn')?.addEventListener('click', () => updateDoc(votingRef, { conVotes: increment(1) }));
+        voteProBtn?.addEventListener('click', () => handleVote('pro'));
+        voteConBtn?.addEventListener('click', () => handleVote('con'));
 
         commentForm?.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -522,7 +543,69 @@
                 </div>
             </div>
 
-            <div id="page-toolbox" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Toolbox</h3><p class="mt-2 text-gray-600">Anleitungen, Checklisten und Vorlagen für deine politische Arbeit vor Ort. Vom Spritzerstand bis zur Gemeindezeitung.</p></div></div>
+            <div id="page-toolbox" class="content-page hidden">
+                <div class="space-y-6">
+                    <!-- Toolbox Item 1: Wording -->
+                    <details class="card" open>
+                        <summary class="p-4 cursor-pointer flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i data-lucide="message-circle" class="w-8 h-8 spoe-red-text mr-4"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold">Wording-Helfer: Schlagfertig auf der Straße</h3>
+                                    <p class="text-sm text-gray-500">Antworten auf die häufigsten Vorurteile.</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-down" class="transition-transform duration-300"></i>
+                        </summary>
+                        <div class="p-4 border-t">
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="font-semibold">"Die SPÖ ist scheiße!"</p>
+                                    <p class="text-gray-700 mt-1 pl-4 border-l-2 border-red-500"><strong>Gegenfrage stellen:</strong> "Das ist ein hartes Urteil. Was genau stört dich denn am meisten? Geht's um leistbares Wohnen, die Teuerung oder etwas ganz anderes? Lass uns darüber reden, denn genau dafür sind wir ja da."</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">"Martin Winkler ist auch nicht besser als der jetzige Landeshauptmann."</p>
+                                    <p class="text-gray-700 mt-1 pl-4 border-l-2 border-red-500"><strong>Auf den neuen Stil fokussieren:</strong> "Ich sehe das anders. Winkler's ganzer Ansatz ist neu: Er entwickelt seinen Plan nicht allein, sondern gemeinsam mit den Leuten über unsere Mitmach-Plattform. Er will nicht nur reden, sondern die Anliegen der Leute direkt umsetzen. Gib ihm eine Chance zu zeigen, dass er wirklich anpackt."</p>
+                                </div>
+                                 <div>
+                                    <p class="font-semibold">"Ihr Sozis wollt ja nur allen das Geld wegnehmen!"</p>
+                                    <p class="text-gray-700 mt-1 pl-4 border-l-2 border-red-500"><strong>Auf Fairness umdeuten:</strong> "Uns geht es um Fairness. Ist es nicht gerecht, wenn die, die extrem viel haben – wie große internationale Konzerne – einen fairen Beitrag leisten, damit unsere Schulen, Spitäler und Pensionen für alle sicher sind? Davon profitieren wir doch alle."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Toolbox Item 2: Spritzerstand -->
+                    <details class="card">
+                        <summary class="p-4 cursor-pointer flex justify-between items-center">
+                             <div class="flex items-center">
+                                <i data-lucide="party-popper" class="w-8 h-8 spoe-red-text mr-4"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold">Anleitung: Dein erfolgreicher Spritzerstand</h3>
+                                    <p class="text-sm text-gray-500">Von der Idee zur Umsetzung in 7 Schritten.</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-down" class="transition-transform duration-300"></i>
+                        </summary>
+                        <div class="p-4 border-t prose max-w-none">
+                            <h4>Schritt 1: Idee & Team</h4>
+                            <p>Sucht euch 3-5 motivierte Leute und legt ein Ziel fest: Wollt ihr Spenden sammeln, neue Mitglieder werben oder einfach mit den Leuten ins Gespräch kommen?</p>
+                            <h4>Schritt 2: Rechtliches & Genehmigung</h4>
+                            <p>Jeder Stand im öffentlichen Raum braucht eine Genehmigung. Meldet eure Veranstaltung rechtzeitig bei eurer Gemeinde an (meistens 2-4 Wochen vorher). Bei Fragen hilft euch das Team der Landesorganisation. Ansprechpartner: Max Mustermann.</p>
+                            <h4>Schritt 3: Budget & Sponsoring</h4>
+                            <p>Erstellt eine einfache Kostenliste (Getränke, Becher, Servietten). Fragt lokale Betriebe (Bäcker, Supermarkt) nach Unterstützung – oft gibt es Sachspenden! Eure Bezirksorganisation kann eventuell auch finanziell unter die Arme greifen.</p>
+                            <h4>Schritt 4: Material & Logistik</h4>
+                            <p><strong>Checkliste:</strong> Tische, Schirm/Pavillon, Gläser/Becher, Wechselgeld, Müllsäcke, SPÖ-Plakate & Flyer. Vieles davon könnt ihr euch kostenlos bei der Landes-SPÖ ausleihen!</p>
+                            <h4>Schritt 5: Der Tag davor</h4>
+                            <p>Wetter-Check! Habt ihr einen Plan B bei Regen (z.B. Pavillon)? Kauft die Getränke und bereitet alles vor. Teilt die Aufgaben im Team auf (Aufbau, Ausschank, Abbau).</p>
+                             <h4>Schritt 6: Der große Tag</h4>
+                            <p>Seid freundlich, geht aktiv auf die Leute zu und habt Spaß! Es geht darum, als Team für unsere Werte einzustehen.</p>
+                            <h4>Schritt 7: Danach</h4>
+                            <p>Macht die Kassa, bedankt euch bei allen Helfer:innen und Sponsor:innen und postet ein Foto eures Erfolgs hier auf der Plattform!</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
 
         </main>
 
