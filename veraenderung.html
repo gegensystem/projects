@@ -479,7 +479,96 @@
                 </div>
             </div>
 
-            <div id="page-gruppen" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Gruppen</h3><p class="mt-2 text-gray-600">Schließe dich mit Gleichgesinnten zusammen, um Projekte zu planen und umzusetzen.</p></div></div>
+            <div id="page-gruppen" class="content-page hidden">
+                <div class="card overflow-hidden">
+                    <div class="flex h-[600px]">
+                        <!-- Group List -->
+                        <div class="w-1/3 bg-gray-50 border-r">
+                            <div class="p-4 border-b">
+                                <h3 class="font-bold text-lg">Meine Gruppen</h3>
+                            </div>
+                            <div class="p-2 space-y-1">
+                                <a href="#" class="block p-3 rounded-lg bg-red-100">
+                                    <p class="font-bold text-red-800">Aktionsteam #LeistbaresWohnen</p>
+                                    <p class="text-sm text-red-700 truncate">Gerhard: Super, die Plakate sind da!</p>
+                                </a>
+                                <a href="#" class="block p-3 rounded-lg hover:bg-gray-100">
+                                    <p class="font-bold">Ortsgruppe Rohrbach</p>
+                                    <p class="text-sm text-gray-600 truncate">Monika: Wer bringt die Kuchen für das...</p>
+                                </a>
+                                 <a href="#" class="block p-3 rounded-lg hover:bg-gray-100">
+                                    <p class="font-bold">GR-Fraktion Steyr</p>
+                                    <p class="text-sm text-gray-600 truncate">Sitzungsprotokoll vom 22.08. ist online</p>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Chat View -->
+                        <div class="w-2/3 flex flex-col">
+                            <div class="p-4 border-b flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-lg">Aktionsteam #LeistbaresWohnen</h3>
+                                    <p class="text-sm text-gray-500">12 Mitglieder</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="p-2 rounded-full hover:bg-gray-100"><i data-lucide="phone"></i></button>
+                                    <button class="p-2 rounded-full hover:bg-gray-100"><i data-lucide="users"></i></button>
+                                </div>
+                            </div>
+                            <!-- Group Navigation -->
+                            <div class="flex border-b">
+                                <button class="px-4 py-2 text-sm font-semibold border-b-2 border-red-500 text-red-500">Chat</button>
+                                <button class="px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-100">Aufgaben</button>
+                                <button class="px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-100">Termine</button>
+                                <button class="px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-100">Dateien</button>
+                            </div>
+                            <!-- Chat Messages -->
+                            <div class="flex-1 p-4 space-y-4 overflow-y-auto">
+                                <!-- AI Summary Button -->
+                                <div class="text-center my-2">
+                                    <button class="bg-blue-100 text-blue-700 text-sm font-semibold px-4 py-2 rounded-full hover:bg-blue-200 flex items-center mx-auto">
+                                        <i data-lucide="sparkles" class="w-4 h-4 mr-2"></i>
+                                        KI-Zusammenfassung der letzten 24h anzeigen
+                                    </button>
+                                </div>
+
+                                <!-- Message -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://placehold.co/40x40/E30613/FFFFFF?text=S" class="rounded-full">
+                                    <div class="bg-gray-100 p-3 rounded-lg">
+                                        <p class="font-semibold text-sm">Sabine</p>
+                                        <p>Hallo Team, die Genehmigung für den Infostand am Hauptplatz ist durch! Wir können nächsten Samstag von 9-13 Uhr aufbauen.</p>
+                                    </div>
+                                </div>
+                                <!-- Message -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://placehold.co/40x40/cccccc/000000?text=M" class="rounded-full">
+                                    <div class="bg-gray-100 p-3 rounded-lg">
+                                        <p class="font-semibold text-sm">Michael</p>
+                                        <p>Super! Ich habe in der Toolbox die Checkliste für Infostände gefunden. Wer kümmert sich um die Flyer?</p>
+                                    </div>
+                                </div>
+                                 <!-- Message from current user -->
+                                <div class="flex items-start gap-3 flex-row-reverse">
+                                    <img src="https://placehold.co/40x40/E30613/FFFFFF?text=A" class="rounded-full">
+                                    <div class="bg-red-500 text-white p-3 rounded-lg">
+                                        <p class="font-semibold text-sm">Andreas</p>
+                                        <p>Ich hab bei der Landesorganisation angefragt, die schicken uns die neuen Wohnbau-Flyer direkt zu.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Message Input -->
+                            <div class="p-4 bg-white border-t">
+                                <div class="relative">
+                                    <input type="text" placeholder="Nachricht in #planung schreiben..." class="w-full p-3 pr-20 border rounded-lg bg-gray-100">
+                                    <button class="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-500 text-white hover:bg-red-600">
+                                        <i data-lucide="send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div id="page-bildung" class="content-page hidden">
                 <div id="education-filter-container" class="flex flex-wrap gap-2 mb-6">
