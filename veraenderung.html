@@ -19,6 +19,8 @@
         .feed-icon { width: 20px; height: 20px; }
         .nav-link.active { background-color: #fee2e2; color: #E30613; }
         .filter-btn.active { background-color: #E30613; color: white; border-color: #E30613; }
+        .progress-bar { background-color: #e0e0e0; border-radius: 9999px; overflow: hidden; height: 1.5rem; }
+        .progress { transition: width 0.5s ease-in-out; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -27,7 +29,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, increment, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -205,6 +207,86 @@
             });
         }
 
+        // --- Voting Logic ---
+        const votingId = 'leistbares-wohnen';
+        const votingRef = doc(db, "votings", votingId);
+        const commentsCol = collection(db, "votings", votingId, "comments");
+        
+        const proBar = document.getElementById('pro-bar');
+        const conBar = document.getElementById('con-bar');
+        const proPercent = document.getElementById('pro-percent');
+        const conPercent = document.getElementById('con-percent');
+        const proVotesEl = document.getElementById('pro-votes');
+        const conVotesEl = document.getElementById('con-votes');
+        const commentsContainer = document.getElementById('comments-container');
+        const commentForm = document.getElementById('comment-form');
+        const commentTextarea = document.getElementById('comment-textarea');
+        const aiCommentHelperBtn = document.getElementById('ai-comment-helper-btn');
+
+        onSnapshot(votingRef, (doc) => {
+            if (doc.exists() && proBar) {
+                const data = doc.data();
+                const proVotes = data.proVotes || 0;
+                const conVotes = data.conVotes || 0;
+                const totalVotes = proVotes + conVotes;
+
+                const proPercentage = totalVotes > 0 ? (proVotes / totalVotes) * 100 : 0;
+                const conPercentage = totalVotes > 0 ? (conVotes / totalVotes) * 100 : 0;
+
+                proBar.style.width = `${proPercentage}%`;
+                conBar.style.width = `${conPercentage}%`;
+                proPercent.textContent = `${Math.round(proPercentage)}%`;
+                conPercent.textContent = `${Math.round(conPercentage)}%`;
+                proVotesEl.textContent = `${proVotes} Stimmen`;
+                conVotesEl.textContent = `${conVotes} Stimmen`;
+            }
+        });
+
+        const qComments = query(commentsCol, orderBy("timestamp", "desc"));
+        onSnapshot(qComments, (snapshot) => {
+            if (!commentsContainer) return;
+            commentsContainer.innerHTML = '';
+            snapshot.docs.forEach(doc => {
+                const comment = doc.data();
+                const commentEl = document.createElement('div');
+                commentEl.className = 'flex items-start space-x-3 pt-4';
+                const timestamp = comment.timestamp ? new Date(comment.timestamp.toDate()).toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'}) : '';
+                commentEl.innerHTML = `
+                    <img src="https://placehold.co/32x32/cccccc/000000?text=${comment.author.charAt(0)}" class="rounded-full">
+                    <div class="flex-1">
+                        <div class="bg-gray-100 p-3 rounded-lg">
+                            <p class="font-semibold text-sm">${comment.author}</p>
+                            <p class="text-sm">${comment.text}</p>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">${timestamp}</p>
+                    </div>
+                `;
+                commentsContainer.appendChild(commentEl);
+            });
+        });
+
+        document.getElementById('vote-pro-btn')?.addEventListener('click', () => updateDoc(votingRef, { proVotes: increment(1) }));
+        document.getElementById('vote-con-btn')?.addEventListener('click', () => updateDoc(votingRef, { conVotes: increment(1) }));
+
+        commentForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = commentTextarea.value;
+            if (text.trim() === '') return;
+            await addDoc(commentsCol, {
+                author: "Eva M.", // Placeholder
+                text: text,
+                timestamp: new Date()
+            });
+            commentTextarea.value = '';
+        });
+
+        aiCommentHelperBtn?.addEventListener('click', () => {
+            const currentText = commentTextarea.value;
+            const improvedText = `Ich stimme zu, weil ${currentText}. Besonders wichtig finde ich dabei den Aspekt, dass [konkreter Punkt]. Ein gutes Beispiel dafür ist [Beispiel aus eigener Erfahrung oder Gemeinde].`;
+            commentTextarea.value = improvedText;
+        });
+
+
     </script>
 
     <!-- Main Layout -->
@@ -258,7 +340,69 @@
             </div>
 
             <!-- Other Pages (initially hidden) -->
-            <div id="page-abstimmungen" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Monatliche Abstimmungen</h3><p class="mt-2 text-gray-600">Hier werden bald die Top-Ideen der Community zur Abstimmung gestellt.</p></div></div>
+            <div id="page-abstimmungen" class="content-page hidden">
+                <div class="card p-6">
+                    <span class="text-sm font-bold spoe-red-text">TOP-THEMA DES MONATS</span>
+                    <h3 class="text-2xl font-bold my-2">#LeistbaresWohnen</h3>
+                    <p class="text-gray-700 mb-6">Die Community hat diese Idee zur wichtigsten des Monats gewählt. Jetzt geht es um die konkrete Ausgestaltung. Stimmst du dem folgenden Vorschlag zu?</p>
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mb-6">
+                        <p class="font-semibold">"Sollen wir eine Landes-Wohnbauoffensive starten, um 5.000 neue, leistbare Gemeindewohnungen in den nächsten 5 Jahren zu schaffen?"</p>
+                    </div>
+
+                    <!-- Voting Results -->
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-lg font-bold text-green-600">Zustimmung</span>
+                            <span id="pro-votes" class="text-sm text-gray-600">0 Stimmen</span>
+                        </div>
+                        <div class="progress-bar flex">
+                            <div id="pro-bar" class="progress bg-green-500 flex items-center justify-center text-white font-bold" style="width: 0%;">
+                                <span id="pro-percent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-lg font-bold spoe-red-text">Ablehnung</span>
+                            <span id="con-votes" class="text-sm text-gray-600">0 Stimmen</span>
+                        </div>
+                        <div class="progress-bar flex">
+                             <div id="con-bar" class="progress spoe-red flex items-center justify-center text-white font-bold" style="width: 0%;">
+                                <span id="con-percent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Voting Actions -->
+                    <div class="flex space-x-4 mb-8">
+                        <button id="vote-pro-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 transition-transform transform hover:scale-105">
+                            <i data-lucide="thumbs-up"></i>
+                            <span>Zustimmen</span>
+                        </button>
+                        <button id="vote-con-btn" class="w-full spoe-red hover:bg-red-700 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 transition-transform transform hover:scale-105">
+                            <i data-lucide="thumbs-down"></i>
+                            <span>Ablehnen</span>
+                        </button>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div class="border-t pt-6">
+                        <h4 class="text-xl font-bold mb-4">Diskussion</h4>
+                        <form id="comment-form" class="mb-4">
+                            <textarea id="comment-textarea" class="w-full p-2 border rounded-lg" rows="3" placeholder="Dein Kommentar, deine Anregung..."></textarea>
+                            <div class="flex justify-between items-center mt-2">
+                                <button type="button" id="ai-comment-helper-btn" class="flex items-center text-sm text-gray-600 hover:spoe-red-text">
+                                    <i data-lucide="sparkles" class="mr-1 w-4 h-4"></i> Mit KI-Assistent formulieren
+                                </button>
+                                <button type="submit" class="btn-primary px-4 py-2 text-sm">Kommentieren</button>
+                            </div>
+                        </form>
+                        <div id="comments-container" class="space-y-4 divide-y">
+                            <!-- Comments loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div id="page-veranstaltungen" class="content-page hidden">
                 <div id="event-filter-container" class="flex flex-wrap gap-2 mb-6">
