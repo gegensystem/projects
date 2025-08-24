@@ -56,6 +56,7 @@
         const ideasCol = collection(db, 'ideas');
         const q = query(ideasCol, orderBy("timestamp", "desc"));
         onSnapshot(q, (snapshot) => {
+            if (!feedContainer) return;
             feedContainer.innerHTML = ''; // Clear existing feed
             if (snapshot.empty) {
                 feedContainer.innerHTML = '<div class="card p-4 text-center text-gray-500">Noch keine Ideen vorhanden. Sei der/die Erste!</div>';
@@ -113,33 +114,37 @@
         });
 
         // --- Handle Idea Submission ---
-        ideaForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const text = ideaTextarea.value;
-            if (text.trim() === '') return;
+        if (ideaForm) {
+            ideaForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const text = ideaTextarea.value;
+                if (text.trim() === '') return;
 
-            await addDoc(ideasCol, {
-                author: "Andreas N.", // Placeholder for logged-in user
-                location: "Linz", // Placeholder
-                text: text,
-                likes: 0,
-                comments: 0,
-                inProgress: false,
-                timestamp: new Date()
+                await addDoc(ideasCol, {
+                    author: "Andreas N.", // Placeholder for logged-in user
+                    location: "Linz", // Placeholder
+                    text: text,
+                    likes: 0,
+                    comments: 0,
+                    inProgress: false,
+                    timestamp: new Date()
+                });
+
+                ideaTextarea.value = '';
             });
-
-            ideaTextarea.value = '';
-        });
+        }
         
         // --- AI Helper (Mock) ---
-        aiHelperBtn.addEventListener('click', () => {
-            const currentText = ideaTextarea.value;
-            const improvedText = `**Problem:** ${currentText}\n\n**Lösungsvorschlag:** Wir könnten [konkrete Maßnahme] umsetzen, um [Ziel] zu erreichen.\n\n**Referenz:** Ähnliche Projekte gab es bereits in [Gemeinde X] (siehe Spritzerstand 2023, Kosten: €350, Helfer: 5).`;
-            ideaTextarea.value = improvedText;
-            const modal = document.getElementById('ai-modal');
-            modal.classList.remove('hidden');
-            setTimeout(() => modal.classList.add('hidden'), 3000);
-        });
+        if (aiHelperBtn) {
+            aiHelperBtn.addEventListener('click', () => {
+                const currentText = ideaTextarea.value;
+                const improvedText = `**Problem:** ${currentText}\n\n**Lösungsvorschlag:** Wir könnten [konkrete Maßnahme] umsetzen, um [Ziel] zu erreichen.\n\n**Referenz:** Ähnliche Projekte gab es bereits in [Gemeinde X] (siehe Spritzerstand 2023, Kosten: €350, Helfer: 5).`;
+                ideaTextarea.value = improvedText;
+                const modal = document.getElementById('ai-modal');
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('hidden'), 3000);
+            });
+        }
 
         // --- Navigation Logic ---
         navLinks.forEach(link => {
@@ -163,20 +168,34 @@
         });
         
         // --- Event Filter Logic ---
-        const filterContainer = document.getElementById('event-filter-container');
-        const eventCards = document.querySelectorAll('.event-card');
-
-        if (filterContainer) {
-            filterContainer.addEventListener('click', (e) => {
+        const eventFilterContainer = document.getElementById('event-filter-container');
+        if (eventFilterContainer) {
+            eventFilterContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('filter-btn')) {
-                    // Update active button
-                    filterContainer.querySelector('.filter-btn.active').classList.remove('active');
+                    eventFilterContainer.querySelector('.filter-btn.active').classList.remove('active');
                     e.target.classList.add('active');
-
                     const filterValue = e.target.dataset.filter;
-
-                    eventCards.forEach(card => {
+                    document.querySelectorAll('.event-card').forEach(card => {
                         if (filterValue === 'alle' || card.dataset.gemeinde === filterValue) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                }
+            });
+        }
+
+        // --- Education Filter Logic ---
+        const educationFilterContainer = document.getElementById('education-filter-container');
+        if (educationFilterContainer) {
+            educationFilterContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    educationFilterContainer.querySelector('.filter-btn.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    const filterValue = e.target.dataset.filter;
+                    document.querySelectorAll('.education-card').forEach(card => {
+                        if (filterValue === 'alle' || card.dataset.category === filterValue) {
                             card.classList.remove('hidden');
                         } else {
                             card.classList.add('hidden');
@@ -296,7 +315,69 @@
             </div>
 
             <div id="page-gruppen" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Gruppen</h3><p class="mt-2 text-gray-600">Schließe dich mit Gleichgesinnten zusammen, um Projekte zu planen und umzusetzen.</p></div></div>
-            <div id="page-bildung" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Bildungsangebote</h3><p class="mt-2 text-gray-600">Hier findest du alle Workshops, Rufseminare und Online-Kurse.</p></div></div>
+            
+            <div id="page-bildung" class="content-page hidden">
+                <div id="education-filter-container" class="flex flex-wrap gap-2 mb-6">
+                    <button class="filter-btn active px-4 py-2 text-sm font-semibold rounded-full border" data-filter="alle">Alle</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full border bg-white" data-filter="top">Top-Angebote</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full border bg-white" data-filter="kommunal">Kommunales</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full border bg-white" data-filter="digital">KI & Digitales</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full border bg-white" data-filter="grundlagen">Grundlagen</button>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4">Unsere Top-Angebote</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="education-card card p-6 flex flex-col" data-category="top">
+                        <i data-lucide="phone-call" class="w-10 h-10 spoe-red-text mb-3"></i>
+                        <h3 class="text-xl font-bold mb-2">Rufseminare: Bildung nach Maß</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Ihre Sektion braucht Input zu einem bestimmten Thema? Buchen Sie hier maßgeschneiderte Workshops direkt für Ihre Ortsgruppe.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Jetzt anfragen &rarr;</a>
+                    </div>
+                    <div class="education-card card p-6 flex flex-col" data-category="top">
+                        <i data-lucide="file-text" class="w-10 h-10 spoe-red-text mb-3"></i>
+                        <h3 class="text-xl font-bold mb-2">Update: Das neue ElWog</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Das OÖ Elektrizitätswirtschaftsgesetz einfach erklärt. Ein Muss für alle Bürgermeister:innen und Gemeinderät:innen.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Zum Erklärvideo &rarr;</a>
+                    </div>
+                    <div class="education-card card p-6 flex flex-col" data-category="top">
+                        <i data-lucide="sparkles" class="w-10 h-10 spoe-red-text mb-3"></i>
+                        <h3 class="text-xl font-bold mb-2">KI in der politischen Arbeit</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Lernen Sie, wie künstliche Intelligenz die politische Arbeit revolutioniert – von der Analyse bis zur Kommunikation.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Details & Termine &rarr;</a>
+                    </div>
+                    <div class="education-card card p-6 flex flex-col" data-category="top">
+                        <i data-lucide="mouse-pointer-click" class="w-10 h-10 spoe-red-text mb-3"></i>
+                        <h3 class="text-xl font-bold mb-2">Training: Der OÖ-Plan</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Werden Sie zum Profi auf unserer neuen Mitmach-Plattform. Lernen Sie alle Funktionen kennen und nutzen Sie das volle Potenzial.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Zu den Anleitungen &rarr;</a>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold mb-4">Weitere Angebote</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div class="education-card card p-6 flex flex-col" data-category="kommunal">
+                        <h3 class="text-lg font-bold mb-2">Gemeindefinanzen für Einsteiger:innen</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Wie liest man ein Gemeindebudget? Wo sind die Gestaltungsspielräume? Kompakter Überblick für die Fraktionsarbeit.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Mehr erfahren &rarr;</a>
+                    </div>
+                     <div class="education-card card p-6 flex flex-col" data-category="grundlagen">
+                        <h3 class="text-lg font-bold mb-2">Grundlagen der Sozialdemokratie</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Unsere Werte, unsere Geschichte, unsere Zukunft. Das ideale Seminar für neue Mitglieder und Interessierte.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Mehr erfahren &rarr;</a>
+                    </div>
+                     <div class="education-card card p-6 flex flex-col" data-category="digital">
+                        <h3 class="text-lg font-bold mb-2">Social Media für die Ortsgruppe</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Wie erreichen wir die Menschen online? Tipps und Tricks für einen gelungenen Auftritt auf Facebook, Instagram & Co.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Mehr erfahren &rarr;</a>
+                    </div>
+                     <div class="education-card card p-6 flex flex-col" data-category="kommunal">
+                        <h3 class="text-lg font-bold mb-2">Bauordnung und Raumplanung</h3>
+                        <p class="text-gray-600 mb-4 flex-grow">Einblick in die wichtigsten Instrumente der Gemeindeentwicklung. Für alle, die im Bauausschuss mitreden wollen.</p>
+                        <a href="#" class="font-semibold spoe-red-text self-start">Mehr erfahren &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
             <div id="page-toolbox" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Toolbox</h3><p class="mt-2 text-gray-600">Anleitungen, Checklisten und Vorlagen für deine politische Arbeit vor Ort. Vom Spritzerstand bis zur Gemeindezeitung.</p></div></div>
 
         </main>
