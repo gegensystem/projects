@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografik: Der OÖ-Plan | Eine neue Strategie für die SPÖ OÖ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .spoe-red { color: #FF4E50; }
+        .spoe-red-bg { background-color: #FF4E50; }
+        .spoe-orange { color: #FC913A; }
+        .spoe-yellow { color: #F9D423; }
+        .header-gradient {
+            background: linear-gradient(90deg, #FF4E50, #FC913A);
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <!-- 
+    Infographic Plan Summary:
+    Narrative: This infographic tells the story of transforming the SPÖ OÖ by leveraging its member base through a new, KI-powered strategy, culminating in measurable growth and readiness for the 2027 election.
+    Structure: 
+    1. The Mission: Hook with the big number of members and the clear goal.
+    2. The Strategy: Visually explain the two core pillars.
+    3. The 100-Day Plan: Show the immediate, structured approach.
+    4. The 2026 Roadmap: Visualize the year-long implementation and KPI growth.
+    5. The Impact: Summarize the key results and outcomes.
+    6. The Vision: Conclude with a strong call to action.
+
+    Visualization Choices (NO SVG, NO MERMAID JS):
+    - 20,000 Members: Big Number (HTML). Goal: Inform. Justification: High-impact, simple.
+    - Two Pillars: Two-column layout with Unicode icons (HTML/CSS). Goal: Organize. Justification: Clear, structured comparison.
+    - 100-Day Plan: Timeline with styled divs (HTML/CSS). Goal: Organize. Justification: Shows a clear process flow.
+    - 2026 Roadmap KPIs: Bar Chart (Chart.js/Canvas). Goal: Compare/Change. Justification: Clearly shows quarterly growth targets.
+    - Key Results: Big Numbers (HTML). Goal: Inform. Justification: Highlights the most important outcomes.
+
+    Confirmation: NEITHER Mermaid JS NOR SVG were used in this output. All visuals are rendered via HTML/CSS or the Chart.js Canvas element.
+    Selected Color Palette: Energetic & Playful (#FF4E50, #FC913A, #F9D423)
+    -->
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <!-- Section 1: The Mission -->
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold header-gradient text-transparent bg-clip-text">Der OÖ-Plan</h1>
+            <p class="text-xl md:text-2xl mt-4 text-gray-600">Eine neue Strategie zur politischen Trendwende</p>
+            <div class="mt-12 kpi-card max-w-md mx-auto">
+                <p class="text-7xl font-extrabold spoe-red">20.000</p>
+                <p class="text-xl font-semibold text-gray-700 mt-2">Mitglieder sind unser größtes Kapital. Es ist Zeit, dieses Potenzial zu aktivieren.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: The Two-Pillar Strategy -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold">Unsere Strategie für den Erfolg</h2>
+                <p class="mt-3 text-lg text-gray-600 max-w-3xl mx-auto">Zwei Säulen, die sich gegenseitig verstärken, bilden die Grundlage für eine moderne und schlagkräftige Parteiorganisation.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="kpi-card">
+                    <span class="text-6xl">🤖</span>
+                    <h3 class="text-2xl font-bold mt-4">KI-gestützte Effizienz</h3>
+                    <p class="mt-2 text-gray-600">Wir arbeiten intern schneller, klüger und datenbasierter als die Konkurrenz. KI entlastet Funktionär:innen und schärft unsere Botschaften.</p>
+                </div>
+                <div class="kpi-card">
+                    <span class="text-6xl">👥</span>
+                    <h3 class="text-2xl font-bold mt-4">Echte Mitglieder-Partizipation</h3>
+                    <p class="mt-2 text-gray-600">Wir verwandeln passive Mitglieder in aktive Mitgestalter:innen. Das Werkzeug: Die Mitmach-Plattform "Der OÖ-Plan".</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The First 100 Days -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold">Die ersten 100 Tage: Ein klarer Plan</h2>
+                <p class="mt-3 text-lg text-gray-600 max-w-3xl mx-auto">Wir starten nicht planlos, sondern mit einer strukturierten Analyse- und Konzeptionsphase, um nachhaltige Erfolge zu sichern.</p>
+            </div>
+            <div class="relative max-w-3xl mx-auto">
+                <div class="border-l-4 border-red-200 absolute h-full top-0 left-4"></div>
+                <div class="space-y-12">
+                    <div class="relative pl-12">
+                        <div class="absolute w-8 h-8 spoe-red-bg rounded-full top-0 left-0 flex items-center justify-center text-white font-bold">1</div>
+                        <h3 class="text-xl font-bold">Wochen 1-4: Analyse & Quick Wins</h3>
+                        <p class="text-gray-600 mt-1">Intensive Gespräche mit allen Ebenen, um Bedarfe zu verstehen. Gleichzeitig finalisieren wir laufende Projekte für schnelle, sichtbare Erfolge.</p>
+                    </div>
+                    <div class="relative pl-12">
+                        <div class="absolute w-8 h-8 spoe-red-bg rounded-full top-0 left-0 flex items-center justify-center text-white font-bold">2</div>
+                        <h3 class="text-xl font-bold">Wochen 5-12: Strategie & Konzeption</h3>
+                        <p class="text-gray-600 mt-1">Entwicklung des parteiweiten KI-Use-Case-Katalogs und Finalisierung der technischen Roadmap für die Mitmach-Plattform "Der OÖ-Plan".</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The 2026 Roadmap -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold">Der Jahresplan 2026: Unser Weg zur Wahl</h2>
+                <p class="mt-3 text-lg text-gray-600 max-w-3xl mx-auto">Ein messbarer Fahrplan mit klaren Zielen für jedes Quartal, um unsere Schlagkraft systematisch zu erhöhen.</p>
+            </div>
+            <div class="kpi-card">
+                <div class="chart-container">
+                    <canvas id="roadmapChart"></canvas>
+                </div>
+                <p class="mt-4 text-gray-600 text-center">Die Grafik zeigt das geplante Wachstum der aktiven Nutzer:innen auf der Plattform "Der OÖ-Plan" und die kumulierte Anzahl der eingereichten Ideen im Laufe des Jahres 2026. Jedes Quartal baut auf dem vorherigen auf und steigert die Mitglieder-Aktivierung.</p>
+            </div>
+        </section>
+
+        <!-- Section 5: The Impact -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold">Der erwartete Impact: Messbare Erfolge</h2>
+                <p class="mt-3 text-lg text-gray-600 max-w-3xl mx-auto">Am Ende des Jahres 2026 werden wir nicht nur über Veränderung reden, wir werden sie in Zahlen belegen können.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="kpi-card">
+                    <p class="text-6xl font-extrabold spoe-red">10.000</p>
+                    <p class="text-xl font-semibold text-gray-700 mt-2">Aktive Nutzer:innen</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="text-6xl font-extrabold spoe-orange">+50%</p>
+                    <p class="text-xl font-semibold text-gray-700 mt-2">Mitglieder-Interaktion</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="text-6xl font-extrabold spoe-yellow">1</p>
+                    <p class="text-xl font-semibold text-gray-700 mt-2">Umfassender Datenreport zur Mitgliederstimmung</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: The Vision -->
+        <section class="header-gradient text-white rounded-lg p-8 md:p-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold">Gemeinsam zur politischen Trendwende</h2>
+            <p class="mt-4 text-lg max-w-3xl mx-auto">"Dieser Plan verbindet technologische Innovation mit unseren sozialdemokratischen Grundwerten. Ich habe die Vision und die Erfahrung, um die SPÖ OÖ zukunftsfit zu machen und den Landtag zurückzuerobern."</p>
+            <p class="mt-6 font-bold text-xl">- Andreas Neuhold</p>
+        </section>
+
+    </main>
+
+    <script>
+        const roadmapCtx = document.getElementById('roadmapChart').getContext('2d');
+        new Chart(roadmapCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026'],
+                datasets: [{
+                    label: 'Aktive Nutzer:innen',
+                    data: [5000, 10000, 12000, 15000],
+                    backgroundColor: '#FF4E50',
+                    borderColor: '#FF4E50',
+                    borderWidth: 1
+                }, {
+                    label: 'Eingereichte Ideen (kumuliert)',
+                    data: [1000, 2500, 4000, 5000],
+                    backgroundColor: '#FC913A',
+                    borderColor: '#FC913A',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'KPI-Wachstum im Jahresverlauf 2026',
+                        font: { size: 18 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('de-DE');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
