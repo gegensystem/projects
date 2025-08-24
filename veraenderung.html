@@ -17,7 +17,7 @@
         .btn-primary:hover { background-color: #c00511; }
         .card { background-color: white; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         .feed-icon { width: 20px; height: 20px; }
-        .active-filter { background-color: #E30613; color: white; }
+        .nav-link.active { background-color: #fee2e2; color: #E30613; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -26,7 +26,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, onSnapshot, addDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, increment, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -47,31 +47,40 @@
         const ideaForm = document.getElementById('idea-form');
         const ideaTextarea = document.getElementById('idea-textarea');
         const aiHelperBtn = document.getElementById('ai-helper-btn');
+        const mainContentTitle = document.getElementById('main-content-title');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentPages = document.querySelectorAll('.content-page');
         
-        // --- Real-time Feed Listener ---
+        // --- Real-time Feed Listener (sorted by timestamp) ---
         const ideasCol = collection(db, 'ideas');
-        onSnapshot(ideasCol, (snapshot) => {
+        const q = query(ideasCol, orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
             feedContainer.innerHTML = ''; // Clear existing feed
-            snapshot.docs.forEach(doc => {
-                const idea = doc.data();
-                const ideaElement = createIdeaElement(doc.id, idea);
-                feedContainer.appendChild(ideaElement);
-            });
+            if (snapshot.empty) {
+                feedContainer.innerHTML = '<div class="card p-4 text-center text-gray-500">Noch keine Ideen vorhanden. Sei der/die Erste!</div>';
+            } else {
+                snapshot.docs.forEach(doc => {
+                    const idea = doc.data();
+                    const ideaElement = createIdeaElement(doc.id, idea);
+                    feedContainer.appendChild(ideaElement);
+                });
+            }
         });
 
         // --- Create Idea Element ---
         function createIdeaElement(id, idea) {
             const div = document.createElement('div');
             div.className = 'card p-4';
+            const timestamp = idea.timestamp ? new Date(idea.timestamp.toDate()).toLocaleString('de-DE') : 'gerade eben';
             div.innerHTML = `
                 <div class="flex items-center mb-3">
                     <img src="https://placehold.co/40x40/cccccc/000000?text=${idea.author.charAt(0)}" class="rounded-full mr-3">
                     <div>
                         <p class="font-bold">${idea.author}</p>
-                        <p class="text-xs text-gray-500">${idea.location} - ${new Date(idea.timestamp?.toDate()).toLocaleString('de-DE')}</p>
+                        <p class="text-xs text-gray-500">${idea.location} - ${timestamp}</p>
                     </div>
                 </div>
-                <p class="mb-4">${idea.text}</p>
+                <p class="mb-4 whitespace-pre-wrap">${idea.text}</p>
                 <div class="flex justify-between items-center border-t pt-2">
                     <div class="flex space-x-4">
                         <button data-id="${id}" class="like-btn flex items-center space-x-1 text-gray-600 hover:spoe-red-text">
@@ -88,21 +97,17 @@
                     </span>
                 </div>
             `;
-            lucide.createIcons({
-                nodes: [div]
-            });
+            lucide.createIcons({ nodes: [div] });
             return div;
         }
 
         // --- Handle Likes ---
         document.addEventListener('click', async (e) => {
-            if (e.target.closest('.like-btn')) {
-                const btn = e.target.closest('.like-btn');
-                const id = btn.dataset.id;
+            const likeBtn = e.target.closest('.like-btn');
+            if (likeBtn) {
+                const id = likeBtn.dataset.id;
                 const ideaRef = doc(db, 'ideas', id);
-                await updateDoc(ideaRef, {
-                    likes: increment(1)
-                });
+                await updateDoc(ideaRef, { likes: increment(1) });
             }
         });
 
@@ -128,10 +133,32 @@
         // --- AI Helper (Mock) ---
         aiHelperBtn.addEventListener('click', () => {
             const currentText = ideaTextarea.value;
-            // Mock AI interaction
-            const improvedText = `**Zusammenfassung:** ${currentText}\n\n**Vorschlag:** Wir könnten [konkrete Maßnahme] umsetzen, um [Ziel] zu erreichen. Ähnliche erfolgreiche Projekte gab es bereits in [Gemeinde X] (siehe Spritzerstand 2023, Kosten: €350, Helfer: 5).`;
+            const improvedText = `**Problem:** ${currentText}\n\n**Lösungsvorschlag:** Wir könnten [konkrete Maßnahme] umsetzen, um [Ziel] zu erreichen.\n\n**Referenz:** Ähnliche Projekte gab es bereits in [Gemeinde X] (siehe Spritzerstand 2023, Kosten: €350, Helfer: 5).`;
             ideaTextarea.value = improvedText;
-            alert("KI-Assistent hat deinen Beitrag optimiert!");
+            const modal = document.getElementById('ai-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.add('hidden'), 3000);
+        });
+
+        // --- Navigation Logic ---
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                const targetPageId = link.dataset.target;
+                mainContentTitle.textContent = link.querySelector('span').textContent;
+
+                contentPages.forEach(page => {
+                    if (page.id === targetPageId) {
+                        page.classList.remove('hidden');
+                    } else {
+                        page.classList.add('hidden');
+                    }
+                });
+            });
         });
 
     </script>
@@ -139,18 +166,18 @@
     <!-- Main Layout -->
     <div class="min-h-screen flex">
         <!-- Left Sidebar (Navigation) -->
-        <aside class="w-1/5 bg-white p-6 hidden md:block shadow-lg">
+        <aside class="w-1/5 bg-white p-6 hidden md:block shadow-lg flex-shrink-0">
             <div class="flex items-center mb-8">
                 <svg class="h-10 w-auto spoe-red-text" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0z"/><path d="M50 30c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20z"/></svg>
                 <span class="ml-3 text-xl font-bold">Der OÖ-Plan</span>
             </div>
             <nav class="space-y-2">
-                <a href="#" class="flex items-center p-2 text-lg font-semibold rounded-lg bg-red-100 spoe-red-text"><i data-lucide="home" class="mr-3"></i> Home / Feed</a>
-                <a href="#" class="flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100"><i data-lucide="bar-chart-2" class="mr-3"></i> Abstimmungen</a>
-                <a href="#" class="flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100"><i data-lucide="calendar" class="mr-3"></i> Veranstaltungen</a>
-                <a href="#" class="flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100"><i data-lucide="users" class="mr-3"></i> Gruppen</a>
-                <a href="#" class="flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100"><i data-lucide="book-open" class="mr-3"></i> Bildungsangebote</a>
-                <a href="#" class="flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100"><i data-lucide="wrench" class="mr-3"></i> Toolbox</a>
+                <a href="#" class="nav-link flex items-center p-2 text-lg font-semibold rounded-lg active" data-target="page-home"><i data-lucide="home" class="mr-3"></i><span>Home / Feed</span></a>
+                <a href="#" class="nav-link flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100" data-target="page-abstimmungen"><i data-lucide="bar-chart-2" class="mr-3"></i><span>Abstimmungen</span></a>
+                <a href="#" class="nav-link flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100" data-target="page-veranstaltungen"><i data-lucide="calendar" class="mr-3"></i><span>Veranstaltungen</span></a>
+                <a href="#" class="nav-link flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100" data-target="page-gruppen"><i data-lucide="users" class="mr-3"></i><span>Gruppen</span></a>
+                <a href="#" class="nav-link flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100" data-target="page-bildung"><i data-lucide="book-open" class="mr-3"></i><span>Bildungsangebote</span></a>
+                <a href="#" class="nav-link flex items-center p-2 text-lg font-semibold rounded-lg hover:bg-gray-100" data-target="page-toolbox"><i data-lucide="wrench" class="mr-3"></i><span>Toolbox</span></a>
             </nav>
             <div class="mt-10 p-4 bg-red-50 rounded-lg">
                 <h3 class="font-bold spoe-red-text">KI-Workshops für Mandatare</h3>
@@ -161,36 +188,42 @@
 
         <!-- Center (Main Feed) -->
         <main class="w-full md:w-3/5 p-4 md:p-8 overflow-y-auto">
-            <!-- "Was gibt's Neues?" Input Card -->
-            <div class="card p-4 mb-6">
-                <h2 class="text-xl font-bold mb-4">Gestalte OÖ mit! Was ist deine Idee?</h2>
-                <form id="idea-form">
-                    <textarea id="idea-textarea" class="w-full p-2 border rounded-lg" rows="4" placeholder="Beschreibe deine Idee, deinen Wunsch oder dein Anliegen..."></textarea>
-                    <div class="flex justify-between items-center mt-2">
-                        <button type="button" id="ai-helper-btn" class="flex items-center text-sm text-gray-600 hover:spoe-red-text">
-                            <i data-lucide="sparkles" class="mr-1 w-4 h-4"></i> Mit KI-Assistent verbessern
-                        </button>
-                        <button type="submit" class="btn-primary">Veröffentlichen</button>
-                    </div>
-                </form>
+            <h2 id="main-content-title" class="text-2xl font-bold mb-4">Home / Feed</h2>
+            
+            <!-- Page: Home -->
+            <div id="page-home" class="content-page">
+                <div class="card p-4 mb-6">
+                    <form id="idea-form">
+                        <textarea id="idea-textarea" class="w-full p-2 border rounded-lg" rows="4" placeholder="Gestalte OÖ mit! Was ist deine Idee, dein Wunsch oder dein Anliegen..."></textarea>
+                        <div class="flex justify-between items-center mt-2">
+                            <button type="button" id="ai-helper-btn" class="flex items-center text-sm text-gray-600 hover:spoe-red-text">
+                                <i data-lucide="sparkles" class="mr-1 w-4 h-4"></i> Mit KI-Assistent verbessern
+                            </button>
+                            <button type="submit" class="btn-primary">Veröffentlichen</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="flex space-x-2 mb-4">
+                    <button class="px-4 py-1 text-sm font-semibold rounded-full active-filter">Alles</button>
+                    <button class="px-4 py-1 text-sm font-semibold rounded-full bg-white hover:bg-gray-200">Meine Gemeinde</button>
+                    <button class="px-4 py-1 text-sm font-semibold rounded-full bg-white hover:bg-gray-200">Mein Bezirk</button>
+                </div>
+                <div id="feed-container" class="space-y-4">
+                    <div class="card p-4 text-center text-gray-500">Lade Ideen...</div>
+                </div>
             </div>
 
-            <!-- Feed Filter -->
-            <div class="flex space-x-2 mb-4">
-                <button class="px-4 py-1 text-sm font-semibold rounded-full active-filter">Alles</button>
-                <button class="px-4 py-1 text-sm font-semibold rounded-full bg-white hover:bg-gray-200">Meine Gemeinde</button>
-                <button class="px-4 py-1 text-sm font-semibold rounded-full bg-white hover:bg-gray-200">Mein Bezirk</button>
-            </div>
+            <!-- Other Pages (initially hidden) -->
+            <div id="page-abstimmungen" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Monatliche Abstimmungen</h3><p class="mt-2 text-gray-600">Hier werden bald die Top-Ideen der Community zur Abstimmung gestellt.</p></div></div>
+            <div id="page-veranstaltungen" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Veranstaltungskalender</h3><p class="mt-2 text-gray-600">Finde alle Termine, von der Sektionssitzung bis zum Sommerfest, in deiner Nähe.</p></div></div>
+            <div id="page-gruppen" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Gruppen</h3><p class="mt-2 text-gray-600">Schließe dich mit Gleichgesinnten zusammen, um Projekte zu planen und umzusetzen.</p></div></div>
+            <div id="page-bildung" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Bildungsangebote</h3><p class="mt-2 text-gray-600">Hier findest du alle Workshops, Rufseminare und Online-Kurse.</p></div></div>
+            <div id="page-toolbox" class="content-page hidden"><div class="card p-8 text-center"><h3 class="text-xl font-bold">Toolbox</h3><p class="mt-2 text-gray-600">Anleitungen, Checklisten und Vorlagen für deine politische Arbeit vor Ort. Vom Spritzerstand bis zur Gemeindezeitung.</p></div></div>
 
-            <!-- Dynamic Feed Container -->
-            <div id="feed-container" class="space-y-4">
-                <!-- Feed items will be injected here by JavaScript -->
-                <div class="card p-4 text-center text-gray-500">Lade Ideen...</div>
-            </div>
         </main>
 
         <!-- Right Sidebar (Martin Winkler & Top-Themen) -->
-        <aside class="w-1/5 bg-transparent p-6 hidden md:block">
+        <aside class="w-1/5 bg-transparent p-6 hidden md:block flex-shrink-0">
             <div class="card p-4 mb-6 text-center">
                 <img src="https://placehold.co/80x80/E30613/FFFFFF?text=MW" alt="Martin Winkler" class="rounded-full mx-auto mb-3">
                 <h3 class="font-bold">Martin Winkler</h3>
@@ -213,6 +246,11 @@
                 <a href="#" class="text-sm font-semibold spoe-red-text mt-2 block">Zur Analyse &rarr;</a>
             </div>
         </aside>
+    </div>
+
+    <!-- AI Helper Modal -->
+    <div id="ai-modal" class="hidden fixed top-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
+        <p>KI-Assistent hat deinen Beitrag optimiert!</p>
     </div>
 
     <script>
