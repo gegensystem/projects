@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometrie der Raumzeit - Grundlagen</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for formula rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMVIhbGKZC0sNQFDJidHLIACLcutsConservationOfEnergy" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZYPo8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        .katex { font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-gray-800 p-4 md:p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-white mb-4">Navigation</h2>
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="https://github.com/gegensystem/projects/blob/main/raumzeit.html" class="block py-2 px-4 text-cyan-400 hover:bg-gray-700 rounded-md transition-colors duration-200">Hauptseite</a>
+                    </li>
+                    <li>
+                        <a href="https://gegensystem.github.io/projects/raumzeit/noether.html" class="block py-2 px-4 text-gray-300 hover:bg-gray-700 rounded-md transition-colors duration-200">Noether Theorem</a>
+                    </li>
+                    <li>
+                        <a href="https://gegensystem.github.io/projects/raumzeit/strukturuniversum.html" class="block py-2 px-4 text-gray-300 hover:bg-gray-700 rounded-md transition-colors duration-200">Struktur des Universums</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1">
+            <div class="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+
+                <!-- Header Section -->
+                <header class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Geometrie der Raumzeit</h1>
+                    <p class="text-lg text-cyan-400">Eine Sammlung von Grundlagen und Konzepten</p>
+                </header>
+
+                <!-- Main Content Sections -->
+                <main class="space-y-10">
+                    <section id="was-ist-raumzeit" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">1. Was ist Raumzeit?</h2>
+                        <p class="text-gray-300 leading-relaxed">Die Raumzeit ist ein fundamentales Konzept der modernen Physik, das unsere dreidimensionalen Raumkoordinaten (Länge, Breite, Höhe) mit der vierten Dimension, der Zeit, zu einem einzigen vierdimensionalen Kontinuum vereint. Diese Idee, maßgeblich durch Hermann Minkowski und Albert Einstein geprägt, ist die Bühne, auf der sich alle Ereignisse im Universum abspielen.</p>
+                        <p class="text-gray-300 leading-relaxed mt-4">Um mit der Geometrie der Raumzeit rechnen zu können, verwenden wir den <strong>metrischen Tensor</strong> $g_{\mu\nu}$. Er beschreibt, wie Abstände an jedem Punkt in der Raumzeit gemessen werden und beinhaltet die gesamte Information über deren Krümmung. Das fundamentale Werkzeug ist das Linienelement $ds^2$, das den Abstand zwischen zwei benachbarten Punkten in der Raumzeit definiert:</p>
+                        <div class="mt-4 p-4 bg-gray-900 rounded-md">
+                            <p class="text-gray-400 text-sm mb-2">Allgemeines Linienelement:</p>
+                            $$ ds^2 = \sum_{\mu,\nu=0}^{3} g_{\mu\nu} dx^\mu dx^\nu $$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mt-4">Die ultimative Beziehung zwischen der Materieverteilung (rechte Seite) und der daraus resultierenden Raumzeit-Krümmung (linke Seite) wird durch die Einsteinschen Feldgleichungen beschrieben:</p>
+                        <div class="mt-4 p-4 bg-gray-900 rounded-md">
+                            <p class="text-gray-400 text-sm mb-2">Einsteinsche Feldgleichungen:</p>
+                            $$ R_{\mu\nu} - \frac{R}{2} g_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8 \pi G}{c^4} T_{\mu\nu} $$
+                        </div>
+                    </section>
+                    <section id="spezielle-relativitaet" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">2. Die flache Raumzeit der Speziellen Relativitätstheorie</h2>
+                        <p class="text-gray-300 leading-relaxed">In der Speziellen Relativitätstheorie (SRT) ist die Raumzeit "flach", da die Gravitation nicht berücksichtigt wird. Die Geometrie hier ist die Minkowski-Geometrie. Ein zentrales Postulat ist die Konstanz der Lichtgeschwindigkeit. Phänomene wie Zeitdilatation und Längenkontraktion sind Konsequenzen dieser Geometrie. Der Abstand zweier Ereignisse in der Raumzeit, das Raumzeit-Intervall, ist für alle Beobachter invariant.</p>
+                        <div class="mt-4 p-4 bg-gray-900 rounded-md">
+                            <p class="text-gray-400 text-sm mb-2">Raumzeit-Intervall in der SRT (Minkowski-Metrik):</p>
+                            $$ ds^2 = -(c \Delta t)^2 + (\Delta x)^2 + (\Delta y)^2 + (\Delta z)^2 $$
+                        </div>
+                    </section>
+                    <section id="minkowski-diagramm" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">3. Das Minkowski-Diagramm</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">Ein <a href="https://de.wikipedia.org/wiki/Minkowski-Diagramm" target="_blank" class="text-cyan-400 hover:underline">Minkowski-Diagramm</a> ist ein Werkzeug zur Visualisierung der Raumzeit in der SRT. Es stellt eine Raumdimension (x-Achse) und die Zeit (ct-Achse) dar. Jeder Punkt im Diagramm ist ein "Ereignis".</p>
+                        <div class="my-6 bg-gray-900 p-4 rounded-lg flex justify-center">
+                            <img src="https://gegensystem.github.io/projects/Raumzeit/Minkowski_lightcone_lorentztransform.svg.png" alt="Minkowski-Diagramm mit Lichtkegel und Lorentz-Transformation" class="rounded-md shadow-lg bg-white">
+                        </div>
+                        <p class="text-gray-300 leading-relaxed">Die wichtigsten Elemente sind:</p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-300 mt-4">
+                            <li><strong>Weltlinie:</strong> Der Pfad, den ein Objekt durch die Raumzeit nimmt. Eine vertikale Linie stellt ein ruhendes Objekt dar, eine geneigte Linie ein sich bewegendes.</li>
+                            <li><strong>Lichtkegel:</strong> Die beiden Linien mit 45° Neigung ($x = \pm ct$) repräsentieren die Bewegung von Licht. Nichts kann sich schneller als das Licht bewegen, daher müssen alle Weltlinien innerhalb dieses Kegels verlaufen. Der Vergangenheits-Lichtkegel enthält alle Ereignisse, die das aktuelle Ereignis beeinflussen konnten, der Zukunfts-Lichtkegel alle, die von ihm beeinflusst werden können.</li>
+                        </ul>
+                    </section>
+                    <section id="allgemeine-relativitaet" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">4. Globale Flachheit vs. lokale Krümmung</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">Aktuelle Messungen zeigen, dass das Universum auf den größten Skalen bemerkenswert **flach** ist. Dies steht nicht im Widerspruch zur Allgemeinen Relativitätstheorie, die besagt, dass Masse und Energie die Raumzeit **lokal krümmen** (was wir als Gravitation wahrnehmen). Man kann sich das Universum wie ein riesiges, straff gespanntes Tuch vorstellen: Im Großen und Ganzen ist es flach, aber Planeten und Sterne erzeugen lokale "Dellen".</p>
+                        
+                        <h3 class="text-xl font-bold text-white mt-6 mb-3">Beweise für die globale Flachheit:</h3>
+                        <ul class="list-disc list-inside space-y-2 text-gray-300">
+                            <li><strong>Kosmische Mikrowellenhintergrundstrahlung (CMB):</strong> Die charakteristische Größe der Temperaturschwankungen im ältesten Licht des Universums beträgt etwa 1 Grad am Himmel. Dies entspricht exakt den Vorhersagen für ein geometrisch flaches Universum.</li>
+                            <li><strong>Baryonische Akustische Oszillationen (BAO):</strong> Ein festes Muster in der Verteilung von Galaxien, das wie ein "Standardlineal" wirkt, bestätigt über alle Entfernungen hinweg die flache Geometrie des Raumes.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold text-white mt-6 mb-3">Beweise für die lokale Krümmung:</h3>
+                        <ul class="list-disc list-inside space-y-2 text-gray-300">
+                            <li><strong>Gravitationslinseneffekt:</strong> Massereiche Objekte wie Galaxienhaufen krümmen die Raumzeit und lenken das Licht dahinterliegender Objekte ab. Dies führt zu sichtbaren Verzerrungen und Mehrfachbildern.</li>
+                            <li><strong>Shapiro-Verzögerung:</strong> Radarsignale, die nahe an der Sonne vorbeilaufen, benötigen messbar länger für ihren Weg, da sie die "Delle" in der Raumzeit durchqueren müssen.</li>
+                        </ul>
+                    </section>
+                    <section id="impressum" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">Impressum</h2>
+                        <div class="text-gray-300 leading-relaxed">
+                            <p class="font-bold">Dipl.-Ing. Ing. Andreas E. Neuhold, BSc.</p>
+                            <p>Haushoferstraße 25</p>
+                            <p>4020 Linz</p>
+                            <p>Österreich</p><br>
+                            <p class="font-bold">Kontakt:</p>
+                            <p>Telefon: +43 677 624 639 01</p>
+                            <p>E-Mail: <a href="mailto:andreas.neuhold@gmail.com" class="text-cyan-400 hover:underline">andreas.neuhold@gmail.com</a></p>
+                        </div>
+                    </section>
+                </main>
+
+                <!-- Footer -->
+                <footer class="text-center mt-16 text-gray-500 text-sm">
+                    <p>&copy; 2024 - Andreas E. Neuhold</p>
+                    <div class="mt-2">
+                        <a href="#impressum" class="hover:text-cyan-400 transition-colors duration-300">Impressum</a>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
 
