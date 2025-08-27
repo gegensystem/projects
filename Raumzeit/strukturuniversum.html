@@ -1,1 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur des Universums</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for formula rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMVIhbGKZC0sNQFDJidHLIACLcutsConservationOfEnergy" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZYPo8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        .katex { font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-gray-800 p-4 md:p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-white mb-4">Navigation</h2>
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="https://gegensystem.github.io/projects/raumzeit.html" class="block py-2 px-4 text-gray-300 hover:bg-gray-700 rounded-md transition-colors duration-200">Hauptseite</a>
+                    </li>
+                    <li>
+                        <a href="https://gegensystem.github.io/projects/Raumzeit/noether.html" class="block py-2 px-4 text-gray-300 hover:bg-gray-700 rounded-md transition-colors duration-200">Noether Theorem</a>
+                    </li>
+                    <li>
+                        <a href="https://gegensystem.github.io/projects/Raumzeit/strukturuniversum.html" class="block py-2 px-4 text-cyan-400 hover:bg-gray-700 rounded-md transition-colors duration-200">Struktur des Universums</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1">
+            <div class="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+
+                <!-- Header Section -->
+                <header class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Die Struktur des Universums</h1>
+                    <p class="text-lg text-cyan-400">Unsere Position im Kosmos</p>
+                </header>
+
+                <!-- Main Content Sections -->
+                <main class="space-y-10">
+                    <section id="einleitung" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">1. Das kosmische Netz</h2>
+                        <p class="text-gray-300 leading-relaxed">Das Universum ist keine gleichmäßig verteilte Ansammlung von Sternen und Galaxien. Stattdessen bildet die Materie eine gigantische, netzartige Struktur, das sogenannte "kosmische Netz". Diese Struktur entsteht durch die Anziehungskraft der Dunklen Materie, die ein unsichtbares Gerüst bildet, entlang dessen sich die sichtbare Materie sammelt. Die Galaxien sind also nicht zufällig verteilt, sondern ordnen sich in Galaxienhaufen und noch größeren Superhaufen an. Diese Haufen sind wie Knotenpunkte im Netz und werden durch lange, dünne Filamente aus Gas und Galaxien miteinander verbunden. Dazwischen liegen riesige, fast leere Blasen, die "Voids", in denen kaum Materie zu finden ist.</p>
+                    </section>
+                    
+                    <section id="position" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">2. Unsere kosmische Adresse</h2>
+                        <p class="text-gray-300 leading-relaxed mb-6">Die folgende Darstellung zeigt unsere Position im Universum in einer hierarchischen Übersicht, von unserem Heimatplaneten bis hin zum größten beobachtbaren Maßstab.</p>
+                        
+                        <div class="my-6 bg-gray-900 p-4 rounded-lg flex justify-center">
+                            <img src="https://gegensystem.github.io/projects/Raumzeit/Position_der_Erde_im_Universum_4x2.png" alt="Position der Erde im Universum" class="rounded-md shadow-lg">
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-gray-900 rounded-lg text-sm">
+                                <thead class="bg-gray-700">
+                                    <tr>
+                                        <th class="text-left py-3 px-4 font-semibold text-white">Bereich</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-white">Ausdehnung</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-white">Anmerkungen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><b><a href="https://de.wikipedia.org/wiki/Erde" target="_blank" class="text-cyan-400 hover:underline">Erde</a></b></td><td class="py-3 px-4">12.700 km ⌀</td><td class="py-3 px-4">Ausgangspunkt</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Magnetosph%C3%A4re" target="_blank" class="text-cyan-400 hover:underline">Magnetosphäre</a></td><td class="py-3 px-4">63.000 km (Sonnenseite);<br>6.300.000 km (Schattenseite)</td><td class="py-3 px-4">Der vom Erdmagnetfeld beeinflusste Raum</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Mondbahn" target="_blank" class="text-cyan-400 hover:underline">Mondbahn</a></td><td class="py-3 px-4">770.000 km ⌀</td><td class="py-3 px-4">Mittlerer Durchmesser der relativen Mondbahn</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Erdbahn" target="_blank" class="text-cyan-400 hover:underline">Erdbahn</a></td><td class="py-3 px-4">300.000.000 km ⌀ (2 AE)</td><td class="py-3 px-4">Mittlerer Durchmesser der Erdbahn um die Sonne</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4">Inneres Sonnensystem</td><td class="py-3 px-4">6 AE ⌀</td><td class="py-3 px-4">Enthält Sonne, innere Planeten und Asteroidengürtel</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4">Äußeres Sonnensystem</td><td class="py-3 px-4">60 AE ⌀</td><td class="py-3 px-4">Enthält die äußeren Planeten</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Kuipergürtel" target="_blank" class="text-cyan-400 hover:underline">Kuipergürtel</a></td><td class="py-3 px-4">96 AE ⌀</td><td class="py-3 px-4">Gürtel transneptunischer Objekte</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Heliosph%C3%A4re" target="_blank" class="text-cyan-400 hover:underline">Heliosphäre</a></td><td class="py-3 px-4">240 AE ⌀</td><td class="py-3 px-4">Maximale Ausbreitung des Sonnenwindes</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Oortsche_Wolke" target="_blank" class="text-cyan-400 hover:underline">Oortsche Wolke</a></td><td class="py-3 px-4">1,5–3 Lichtjahre ⌀</td><td class="py-3 px-4">Kugelförmige Hülle mit Billionen Objekten (hypothetisch)</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><b><a href="https://de.wikipedia.org/wiki/Sonnensystem" target="_blank" class="text-cyan-400 hover:underline">Sonnensystem</a></b></td><td class="py-3 px-4">3 Lichtjahre ⌀</td><td class="py-3 px-4">Gravitatives System der Sonne</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Lokale_interstellare_Wolke" target="_blank" class="text-cyan-400 hover:underline">Lokale Interstellare Wolke</a></td><td class="py-3 px-4">30 Lichtjahre ⌀</td><td class="py-3 px-4">Interstellare Wolke, durch die sich die Sonne bewegt</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Lokale_Blase" target="_blank" class="text-cyan-400 hover:underline">Lokale Blase</a></td><td class="py-3 px-4">210–815 Lichtjahre ⌀</td><td class="py-3 px-4">Blase im interstellaren Medium; Überrest einer Supernova</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Gouldscher_G%C3%BCrtel" target="_blank" class="text-cyan-400 hover:underline">Gouldscher Gürtel</a></td><td class="py-3 px-4">1150 × 750 Lichtjahre</td><td class="py-3 px-4">Gürtel junger Sterne, durch den sich die Sonne bewegt</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Orion-Arm" target="_blank" class="text-cyan-400 hover:underline">Orion-Arm</a></td><td class="py-3 px-4">10.000 Lichtjahre lang</td><td class="py-3 px-4">Der Spiralarm der Milchstraße, in dem wir uns befinden</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><b><a href="https://de.wikipedia.org/wiki/Milchstra%C3%9Fe" target="_blank" class="text-cyan-400 hover:underline">Milchstraße</a></b></td><td class="py-3 px-4">100.000 Lichtjahre ⌀</td><td class="py-3 px-4">Unsere Heimatgalaxie mit 100-300 Mrd. Sternen</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Lokale_Gruppe" target="_blank" class="text-cyan-400 hover:underline">Lokale Gruppe</a></td><td class="py-3 px-4">9 Mio. Lichtjahre ⌀</td><td class="py-3 px-4">Gruppe von ca. 50 Galaxien, inkl. Andromeda</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Virgo-Superhaufen" target="_blank" class="text-cyan-400 hover:underline">Virgo-Superhaufen</a></td><td class="py-3 px-4">100 Mio. Lichtjahre ⌀</td><td class="py-3 px-4">Superhaufen mit ca. 100 Galaxiengruppen</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Laniakea" target="_blank" class="text-cyan-400 hover:underline">Laniakea-Superhaufen</a></td><td class="py-3 px-4">500 Mio. Lichtjahre ⌀</td><td class="py-3 px-4">Superhaufen mit ca. 100.000 Galaxien</td></tr>
+                                    <tr class="border-b border-gray-700"><td class="py-3 px-4"><a href="https://de.wikipedia.org/wiki/Beobachtbares_Universum" target="_blank" class="text-cyan-400 hover:underline">Beobachtbares Universum</a></td><td class="py-3 px-4">92 Mrd. Lichtjahre ⌀</td><td class="py-3 px-4">Besteht aus Millionen von Superhaufen, Filamenten und Voids</td></tr>
+                                    <tr><td class="py-3 px-4"><b><a href="https://de.wikipedia.org/wiki/Universum" target="_blank" class="text-cyan-400 hover:underline">Universum</a></b></td><td class="py-3 px-4">mind. 92 Mrd. Lichtjahre ⌀</td><td class="py-3 px-4">Jenseits des Beobachtbaren liegt der Rest des Universums</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section id="video-struktur" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">3. Eine Reise durch die Skalen</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">Das folgende Video, inspiriert vom berühmten Kurzfilm "Zehn Hoch" (Powers of Ten) von 1977, visualisiert eindrucksvoll die unvorstellbaren Größenordnungen im Universum, von subatomaren Teilchen bis hin zu den größten kosmischen Strukturen.</p>
+                        <div class="aspect-w-16 aspect-h-9">
+                           <iframe src="https://www.youtube.com/embed/ckRQeN56hzY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full rounded-md"></iframe>
+                        </div>
+                    </section>
+                </main>
+
+                <!-- Footer -->
+                <footer class="text-center mt-16 text-gray-500 text-sm">
+                    <p>&copy; 2025 - Andreas E. Neuhold</p>
+                    <div class="mt-2">
+                        <a href="raumzeit.html#impressum" class="hover:text-cyan-400 transition-colors duration-300">Impressum</a>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
 
