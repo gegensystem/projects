@@ -1,1 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noether-Theorem und Energieerhaltung</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for formula rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMVIhbGKZC0sNQFDJidHLIACLcutsConservationOfEnergy" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZYPo8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        .katex { font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-gray-800 p-4 md:p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-white mb-4">Navigation</h2>
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="https://github.com/gegensystem/projects/blob/main/raumzeit.html" class="block py-2 px-4 text-gray-300 hover:bg-gray-700 rounded-md transition-colors duration-200">Hauptseite</a>
+                    </li>
+                    <li>
+                        <a href="https://gegensystem.github.io/projects/raumzeit/noether.html" class="block py-2 px-4 text-cyan-400 hover:bg-gray-700 rounded-md transition-colors duration-200">Noether Theorem</a>
+                    </li>
+                    <li>
+                        <a href="https://gegensystem.github.io/projects/raumzeit/strukturuniversum.html" class="block py-2 px-4 text-gray-300 hover:bg-gray-700 rounded-md transition-colors duration-200">Struktur des Universums</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1">
+            <div class="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+
+                <!-- Header Section -->
+                <header class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Das Noether-Theorem</h1>
+                    <p class="text-lg text-cyan-400">Von Symmetrien und Erhaltungsgrößen</p>
+                </header>
+
+                <!-- Main Content Sections -->
+                <main class="space-y-10">
+                    <section id="planck-einstein" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">1. Die Energie des Lichts</h2>
+                        <p class="text-gray-300 leading-relaxed">Die Grundlage zum Verständnis der Energie im kosmischen Maßstab ist die Planck-Einstein-Beziehung. Sie verknüpft die Energie $E$ eines Lichtteilchens (Photons) direkt mit seiner Frequenz $f$.</p>
+                        <div class="mt-4 p-4 bg-gray-900 rounded-md">
+                            $$ E = h \cdot f $$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mt-4">Dabei ist $h$ das Plancksche Wirkungsquantum. Da Frequenz $f$ und Wellenlänge $\lambda$ über die Lichtgeschwindigkeit $c$ zusammenhängen ($c = \lambda \cdot f$), kann man auch schreiben:</p>
+                        <div class="mt-4 p-4 bg-gray-900 rounded-md">
+                            $$ E = \frac{h \cdot c}{\lambda} $$
+                        </div>
+                         <p class="text-gray-300 leading-relaxed mt-4">Diese Formel zeigt: Je größer die Wellenlänge (Rotverschiebung), desto kleiner die Energie des Photons.</p>
+                    </section>
+                    
+                    <section id="noether-symmetrie" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">2. Emmy Noether und die Symmetrie der Zeit</h2>
+                        <p class="text-gray-300 leading-relaxed">Die geniale Mathematikerin Emmy Noether entdeckte eines der tiefsten Prinzipien der Physik: Das <strong>Noether-Theorem</strong>. Es besagt, dass jede kontinuierliche Symmetrie eines physikalischen Systems zu einer dazugehörigen Erhaltungsgröße führt.</p>
+                        <p class="text-gray-300 leading-relaxed mt-4">Für den <strong>Energieerhaltungssatz</strong> ist die entscheidende Symmetrie die <strong>Zeitinvarianz</strong>. Das bedeutet: Die physikalischen Gesetze sind zu jeder Zeit dieselben. Ein Experiment liefert heute unter identischen Bedingungen dasselbe Ergebnis wie in einer Woche. In einem solchen statischen, zeitsymmetrischen System gilt der Energieerhaltungssatz streng.</p>
+                    </section>
+
+                    <section id="expansion" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">3. Energieverlust im expandierenden Universum</h2>
+                        <p class="text-gray-300 leading-relaxed">Das Universum als Ganzes ist <strong>nicht zeitinvariant</strong>, da es expandiert. Der Raum selbst verändert sich. Dadurch ist die Bedingung der Zeitsymmetrie global nicht erfüllt, und es gibt <strong>keinen globalen Energieerhaltungssatz</strong>.</p>
+                        <p class="text-gray-300 leading-relaxed mt-4">Wenn sich ein Photon durch den expandierenden Raum bewegt, wird seine Wellenlänge gedehnt (kosmologische Rotverschiebung). Gemäß der Formel $E = hc/\lambda$ verliert es dabei Energie. Diese Energie wird nicht in etwas anderes umgewandelt – sie verschwindet einfach. Dies ist eine fundamentale Eigenschaft eines dynamischen Universums, wie es die Allgemeine Relativitätstheorie beschreibt.</p>
+                    </section>
+
+                    <section id="andromeda" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">4. Energiegewinn in lokalen Systemen</h2>
+                        <p class="text-gray-300 leading-relaxed">Ein perfektes Gegenbeispiel ist die Andromeda-Galaxie. Zwischen ihr und unserer Milchstraße dominiert die Gravitation die kosmische Expansion. Der Raum zwischen uns kontrahiert, da wir aufeinander zu fallen.</p>
+                        <p class="text-gray-300 leading-relaxed mt-4">Licht von Andromeda erfährt auf seinem Weg zu uns eine <strong>Blauverschiebung</strong>: Seine Wellenlänge wird gestaucht. Gemäß $E=h \cdot f$ kommt das Photon mit <strong>mehr Energie</strong> bei uns an, als es ausgesendet wurde. In diesem lokalen, gebundenen System bleibt die Energie erhalten: Die zusätzliche Energie des Photons stammt aus der Verringerung der potentiellen Energie des Galaxien-Systems.</p>
+                    </section>
+                    
+                     <section id="licht-kruemmung" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold text-white mb-4 border-b-2 border-cyan-500 pb-2">5. Krümmt Licht die Raumzeit?</h2>
+                        <p class="text-gray-300 leading-relaxed"><strong>Ja.</strong> Laut $E=mc^2$ sind Energie und Masse äquivalent. Da Licht Energie besitzt, trägt es auch zur Krümmung der Raumzeit bei. Der Effekt eines einzelnen Photons ist zwar unvorstellbar klein, aber im frühen, "strahlungsdominierten" Universum war die Energiedichte der Strahlung so hoch, dass sie die Hauptursache der Gravitation war und die Expansion des Kosmos bestimmte.</p>
+                    </section>
+                </main>
+
+                <!-- Footer -->
+                <footer class="text-center mt-16 text-gray-500 text-sm">
+                    <p>&copy; 2024 - Andreas E. Neuhold</p>
+                    <div class="mt-2">
+                        <a href="raumzeit.html#impressum" class="hover:text-cyan-400 transition-colors duration-300">Impressum</a>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for KaTeX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+        });
+    </script>
+
+</body>
+</html>
 
