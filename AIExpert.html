@@ -203,7 +203,7 @@
                      <div class="space-y-4">
                         <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
                             <h4 class="font-bold text-gray-700">Akademische Lehre & Erwachsenenbildung</h4>
-                            <p>Lektor an der <strong>FH OÖ (Wels)</strong> für Elektrotechnik und Trainer am <strong>WIFI Linz</strong> für den Fachbereich Messtechnik.</p>
+                            <p>Dozent für Elektrotechnik an der <strong>FH OÖ (Wels)</strong> und Trainer für Messtechnik in der Erwachsenenbildung.</p>
                         </div>
                          <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
                             <h4 class="font-bold text-gray-700">Strategie-Coaching</h4>
@@ -337,7 +337,7 @@
             </div>
         </section>
 
-        <!-- Section: WIFI Angebot -->
+        <!-- Section: Angebot -->
         <section id="angebot" class="mb-20 fade-in-up">
             <h2 class="section-title text-blue-600">Mein Leistungsangebot: Workshops & Beratung</h2>
             <p class="mb-8 text-lg text-gray-600">Mein Ziel: Menschen in praxisorientierten Workshops befähigen, KI als Werkzeug zu verstehen und sofort anzuwenden. Wir gehen vom "Nachdenken" direkt ins "Machen".</p>
@@ -903,15 +903,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // === RESIZE LOGIC ===
             const resizeRenderer = () => {
                 const { clientWidth, clientHeight } = threeContainer;
-                renderer.setSize(clientWidth, clientHeight);
-                camera.aspect = clientWidth / clientHeight;
-                camera.updateProjectionMatrix();
+                if(clientWidth > 0 && clientHeight > 0) {
+                    renderer.setSize(clientWidth, clientHeight);
+                    camera.aspect = clientWidth / clientHeight;
+                    camera.updateProjectionMatrix();
+                }
             };
             
-            const observer = new ResizeObserver(resizeRenderer);
-            observer.observe(threeContainer);
-
+            window.addEventListener('resize', resizeRenderer);
+            // Initial call to set size
             resizeRenderer();
+
             animate();
         }
     } catch(e) {
