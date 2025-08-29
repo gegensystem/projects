@@ -49,7 +49,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            min-height: 500px;
+            min-height: 400px; /* Reduced height */
             overflow: hidden;
             border-radius: 0.5rem;
         }
@@ -241,11 +241,11 @@
         <!-- Section: Interactive Elements -->
         <section id="interactive" class="mb-20 fade-in-up">
             <h2 class="section-title text-blue-600">Erleben Sie KI in Aktion</h2>
-            <div class="grid lg:grid-cols-2 gap-8">
+            <div class="grid lg:grid-cols-2 gap-8 items-start">
                 <!-- 3D Model -->
-                <div class="card lg:col-span-2">
-                     <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives 3D-Modell: Spritzgießmaschine</h3>
-                     <p class="mb-4 text-gray-600">Erkunden Sie ein vereinfachtes 3D-Modell. Öffnen und schließen Sie das Werkzeug und beobachten Sie das Weg-Zeit-Diagramm in Echtzeit.</p>
+                <div class="card">
+                     <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives 3D-Modell</h3>
+                     <p class="mb-4 text-gray-600">Erkunden Sie ein 3D-Modell, öffnen und schließen Sie es und beobachten Sie die Live-Daten im Diagramm.</p>
                     <div id="three-container" class="bg-gray-200">
                         <div id="three-info">Linke Maustaste: Drehen | Mausrad: Zoomen | Rechte Maustaste: Verschieben</div>
                         <div id="three-controls">
@@ -257,30 +257,31 @@
                         </div>
                     </div>
                 </div>
-                <!-- Snake Game -->
-                <div class="card flex flex-col">
-                    <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives Spiel: KI-Snake</h3>
-                    <p class="mb-4 text-gray-600">Ein Klassiker, um das Prinzip von einfachen Regeln und emergentem Verhalten zu demonstrieren.</p>
-                    <div class="flex-grow bg-gray-100 rounded-lg p-2 aspect-video relative border">
-                        <canvas id="snakeCanvas" class="w-full h-full"></canvas>
-                        <div id="scoreBoard" class="absolute top-2 left-4 text-gray-800 font-bold text-lg">
-                            Score: <span id="score">0</span> | Highscore: <span id="highScore">0</span>
+                <!-- Snake Game & Quiz -->
+                <div class="flex flex-col gap-8">
+                    <div class="card flex flex-col">
+                        <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives Spiel: KI-Snake</h3>
+                        <p class="mb-4 text-gray-600">Ein Klassiker, um das Prinzip von einfachen Regeln und emergentem Verhalten zu demonstrieren.</p>
+                        <div class="flex-grow bg-gray-100 rounded-lg p-2 aspect-video relative border">
+                            <canvas id="snakeCanvas" class="w-full h-full"></canvas>
+                            <div id="scoreBoard" class="absolute top-2 left-4 text-gray-800 font-bold text-lg">
+                                Score: <span id="score">0</span> | Highscore: <span id="highScore">0</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-3 gap-2 justify-items-center">
+                            <div></div>
+                            <button id="snake-up" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg></button>
+                            <div></div>
+                            <button id="snake-left" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                            <button id="snake-down" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
+                            <button id="snake-right" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                         </div>
                     </div>
-                    <div class="mt-4 grid grid-cols-3 gap-2 justify-items-center">
-                        <div></div>
-                        <button id="snake-up" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg></button>
-                        <div></div>
-                        <button id="snake-left" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-                        <button id="snake-down" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
-                        <button id="snake-right" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
-                    </div>
-                </div>
-                <!-- AI Quiz -->
-                <div class="card">
-                    <h3 class="font-bold text-2xl mb-4 text-blue-700">Wissensquiz: KI-Grundlagen</h3>
-                    <div id="quizContainer">
-                        <!-- Quiz content will be injected here by JS -->
+                    <div class="card">
+                        <h3 class="font-bold text-2xl mb-4 text-blue-700">Wissensquiz: KI-Grundlagen</h3>
+                        <div id="quizContainer">
+                            <!-- Quiz content will be injected here by JS -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -925,4 +926,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+" selected, I'm asking you to: kannst du das 3D Modell in einem kleineren Fenster einbauen? Es ist einfach so heftig groß auf der Webseite. Ich würde mir das wirklich vielkleiner wünschen. Es soll nur die ideen anregen was möglich ist.
 
