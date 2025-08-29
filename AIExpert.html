@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Andreas Neuhold - Ihr Experte für Angewandte KI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -42,6 +43,65 @@
         .timeline-icon {
             @apply absolute left-0 top-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md;
         }
+
+        /* 3D Model specific styles */
+        #three-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+         #three-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #three-info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            color: #333;
+            font-size: 12px;
+            pointer-events: none;
+        }
+        #three-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+        .three-control-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #btn-open { background-color: #28a745; }
+        #btn-open:hover { background-color: #218838; }
+        #btn-close { background-color: #dc3545; }
+        #btn-close:hover { background-color: #c82333; }
+        #chart-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 250px;
+            height: 125px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            z-index: 100;
+        }
+
     </style>
 </head>
 <body class="bg-gray-50 text-gray-700">
@@ -55,7 +115,7 @@
                     <a href="#career" class="hover:text-blue-600 transition-colors">Meilensteine</a>
                     <a href="#interactive" class="hover:text-blue-600 transition-colors">Interaktiv</a>
                     <a href="#praxis" class="hover:text-blue-600 transition-colors">Praxis</a>
-                    <a href="#wifi-angebot" class="hover:text-blue-600 transition-colors">Angebot</a>
+                    <a href="#angebot" class="hover:text-blue-600 transition-colors">Angebot</a>
                     <a href="#contact" class="hover:text-blue-600 transition-colors">Kontakt</a>
                 </div>
             </div>
@@ -181,7 +241,22 @@
         <!-- Section: Interactive Elements -->
         <section id="interactive" class="mb-20 fade-in-up">
             <h2 class="section-title text-blue-600">Erleben Sie KI in Aktion</h2>
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- 3D Model -->
+                <div class="card lg:col-span-2">
+                     <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives 3D-Modell: Spritzgießmaschine</h3>
+                     <p class="mb-4 text-gray-600">Erkunden Sie ein vereinfachtes 3D-Modell. Öffnen und schließen Sie das Werkzeug und beobachten Sie das Weg-Zeit-Diagramm in Echtzeit.</p>
+                    <div id="three-container" class="bg-gray-200">
+                        <div id="three-info">Linke Maustaste: Drehen | Mausrad: Zoomen | Rechte Maustaste: Verschieben</div>
+                        <div id="three-controls">
+                            <button id="btn-open" class="three-control-btn">Öffnen</button>
+                            <button id="btn-close" class="three-control-btn">Schließen</button>
+                        </div>
+                        <div id="chart-container">
+                            <canvas id="position-time-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
                 <!-- Snake Game -->
                 <div class="card flex flex-col">
                     <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives Spiel: KI-Snake</h3>
@@ -263,8 +338,8 @@
         </section>
 
         <!-- Section: WIFI Angebot -->
-        <section id="wifi-angebot" class="mb-20 fade-in-up">
-            <h2 class="section-title text-blue-600">Mein Angebot als Trainer für das WIFI</h2>
+        <section id="angebot" class="mb-20 fade-in-up">
+            <h2 class="section-title text-blue-600">Mein Leistungsangebot: Workshops & Beratung</h2>
             <p class="mb-8 text-lg text-gray-600">Mein Ziel: Menschen in praxisorientierten Workshops befähigen, KI als Werkzeug zu verstehen und sofort anzuwenden. Wir gehen vom "Nachdenken" direkt ins "Machen".</p>
             
             <div class="grid md:grid-cols-2 gap-8">
@@ -330,290 +405,518 @@
             <p class="text-sm text-gray-400 mt-1">Bereit, die Zukunft mitzugestalten.</p>
         </div>
     </footer>
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 
-<script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Particle Animation for Header ---
-    const canvas = document.getElementById('particle-canvas');
-    const container = document.getElementById('particle-container');
-    if (canvas && container) {
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        
-        const resizeCanvas = () => {
-            canvas.width = container.offsetWidth;
-            canvas.height = container.offsetHeight;
-        };
+    try {
+        // --- Particle Animation for Header ---
+        const canvas = document.getElementById('particle-canvas');
+        const container = document.getElementById('particle-container');
+        if (canvas && container) {
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            const resizeCanvas = () => {
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+            };
 
-        const createParticles = () => {
-            particles = [];
-            let particleCount = (canvas.width * canvas.height) / 15000;
-            for (let i = 0; i < particleCount; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: Math.random() * 0.4 - 0.2,
-                    vy: Math.random() * 0.4 - 0.2,
-                    radius: Math.random() * 1.5 + 0.5
+            const createParticles = () => {
+                particles = [];
+                let particleCount = (canvas.width * canvas.height) / 15000;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: Math.random() * 0.4 - 0.2,
+                        vy: Math.random() * 0.4 - 0.2,
+                        radius: Math.random() * 1.5 + 0.5
+                    });
+                }
+            };
+
+            const animateParticles = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0, 123, 255, 0.3)';
+                    ctx.fill();
                 });
-            }
-        };
+                requestAnimationFrame(animateParticles);
+            };
 
-        const animateParticles = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 123, 255, 0.3)';
-                ctx.fill();
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                createParticles();
             });
-            requestAnimationFrame(animateParticles);
-        };
 
-        window.addEventListener('resize', () => {
             resizeCanvas();
             createParticles();
-        });
-
-        resizeCanvas();
-        createParticles();
-        animateParticles();
+            animateParticles();
+        }
+    } catch (e) {
+        console.error("Error in particle animation:", e);
     }
 
-    // --- Snake Game ---
-    const snakeCanvas = document.getElementById('snakeCanvas');
-    if (snakeCanvas) {
-        const ctx = snakeCanvas.getContext('2d');
-        const scoreEl = document.getElementById('score');
-        const highScoreEl = document.getElementById('highScore');
-        
-        let gridSize = 20;
-        let tileCountX, tileCountY;
-        let snake, food, dx, dy, score, highScore = 0, gameLoop;
+    try {
+        // --- Snake Game ---
+        const snakeCanvas = document.getElementById('snakeCanvas');
+        if (snakeCanvas) {
+            const ctx = snakeCanvas.getContext('2d');
+            const scoreEl = document.getElementById('score');
+            const highScoreEl = document.getElementById('highScore');
+            
+            let gridSize = 20;
+            let tileCountX, tileCountY;
+            let snake, food, dx, dy, score, highScore = 0, gameLoop;
 
-        const resizeSnakeCanvas = () => {
-            const parent = snakeCanvas.parentElement;
-            snakeCanvas.width = parent.clientWidth;
-            snakeCanvas.height = parent.clientHeight;
-            tileCountX = Math.floor(snakeCanvas.width / gridSize);
-            tileCountY = Math.floor(snakeCanvas.height / gridSize);
-        };
+            const resizeSnakeCanvas = () => {
+                const parent = snakeCanvas.parentElement;
+                snakeCanvas.width = parent.clientWidth;
+                snakeCanvas.height = parent.clientHeight;
+                tileCountX = Math.floor(snakeCanvas.width / gridSize);
+                tileCountY = Math.floor(snakeCanvas.height / gridSize);
+            };
 
-        const initGame = () => {
-            clearInterval(gameLoop);
-            snake = [{ x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }];
-            dx = 1; dy = 0;
-            score = 0;
-            spawnFood();
-            updateScores();
-            gameLoop = setInterval(mainLoop, 150); // Slower game speed
-        };
+            const initGame = () => {
+                clearInterval(gameLoop);
+                snake = [{ x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }];
+                dx = 1; dy = 0;
+                score = 0;
+                spawnFood();
+                updateScores();
+                gameLoop = setInterval(mainLoop, 150); // Slower game speed
+            };
 
-        const spawnFood = () => {
-            let foodOnSnake;
-            do {
-                foodOnSnake = false;
-                food = {
-                    x: Math.floor(Math.random() * tileCountX),
-                    y: Math.floor(Math.random() * tileCountY)
-                };
-                for (const segment of snake) {
-                    if (segment.x === food.x && segment.y === food.y) {
-                        foodOnSnake = true;
-                        break;
+            const spawnFood = () => {
+                let foodOnSnake;
+                do {
+                    foodOnSnake = false;
+                    food = {
+                        x: Math.floor(Math.random() * tileCountX),
+                        y: Math.floor(Math.random() * tileCountY)
+                    };
+                    for (const segment of snake) {
+                        if (segment.x === food.x && segment.y === food.y) {
+                            foodOnSnake = true;
+                            break;
+                        }
+                    }
+                } while (foodOnSnake);
+            };
+
+            const updateScores = () => {
+                scoreEl.textContent = score;
+                highScoreEl.textContent = highScore;
+            };
+
+            const mainLoop = () => {
+                const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+                if (head.x < 0) head.x = tileCountX - 1;
+                if (head.x >= tileCountX) head.x = 0;
+                if (head.y < 0) head.y = tileCountY - 1;
+                if (head.y >= tileCountY) head.y = 0;
+
+                for (let i = 1; i < snake.length; i++) {
+                    if (head.x === snake[i].x && head.y === snake[i].y) {
+                        initGame();
+                        return;
                     }
                 }
-            } while (foodOnSnake);
-        };
 
-        const updateScores = () => {
-            scoreEl.textContent = score;
-            highScoreEl.textContent = highScore;
-        };
+                snake.unshift(head);
 
-        const mainLoop = () => {
-            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
-            if (head.x < 0) head.x = tileCountX - 1;
-            if (head.x >= tileCountX) head.x = 0;
-            if (head.y < 0) head.y = tileCountY - 1;
-            if (head.y >= tileCountY) head.y = 0;
-
-            for (let i = 1; i < snake.length; i++) {
-                if (head.x === snake[i].x && head.y === snake[i].y) {
-                    initGame();
-                    return;
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    if (score > highScore) highScore = score;
+                    updateScores();
+                    spawnFood();
+                } else {
+                    snake.pop();
                 }
-            }
+                draw();
+            };
 
-            snake.unshift(head);
+            const draw = () => {
+                ctx.fillStyle = '#f3f4f6'; // bg-gray-100
+                ctx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
 
-            if (head.x === food.x && head.y === food.y) {
-                score++;
-                if (score > highScore) highScore = score;
-                updateScores();
-                spawnFood();
-            } else {
-                snake.pop();
-            }
-            draw();
-        };
-
-        const draw = () => {
-            ctx.fillStyle = '#f3f4f6'; // bg-gray-100
-            ctx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
-
-            snake.forEach((segment, index) => {
-                ctx.fillStyle = index === 0 ? '#2563eb' : '#3b82f6'; // blue-600, blue-500
-                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
-            });
-
-            ctx.fillStyle = '#ef4444'; // red-500
-            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 1, gridSize - 1);
-        };
-        
-        const changeDirection = (newDx, newDy) => {
-            // Prevent reversing
-            if (dx === -newDx && dx !== 0) return;
-            if (dy === -newDy && dy !== 0) return;
-            dx = newDx;
-            dy = newDy;
-        };
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowUp') changeDirection(0, -1);
-            else if (e.key === 'ArrowDown') changeDirection(0, 1);
-            else if (e.key === 'ArrowLeft') changeDirection(-1, 0);
-            else if (e.key === 'ArrowRight') changeDirection(1, 0);
-        });
-        
-        document.getElementById('snake-up').addEventListener('click', () => changeDirection(0, -1));
-        document.getElementById('snake-down').addEventListener('click', () => changeDirection(0, 1));
-        document.getElementById('snake-left').addEventListener('click', () => changeDirection(-1, 0));
-        document.getElementById('snake-right').addEventListener('click', () => changeDirection(1, 0));
-
-
-        window.addEventListener('resize', () => {
-            resizeSnakeCanvas();
-            initGame();
-        });
-
-        resizeSnakeCanvas();
-        initGame();
-    }
-
-    // --- AI Quiz ---
-    const quizContainer = document.getElementById('quizContainer');
-    if (quizContainer) {
-        const quizData = [
-            { question: "Wofür steht die Abkürzung 'KI'?", options: ["Kreative Intelligenz", "Künstliche Intelligenz", "Komplexe Interaktion"], answer: 1 },
-            { question: "Welches Unternehmen entwickelte das Sprachmodell GPT-3?", options: ["Google", "Facebook", "OpenAI"], answer: 2 },
-            { question: "Was ist ein 'Neuronales Netz' im Kontext von KI?", options: ["Ein Computervirus", "Ein biologisches Gehirn", "Ein von Gehirnen inspiriertes Berechnungsmodell"], answer: 2 },
-            { question: "Was beschreibt 'Machine Learning' am besten?", options: ["Computer, die fühlen können", "Systeme, die aus Daten lernen", "Roboter, die Maschinen bauen"], answer: 1 },
-            { question: "Wer prägte den Begriff 'Künstliche Intelligenz'?", options: ["Alan Turing", "John McCarthy", "Isaac Asimov"], answer: 1 },
-            { question: "Was ist der 'Turing-Test'?", options: ["Ein Test für Computer-Hardware", "Ein Test für die Intelligenz eines Menschen", "Ein Test, ob eine Maschine menschenähnlich denken kann"], answer: 2 }
-        ];
-        let currentQuestion = 0;
-        let quizScore = 0;
-
-        const loadQuiz = () => {
-            if (currentQuestion < quizData.length) {
-                const q = quizData[currentQuestion];
-                quizContainer.innerHTML = `
-                    <p class="font-semibold text-lg mb-4 text-gray-700">${currentQuestion + 1}. ${q.question}</p>
-                    <div class="space-y-3">
-                        ${q.options.map((opt, index) => `
-                            <button data-answer="${index}" class="quiz-option w-full text-left p-3 rounded-lg bg-gray-100 hover:bg-blue-100 border border-gray-200 transition-colors duration-200">${opt}</button>
-                        `).join('')}
-                    </div>
-                    <div id="feedback" class="mt-4 h-6"></div>
-                `;
-            } else {
-                quizContainer.innerHTML = `
-                    <h4 class="font-bold text-xl text-center text-blue-600">Quiz beendet!</h4>
-                    <p class="text-center my-4 text-lg">Sie haben ${quizScore} von ${quizData.length} Fragen richtig beantwortet.</p>
-                    <button id="restart-quiz" class="w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neustart</button>
-                `;
-            }
-        };
-
-        quizContainer.addEventListener('click', e => {
-            if (e.target.classList.contains('quiz-option')) {
-                const selectedAnswer = parseInt(e.target.dataset.answer);
-                const correctAnswer = quizData[currentQuestion].answer;
-                const feedbackEl = document.getElementById('feedback');
-                
-                document.querySelectorAll('.quiz-option').forEach(btn => {
-                    btn.disabled = true;
-                    btn.classList.remove('hover:bg-blue-100');
+                snake.forEach((segment, index) => {
+                    ctx.fillStyle = index === 0 ? '#2563eb' : '#3b82f6'; // blue-600, blue-500
+                    ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
                 });
 
-                if (selectedAnswer === correctAnswer) {
-                    quizScore++;
-                    e.target.classList.add('bg-green-100', 'border-green-400');
-                    feedbackEl.innerHTML = `<p class="text-green-600 font-semibold">Richtig!</p>`;
-                } else {
-                    e.target.classList.add('bg-red-100', 'border-red-400');
-                    feedbackEl.innerHTML = `<p class="text-red-600 font-semibold">Falsch.</p>`;
-                    document.querySelector(`[data-answer="${correctAnswer}"]`).classList.add('bg-green-100', 'border-green-400');
-                }
+                ctx.fillStyle = '#ef4444'; // red-500
+                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 1, gridSize - 1);
+            };
+            
+            const changeDirection = (newDx, newDy) => {
+                // Prevent reversing
+                if (dx === -newDx && dx !== 0) return;
+                if (dy === -newDy && dy !== 0) return;
+                dx = newDx;
+                dy = newDy;
+            };
 
-                currentQuestion++;
-                setTimeout(loadQuiz, 1500);
-            }
-            if (e.target.id === 'restart-quiz') {
-                currentQuestion = 0;
-                quizScore = 0;
-                loadQuiz();
-            }
-        });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowUp') changeDirection(0, -1);
+                else if (e.key === 'ArrowDown') changeDirection(0, 1);
+                else if (e.key === 'ArrowLeft') changeDirection(-1, 0);
+                else if (e.key === 'ArrowRight') changeDirection(1, 0);
+            });
+            
+            document.getElementById('snake-up').addEventListener('click', () => changeDirection(0, -1));
+            document.getElementById('snake-down').addEventListener('click', () => changeDirection(0, 1));
+            document.getElementById('snake-left').addEventListener('click', () => changeDirection(-1, 0));
+            document.getElementById('snake-right').addEventListener('click', () => changeDirection(1, 0));
 
-        loadQuiz();
+
+            window.addEventListener('resize', () => {
+                resizeSnakeCanvas();
+                initGame();
+            });
+
+            resizeSnakeCanvas();
+            initGame();
+        }
+    } catch(e) {
+        console.error("Error in Snake game:", e);
     }
 
-    // --- Contact Form ---
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        const formStatus = document.getElementById('form-status');
-        
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            formStatus.textContent = '';
-            formStatus.classList.remove('text-green-600');
+    try {
+        // --- AI Quiz ---
+        const quizContainer = document.getElementById('quizContainer');
+        if (quizContainer) {
+            const quizData = [
+                { question: "Wofür steht die Abkürzung 'KI'?", options: ["Kreative Intelligenz", "Künstliche Intelligenz", "Komplexe Interaktion"], answer: 1 },
+                { question: "Welches Unternehmen entwickelte das Sprachmodell GPT-3?", options: ["Google", "Facebook", "OpenAI"], answer: 2 },
+                { question: "Was ist ein 'Neuronales Netz' im Kontext von KI?", options: ["Ein Computervirus", "Ein biologisches Gehirn", "Ein von Gehirnen inspiriertes Berechnungsmodell"], answer: 2 },
+                { question: "Was beschreibt 'Machine Learning' am besten?", options: ["Computer, die fühlen können", "Systeme, die aus Daten lernen", "Roboter, die Maschinen bauen"], answer: 1 },
+                { question: "Wer prägte den Begriff 'Künstliche Intelligenz'?", options: ["Alan Turing", "John McCarthy", "Isaac Asimov"], answer: 1 },
+                { question: "Was ist der 'Turing-Test'?", options: ["Ein Test für Computer-Hardware", "Ein Test für die Intelligenz eines Menschen", "Ein Test, ob eine Maschine menschenähnlich denken kann"], answer: 2 }
+            ];
+            let currentQuestion = 0;
+            let quizScore = 0;
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
+            const loadQuiz = () => {
+                if (currentQuestion < quizData.length) {
+                    const q = quizData[currentQuestion];
+                    quizContainer.innerHTML = `
+                        <p class="font-semibold text-lg mb-4 text-gray-700">${currentQuestion + 1}. ${q.question}</p>
+                        <div class="space-y-3">
+                            ${q.options.map((opt, index) => `
+                                <button data-answer="${index}" class="quiz-option w-full text-left p-3 rounded-lg bg-gray-100 hover:bg-blue-100 border border-gray-200 transition-colors duration-200">${opt}</button>
+                            `).join('')}
+                        </div>
+                        <div id="feedback" class="mt-4 h-6"></div>
+                    `;
+                } else {
+                    quizContainer.innerHTML = `
+                        <h4 class="font-bold text-xl text-center text-blue-600">Quiz beendet!</h4>
+                        <p class="text-center my-4 text-lg">Sie haben ${quizScore} von ${quizData.length} Fragen richtig beantwortet.</p>
+                        <button id="restart-quiz" class="w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neustart</button>
+                    `;
+                }
+            };
+
+            quizContainer.addEventListener('click', e => {
+                if (e.target.classList.contains('quiz-option')) {
+                    const selectedAnswer = parseInt(e.target.dataset.answer, 10);
+                    const correctAnswer = quizData[currentQuestion].answer;
+                    const feedbackEl = document.getElementById('feedback');
+                    
+                    document.querySelectorAll('.quiz-option').forEach(btn => {
+                        btn.disabled = true;
+                        btn.classList.remove('hover:bg-blue-100');
+                    });
+
+                    if (selectedAnswer === correctAnswer) {
+                        quizScore++;
+                        e.target.classList.add('bg-green-100', 'border-green-400');
+                        feedbackEl.innerHTML = `<p class="text-green-600 font-semibold">Richtig!</p>`;
+                    } else {
+                        e.target.classList.add('bg-red-100', 'border-red-400');
+                        feedbackEl.innerHTML = `<p class="text-red-600 font-semibold">Falsch.</p>`;
+                        document.querySelector(`[data-answer="${correctAnswer}"]`).classList.add('bg-green-100', 'border-green-400');
+                    }
+
+                    currentQuestion++;
+                    setTimeout(loadQuiz, 1500);
+                }
+                if (e.target.id === 'restart-quiz') {
+                    currentQuestion = 0;
+                    quizScore = 0;
+                    loadQuiz();
+                }
+            });
+
+            loadQuiz();
+        }
+    } catch(e) {
+        console.error("Error in AI Quiz:", e);
+    }
+
+    try {
+        // --- Contact Form ---
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            const formStatus = document.getElementById('form-status');
             
-            const subject = encodeURIComponent(`Kontaktanfrage von ${name}`);
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nNachricht:\n${message}`);
-            
-            window.location.href = `mailto:andreas.neuhold@gmail.com?subject=${subject}&body=${body}`;
-            
-            formStatus.textContent = 'Danke! Ihr E-Mail-Programm sollte sich jetzt öffnen.';
-            formStatus.classList.add('text-green-600');
-            
-            contactForm.reset();
-        });
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                formStatus.textContent = '';
+                formStatus.classList.remove('text-green-600');
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                
+                const subject = encodeURIComponent(`Kontaktanfrage von ${name}`);
+                const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nNachricht:\n${message}`);
+                
+                window.location.href = `mailto:andreas.neuhold@gmail.com?subject=${subject}&body=${body}`;
+                
+                formStatus.textContent = 'Danke! Ihr E-Mail-Programm sollte sich jetzt öffnen.';
+                formStatus.classList.add('text-green-600');
+                
+                contactForm.reset();
+            });
+        }
+    } catch(e) {
+        console.error("Error in Contact Form:", e);
     }
     
-    // --- Scroll Animations ---
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
+    try {
+        // --- Scroll Animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
 
-    document.querySelectorAll('.fade-in-up').forEach(el => {
-        observer.observe(el);
-    });
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+    } catch(e) {
+        console.error("Error in Scroll Animations:", e);
+    }
+    
+    // --- 3D MODEL SCRIPT ---
+    try {
+        const threeContainer = document.getElementById('three-container');
+        if (threeContainer) {
+            // === GRUNDEINSTELLUNGEN ===
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+            const camera = new THREE.PerspectiveCamera(75, threeContainer.clientWidth / threeContainer.clientHeight, 0.1, 1000);
+            camera.position.set(12, 8, 16);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.shadowMap.enabled = true;
+            threeContainer.appendChild(renderer.domElement);
+
+            // === STEUERUNG ===
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.target.set(0, 3, 0);
+
+            // === BELEUCHTUNG ===
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            directionalLight.position.set(-10, 15, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // === MATERIALIEN ===
+            const matMachineBase = new THREE.MeshStandardMaterial({ color: 0x333333 });
+            const matMachineParts = new THREE.MeshStandardMaterial({ color: 0xeeeeee });
+            const matSafety = new THREE.MeshStandardMaterial({ color: 0xcc0000 });
+            const matTieBars = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.8, roughness: 0.2 });
+            const matToggle = new THREE.MeshStandardMaterial({ color: 0x005a9c });
+            const matMold = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.9, roughness: 0.4 });
+
+            // === BODEN ===
+            const ground = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), new THREE.MeshStandardMaterial({ color: 0xe0e0e0 }));
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // === MODELLBAU ===
+            const machineGroup = new THREE.Group();
+            scene.add(machineGroup);
+            const bed = new THREE.Mesh(new THREE.BoxGeometry(20, 1.5, 6), matMachineBase);
+            bed.position.y = 0.75;
+            bed.castShadow = true;
+            machineGroup.add(bed);
+            const clampingUnit = new THREE.Group();
+            clampingUnit.position.x = -2;
+            machineGroup.add(clampingUnit);
+            const platenGeo = new THREE.BoxGeometry(1.5, 5, 5);
+            const fixedPlaten = new THREE.Mesh(platenGeo, matMachineParts);
+            fixedPlaten.position.set(-5, 3.5, 0);
+            clampingUnit.add(fixedPlaten);
+            const movablePlaten = new THREE.Mesh(platenGeo, matMachineParts);
+            movablePlaten.position.set(0, 3.5, 0);
+            clampingUnit.add(movablePlaten);
+            const moldGeo = new THREE.BoxGeometry(1.0, 4, 4);
+            const fixedMoldHalf = new THREE.Mesh(moldGeo, matMold);
+            fixedMoldHalf.position.x = 1.25;
+            fixedPlaten.add(fixedMoldHalf);
+            const movableMoldHalf = new THREE.Mesh(moldGeo, matMold);
+            movableMoldHalf.position.x = -1.25;
+            movablePlaten.add(movableMoldHalf);
+            const endPlaten = new THREE.Mesh(new THREE.BoxGeometry(2, 4.5, 4.5), matMachineParts);
+            endPlaten.position.set(6, 3.5, 0);
+            clampingUnit.add(endPlaten);
+            const tieBarGeo = new THREE.CylinderGeometry(0.2, 0.2, 11, 16);
+            const tieBarPositions = [ {y: 5.25, z: 2.25}, {y: 5.25, z: -2.25}, {y: 1.75, z: 2.25}, {y: 1.75, z: -2.25} ];
+            tieBarPositions.forEach(pos => {
+                const bar = new THREE.Mesh(tieBarGeo, matTieBars);
+                bar.rotation.z = Math.PI / 2;
+                bar.position.set(0.5, pos.y, pos.z);
+                clampingUnit.add(bar);
+            });
+            const toggleSystem = new THREE.Group();
+            toggleSystem.position.y = 3.5;
+            clampingUnit.add(toggleSystem);
+            const armLength = 3.5;
+            const armGeo = new THREE.BoxGeometry(armLength, 0.4, 0.4);
+            const rearArm = new THREE.Mesh(armGeo, matToggle);
+            const frontArm = new THREE.Mesh(armGeo, matToggle);
+            const actuator = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), matToggle);
+            toggleSystem.add(rearArm, frontArm, actuator);
+            const injectionUnit = new THREE.Group();
+            injectionUnit.position.x = 6;
+            machineGroup.add(injectionUnit);
+            const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 8, 32), matMachineParts);
+            barrel.rotation.z = Math.PI / 2;
+            barrel.position.set(0, 3.5, 0);
+            injectionUnit.add(barrel);
+            const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.2, 0.8, 32), matTieBars);
+            nozzle.rotation.z = Math.PI / 2;
+            nozzle.position.set(-4.4, 3.5, 0);
+            injectionUnit.add(nozzle);
+            const drive = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), matMachineBase);
+            drive.position.set(5, 3.5, 0);
+            injectionUnit.add(drive);
+            const safetyGuard = new THREE.Mesh(new THREE.BoxGeometry(5.2, 4.2, 5.7), matSafety);
+            safetyGuard.material.transparent = true;
+            safetyGuard.material.opacity = 0.2;
+            safetyGuard.position.set(-2.5, 3.5, 0);
+            clampingUnit.add(safetyGuard);
+
+            // === DIAGRAMM INITIALISIERUNG ===
+            const ctx = document.getElementById('position-time-chart').getContext('2d');
+            const positionTimeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Hub',
+                        data: [],
+                        borderColor: 'rgb(0, 90, 156)',
+                        backgroundColor: 'rgba(0, 90, 156, 0.5)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'Zeit (s)' }, min: 0 },
+                        y: { title: { display: true, text: 'Hub (mm)' }, min: 0 }
+                    },
+                    animation: false,
+                    plugins: { legend: { display: false }, title: { display: true, text: 'Weg-Zeit-Diagramm'} }
+                }
+            });
+
+            // === ANIMATIONSLOGIK ===
+            let targetY = 0.1;
+            const openY = 2.5;
+            const closedY = 0.1;
+            const startTime = performance.now();
+            const closedPositionX = endPlaten.position.x - 2 * Math.sqrt(armLength*armLength - closedY*closedY);
+            document.getElementById('btn-open').addEventListener('click', () => { targetY = openY; });
+            document.getElementById('btn-close').addEventListener('click', () => { targetY = closedY; });
+
+            // === ANIMATIONS-SCHLEIFE ===
+            function animate() {
+                requestAnimationFrame(animate);
+                const currentY = actuator.position.y;
+                const newY = THREE.MathUtils.lerp(currentY, targetY, 0.08);
+                actuator.position.y = newY;
+                const L = armLength;
+                const y = newY;
+                const half_dx = y < L ? Math.sqrt(L*L - y*y) : 0;
+                const rearPivotX = endPlaten.position.x;
+                const movablePlatenX = rearPivotX - 2 * half_dx;
+                const actuatorX = rearPivotX - half_dx;
+                movablePlaten.position.x = movablePlatenX;
+                actuator.position.x = actuatorX;
+                const rearPivotPoint = new THREE.Vector3(rearPivotX, 0, 0);
+                const frontPivotPoint = new THREE.Vector3(movablePlatenX, 0, 0);
+                const kneePoint = new THREE.Vector3(actuatorX, y, 0);
+                rearArm.position.copy(rearPivotPoint).add(kneePoint).multiplyScalar(0.5);
+                rearArm.lookAt(kneePoint);
+                frontArm.position.copy(frontPivotPoint).add(kneePoint).multiplyScalar(0.5);
+                frontArm.lookAt(kneePoint);
+                
+                // Diagramm aktualisieren
+                const currentTime = (performance.now() - startTime) / 1000;
+                const currentStroke = movablePlatenX - closedPositionX;
+                const chartData = positionTimeChart.data.datasets[0].data;
+                chartData.push({ x: currentTime, y: currentStroke });
+                if (chartData.length > 300) { chartData.shift(); }
+                if (chartData.length > 1) {
+                    positionTimeChart.options.scales.x.min = chartData[0].x;
+                    positionTimeChart.options.scales.x.max = currentTime;
+                }
+                positionTimeChart.update();
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            // === RESIZE LOGIC ===
+            const resizeRenderer = () => {
+                const { clientWidth, clientHeight } = threeContainer;
+                renderer.setSize(clientWidth, clientHeight);
+                camera.aspect = clientWidth / clientHeight;
+                camera.updateProjectionMatrix();
+            };
+            
+            const observer = new ResizeObserver(resizeRenderer);
+            observer.observe(threeContainer);
+
+            resizeRenderer();
+            animate();
+        }
+    } catch(e) {
+        console.error("Error in 3D Model:", e);
+    }
 
 });
 </script>
