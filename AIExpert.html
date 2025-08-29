@@ -49,7 +49,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            min-height: 400px; /* Reduced height */
+            min-height: 500px; 
             overflow: hidden;
             border-radius: 0.5rem;
         }
@@ -241,57 +241,51 @@
         <!-- Section: Interactive Elements -->
         <section id="interactive" class="mb-20 fade-in-up">
             <h2 class="section-title text-blue-600">Erleben Sie KI in Aktion</h2>
-            <div class="grid lg:grid-cols-2 gap-8 items-start">
-                <!-- 3D Model -->
-                <div class="card">
-                     <h3 class="font-bold text-2xl mb-4 text-blue-700">3D-Visualisierung mit KI</h3>
-                     <p class="mb-4 text-gray-600">Dieses interaktive Modell wurde mit KI-Unterstützung konzipiert. KI kann helfen, komplexe 3D-Szenen zu generieren, Abmessungen anzupassen oder sogar Möbel für einen Raum vorzuschlagen. Ein perfektes Werkzeug für Planung und Prototyping.</p>
-                    <div id="three-container" class="bg-gray-200">
-                        <div id="three-info">Linke Maustaste: Drehen | Mausrad: Zoomen | Rechte Maustaste: Verschieben</div>
-                        <div id="three-controls">
-                            <button id="btn-open" class="three-control-btn">Öffnen</button>
-                            <button id="btn-close" class="three-control-btn">Schließen</button>
-                        </div>
-                        <div id="chart-container">
-                            <canvas id="position-time-chart"></canvas>
-                        </div>
+            <div class="card mb-8">
+                 <h3 class="font-bold text-2xl mb-4 text-blue-700">3D-Visualisierung mit KI</h3>
+                 <p class="mb-4 text-gray-600">Dieses interaktive Modell wurde mit KI-Unterstützung konzipiert. KI kann helfen, komplexe 3D-Szenen zu generieren, Abmessungen anzupassen oder sogar Möbel für einen Raum vorzuschlagen. Ein perfektes Werkzeug für Planung und Prototyping.</p>
+                <div id="three-container" class="bg-gray-200">
+                    <div id="three-info">Linke Maustaste: Drehen | Mausrad: Zoomen | Rechte Maustaste: Verschieben</div>
+                    <div id="three-controls">
+                        <button id="btn-open" class="three-control-btn">Öffnen</button>
+                        <button id="btn-close" class="three-control-btn">Schließen</button>
+                    </div>
+                    <div id="chart-container">
+                        <canvas id="position-time-chart"></canvas>
                     </div>
                 </div>
-                <!-- Right column for other interactive elements -->
-                <div class="flex flex-col gap-8">
-                    <div class="card flex flex-col">
-                        <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-gestützte Spieleentwicklung</h3>
-                        <p class="mb-4 text-gray-600">Dieses Spiel wurde mit Hilfe von KI programmiert. Es zeigt, wie jeder ohne tiefe Programmierkenntnisse klassische Spiele erschaffen und anpassen kann. KI wird zum Co-Entwickler und beschleunigt die Umsetzung von Ideen.</p>
-                        <div class="flex-grow bg-gray-100 rounded-lg p-2 aspect-video relative border">
-                            <canvas id="snakeCanvas" class="w-full h-full"></canvas>
-                            <div id="scoreBoard" class="absolute top-2 left-4 text-gray-800 font-bold text-lg">
-                                Score: <span id="score">0</span> | Highscore: <span id="highScore">0</span>
-                            </div>
-                        </div>
-                        <div class="mt-4 grid grid-cols-3 gap-2 justify-items-center">
-                            <div></div>
-                            <button id="snake-up" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg></button>
-                            <div></div>
-                            <button id="snake-left" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-                            <button id="snake-down" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
-                            <button id="snake-right" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card flex flex-col">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-gestützte Spieleentwicklung</h3>
+                    <p class="mb-4 text-gray-600">Dieses Spiel wurde mit Hilfe von KI programmiert. Es zeigt, wie jeder ohne tiefe Programmierkenntnisse klassische Spiele erschaffen und anpassen kann. KI wird zum Co-Entwickler und beschleunigt die Umsetzung von Ideen.</p>
+                    <div class="flex-grow bg-gray-100 rounded-lg p-2 aspect-video relative border">
+                        <canvas id="snakeCanvas" class="w-full h-full"></canvas>
+                        <div id="scoreBoard" class="absolute top-2 left-4 text-gray-800 font-bold text-lg">
+                            Score: <span id="score">0</span> | Highscore: <span id="highScore">0</span>
                         </div>
                     </div>
-                    <div class="grid sm:grid-cols-2 gap-8">
-                        <div class="card">
-                            <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-Ideen-Generator</h3>
-                            <p class="mb-4 text-gray-600">Als Brettspielfan nutze ich KI, um kreative Spielideen zu generieren. Klicken Sie auf den Button für Inspiration!</p>
-                            <div id="idea-display" class="p-4 bg-gray-100 rounded-lg min-h-[80px] flex items-center justify-center text-center font-semibold text-gray-700">
-                                Klicken Sie...
-                            </div>
-                            <button id="generate-idea" class="mt-4 w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neue Spielidee</button>
-                        </div>
-                        <div class="card">
-                            <h3 class="font-bold text-2xl mb-4 text-blue-700">Wissensquiz</h3>
-                            <div id="quizContainer">
-                                <!-- Quiz content will be injected here by JS -->
-                            </div>
-                        </div>
+                    <div class="mt-4 grid grid-cols-3 gap-2 justify-items-center">
+                        <div></div>
+                        <button id="snake-up" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg></button>
+                        <div></div>
+                        <button id="snake-left" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                        <button id="snake-down" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
+                        <button id="snake-right" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-Ideen-Generator</h3>
+                    <p class="mb-4 text-gray-600">Als Brettspielfan nutze ich KI, um kreative Spielideen zu generieren. Klicken Sie auf den Button für Inspiration!</p>
+                    <div id="idea-display" class="p-4 bg-gray-100 rounded-lg min-h-[80px] flex items-center justify-center text-center font-semibold text-gray-700">
+                        Klicken Sie...
+                    </div>
+                    <button id="generate-idea" class="mt-4 w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neue Spielidee</button>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">Wissensquiz</h3>
+                    <div id="quizContainer">
+                        <!-- Quiz content will be injected here by JS -->
                     </div>
                 </div>
             </div>
