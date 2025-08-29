@@ -15,7 +15,7 @@
             padding-top: 64px; /* Adjust for fixed navbar */
         }
         .section-title {
-            @apply text-5xl font-bold mb-16 pb-4 border-b-2 border-blue-500 text-center;
+            @apply text-5xl font-extrabold text-gray-900 tracking-tight mb-16 pb-4 border-b-2 border-blue-500 text-center;
         }
         .card {
             @apply bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400;
@@ -102,6 +102,12 @@
             z-index: 100;
         }
 
+        /* Chatbot styles */
+        #chatbot-window { @apply h-96 overflow-y-auto p-4 bg-gray-100 rounded-t-lg border-x border-t border-gray-300; }
+        .chat-bubble { @apply p-3 rounded-lg max-w-[80%]; }
+        .user-bubble { @apply bg-blue-500 text-white self-end; }
+        .bot-bubble { @apply bg-white text-gray-800 self-start border border-gray-200; }
+
     </style>
 </head>
 <body class="bg-gray-50 text-gray-700">
@@ -115,7 +121,8 @@
                     <a href="#career" class="hover:text-blue-600 transition-colors">Meilensteine</a>
                     <a href="#interactive" class="hover:text-blue-600 transition-colors">Interaktiv</a>
                     <a href="#praxis" class="hover:text-blue-600 transition-colors">Praxis</a>
-                    <a href="#prompting" class="hover:text-blue-600 transition-colors">Prompting Tipps</a>
+                    <a href="#prompting" class="hover:text-blue-600 transition-colors">Prompting</a>
+                    <a href="#chatbot" class="hover:text-blue-600 transition-colors">Chatbot</a>
                     <a href="#angebot" class="hover:text-blue-600 transition-colors">Angebot</a>
                     <a href="#contact" class="hover:text-blue-600 transition-colors">Kontakt</a>
                 </div>
@@ -394,6 +401,24 @@
             </div>
         </section>
 
+        <!-- Section: Chatbot -->
+        <section id="chatbot" class="mb-20 fade-in-up">
+            <h2 class="section-title text-blue-600">KI-Chatbots in der Praxis</h2>
+            <div class="card max-w-4xl mx-auto">
+                 <h3 class="font-bold text-xl mb-3 text-blue-700">Demo: Reparatur-Assistenz-Chatbot</h3>
+                 <p class="mb-4 text-gray-600">Dieser Chatbot simuliert, wie KI einen Techniker im Reparaturprozess unterstützen kann. Er greift auf Ticket-Daten zu, liefert KI-basierte Lösungsvorschläge und führt durch den Prozess. Geben Sie die Ticketnummer <strong>T-12345</strong> oder <strong>T-67890</strong> ein, um zu starten.</p>
+                 <div class="chatbot-container">
+                    <div id="chatbot-window" class="flex flex-col space-y-4">
+                        <!-- Chat messages will appear here -->
+                    </div>
+                    <form id="chatbot-form" class="flex gap-2 p-4 bg-white border border-gray-300 rounded-b-lg">
+                        <input type="text" id="chatbot-input" placeholder="Ticketnummer eingeben..." class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" autocomplete="off">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">Senden</button>
+                    </form>
+                 </div>
+            </div>
+        </section>
+
         <!-- Section: Angebot -->
         <section id="angebot" class="mb-20 fade-in-up">
             <h2 class="section-title text-blue-600">Mein Leistungsangebot: Workshops & Beratung</h2>
@@ -659,8 +684,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error in Snake game:", e);
     }
 
+    // --- AI Quiz ---
     try {
-        // --- AI Quiz ---
         const quizContainer = document.getElementById('quizContainer');
         if (quizContainer) {
             const quizData = [
@@ -732,8 +757,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error in AI Quiz:", e);
     }
 
+    // --- Idea Generator ---
     try {
-        // --- Idea Generator ---
         const ideaDisplay = document.getElementById('idea-display');
         const generateIdeaBtn = document.getElementById('generate-idea');
         if(ideaDisplay && generateIdeaBtn) {
@@ -757,8 +782,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error in Idea Generator:", e);
     }
 
+    // --- Contact Form ---
     try {
-        // --- Contact Form ---
         const contactForm = document.getElementById('contact-form');
         if (contactForm) {
             const formStatus = document.getElementById('form-status');
@@ -787,8 +812,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error in Contact Form:", e);
     }
     
+    // --- Scroll Animations ---
     try {
-        // --- Scroll Animations ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1000,6 +1025,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch(e) {
         console.error("Error in 3D Model:", e);
+    }
+    
+    // --- Chatbot ---
+    try {
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const chatbotForm = document.getElementById('chatbot-form');
+        const chatbotInput = document.getElementById('chatbot-input');
+
+        if(chatbotWindow && chatbotForm && chatbotInput) {
+            const ticketData = {
+                "T-12345": {
+                    device: `Kaffeemaschine "Barista Pro"`,
+                    time: "45 Minuten",
+                    booking: "Projekt 77-Reparatur, Kostenstelle 4020",
+                    customerError: `"Maschine heizt nicht mehr richtig auf, Kaffee ist nur lauwarm. Manchmal kommt nur Wasser."`,
+                    aiAnalysis: `Problem deutet auf ein defektes Heizelement oder einen verkalkten Thermosensor hin. Wahrscheinlichkeit Heizelement: 75%. Empfohlene erste Schritte:<br>1. Widerstand des Heizelements messen (Sollwert: 25-30 Ohm).<br>2. Thermosensor auf Kalkablagerungen prüfen.`,
+                    instructions: `Reparaturanleitung R-78B.pdf. <strong>Sicherheitshinweis:</strong> Vor dem Öffnen des Gehäuses Gerät vom Stromnetz trennen und 5 Minuten warten!`,
+                    completion: `Qualitätstest bestanden. Protokoll P-12345-Final.pdf wurde abgelegt. Gerät ist für den Rückversand freigegeben.`
+                },
+                "T-67890": {
+                    device: `Staubsauger "CleanMax 3000"`,
+                    time: "30 Minuten",
+                    booking: "Projekt 77-Reparatur, Kostenstelle 4020",
+                    customerError: `"Der Staubsauger hat keine Saugkraft mehr, Motor klingt aber normal."`,
+                    aiAnalysis: `Problem deutet auf eine Verstopfung im Saugweg oder einen vollen/defekten Filter hin. Wahrscheinlichkeit Verstopfung: 85%. Empfohlene erste Schritte:<br>1. Alle Filter prüfen und reinigen/ersetzen.<br>2. Saugrohr und Schlauch auf Fremdkörper prüfen.`,
+                    instructions: `Wartungsanleitung W-CM3K.pdf. <strong>Sicherheitshinweis:</strong> Filter nur im Freien ausklopfen.`,
+                    completion: `Qualitätstest bestanden. Protokoll P-67890-Final.pdf wurde abgelegt. Gerät ist für den Rückversand freigegeben.`
+                }
+            };
+
+            const addMessage = (message, sender) => {
+                const bubble = document.createElement('div');
+                bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'bot-bubble');
+                bubble.innerHTML = message;
+                chatbotWindow.appendChild(bubble);
+                chatbotWindow.scrollTop = chatbotWindow.scrollHeight;
+            };
+
+            const handleBotResponse = (userInput) => {
+                const ticketId = userInput.trim().toUpperCase();
+                const data = ticketData[ticketId];
+
+                if (data) {
+                    setTimeout(() => addMessage(`Okay, ich rufe die Daten für Ticket <strong>${ticketId}</strong> auf...`, 'bot'), 500);
+                    setTimeout(() => addMessage(`<strong>Gerät:</strong> ${data.device}<br><strong>Zeitvorgabe:</strong> ${data.time}<br><strong>Zeitbuchung:</strong> ${data.booking}`, 'bot'), 1500);
+                    setTimeout(() => addMessage(`<strong>Fehlerbeschreibung des Kunden:</strong><br>${data.customerError}`, 'bot'), 2500);
+                    setTimeout(() => addMessage(`<strong>KI-Analyse & Vorschläge:</strong><br>${data.aiAnalysis}`, 'bot'), 4000);
+                    setTimeout(() => addMessage(`<strong>Anleitung & Sicherheit:</strong><br>${data.instructions}`, 'bot'), 5500);
+                    setTimeout(() => addMessage(`Nach Abschluss der Reparatur und Qualitätsprüfung:<br><strong>Status:</strong> ${data.completion}`, 'bot'), 7000);
+                } else {
+                     setTimeout(() => addMessage(`Entschuldigung, zur Ticketnummer "${userInput}" konnte ich keine Daten finden. Bitte versuchen Sie es mit <strong>T-12345</strong> oder <strong>T-67890</strong>.`, 'bot'), 500);
+                }
+            };
+            
+            chatbotForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userInput = chatbotInput.value;
+                if(!userInput.trim()) return;
+
+                addMessage(userInput, 'user');
+                chatbotInput.value = '';
+
+                handleBotResponse(userInput);
+            });
+
+            addMessage("Hallo! Ich bin Ihr Reparatur-Assistent. Bitte geben Sie eine Ticketnummer ein, um die Auftragsdetails zu erhalten.", "bot");
+        }
+    } catch(e) {
+        console.error("Error in Chatbot:", e);
     }
 
 });
