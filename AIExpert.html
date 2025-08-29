@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andreas Neuhold - Ihr Experte für Angewandte KI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .section-title {
+            @apply text-4xl font-bold text-gray-800 mb-8 pb-3 border-b-2 border-blue-500/30;
+        }
+        .card {
+            @apply bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400;
+        }
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Timeline specific styles */
+        .timeline-item {
+            @apply relative pl-12 pb-12;
+        }
+        .timeline-item:last-child {
+            @apply pb-0;
+        }
+        .timeline-item::before {
+            content: '';
+            @apply absolute left-[22px] top-2 w-0.5 h-full bg-gray-300;
+        }
+        .timeline-icon {
+            @apply absolute left-0 top-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-700">
+
+    <!-- Header Section -->
+    <header class="relative bg-white overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full z-0" id="particle-container">
+            <canvas id="particle-canvas"></canvas>
+        </div>
+        <div class="relative container mx-auto px-6 py-20 z-10">
+            <div class="flex flex-col md:flex-row items-center text-center md:text-left">
+                <div class="md:w-1/4 flex justify-center mb-8 md:mb-0">
+                    <img src="https://gegensystem.github.io/projects/Andreas.jpg" alt="Portrait von Andreas Neuhold" class="rounded-full h-48 w-48 object-cover border-4 border-blue-500 shadow-2xl">
+                </div>
+                <div class="md:w-3/4 md:pl-10">
+                    <h1 class="text-5xl md:text-6xl font-black leading-tight text-gray-900">Dipl.-Ing. Andreas Neuhold, BSc</h1>
+                    <p class="text-2xl md:text-3xl mt-2 text-blue-600 font-semibold">Experte für Angewandte Künstliche Intelligenz & Prozessoptimierung</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-16">
+
+        <!-- Section: About Me -->
+        <section id="about" class="mb-20 fade-in-up">
+            <h2 class="section-title text-blue-600">Mein Weg: Vom Messen zum intelligenten Managen</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <p class="text-lg mb-4">
+                    Im Herzen bin ich ein leidenschaftlicher <strong>Mess- und Elektrotechniker</strong>. Meine berufliche Laufbahn ist geprägt von der Faszination für präzise Daten, stabile Prozesse und die Kunst, komplexe Systeme zu verstehen. Diese technische Grundlage hat mir ein tiefes Verständnis für die Logik und die Strukturen gegeben, die unsere moderne Welt antreiben.
+                </p>
+                <p class="text-lg mb-4">
+                    Der Schritt zur <strong>Künstlichen Intelligenz</strong> war für mich eine natürliche Evolution. Wo die Messtechnik aufhört – beim reinen Sammeln von Daten – fängt die KI erst richtig an. Sie ermöglicht es uns, aus diesen Daten Muster zu erkennen, Vorhersagen zu treffen und Prozesse nicht nur zu überwachen, sondern intelligent zu automatisieren.
+                </p>
+                <p class="text-lg font-semibold text-gray-800">
+                    Heute baue ich Brücken zwischen der soliden Welt des Ingenieurwesens und den grenzenlosen Möglichkeiten der KI. Mein Ziel ist es, diese transformative Technologie praktisch anwendbar und für jeden zugänglich zu machen.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section: Detailed Career Path -->
+        <section id="career" class="mb-20 fade-in-up">
+            <h2 class="section-title text-blue-600">Wichtige Meilensteine</h2>
+            <div class="relative">
+                <!-- Timeline Item: Engel Austria -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Teamleiter Messtechnik bei Engel Austria</h3>
+                    <p class="text-lg font-semibold text-blue-600 mb-4">(Seit 2017)</p>
+                    <div class="space-y-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Praktische KI-Anwendung</h4>
+                            <p>Initiierung von <strong>50 KI-Use-Cases</strong> zur Effizienzsteigerung, z.B. ein KI-Chatbot, der 12% Zeitersparnis im Support ermöglicht.</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Hardware-unabhängige Innovation</h4>
+                            <p>Entwicklung eines patentierten <strong>Condition Monitorings</strong> zur Überwachung von Maschinenteilen ohne zusätzliche Sensoren.</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Agile Führung</h4>
+                            <p>Erfolgreiche Markteinführung einer komplexen Maschine in Rekordzeit durch agile Methoden.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item: Lektor & Trainer -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Wissensvermittlung in der Praxis</h3>
+                    <p class="text-lg font-semibold text-blue-600 mb-4">(Seit 2020)</p>
+                     <div class="space-y-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Akademische Lehre & Erwachsenenbildung</h4>
+                            <p>Lektor an der <strong>FH OÖ (Wels)</strong> für Elektrotechnik und Trainer am <strong>WIFI Linz</strong> für den Fachbereich Messtechnik.</p>
+                        </div>
+                         <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Strategie-Coaching</h4>
+                            <p>Begleitung von NPOs und Vereinen bei der Prozessoptimierung und Zielfindung.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item: Dewetron -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.036 12.322a1.012 1.012 0 010-.639l4.433-7.447A1 1 0 017 4h10a1 1 0 01.53.175l4.433 7.447a1.012 1.012 0 010 .639l-4.433 7.447A1 1 0 0117 20H7a1 1 0 01-.53-.175L2.036 12.322z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Applikationsingenieur für Präzisionsmesstechnik</h3>
+                    <p class="text-lg font-semibold text-blue-600 mb-4">Dewetron GmbH (2013 - 2017)</p>
+                     <div class="space-y-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Internationale Erfahrung & Projektverantwortung</h4>
+                            <p>Durchführung von technischen Schulungen und eigenständige Abwicklung von Projekten (bis 0,6 Mio. EUR) in AT, DE & FR.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Vision -->
+        <section id="vision" class="mb-20 text-center fade-in-up">
+            <h2 class="section-title text-blue-600">Meine Vision: KI als fundamentaler Wandel</h2>
+            <div class="bg-blue-50/50 p-8 rounded-xl shadow-lg max-w-4xl mx-auto border border-blue-200">
+                <p class="text-2xl italic text-gray-600">
+                    "KI ist eine fundamentale Änderung der Wertschöpfungsprozesse in allen Lebensbereichen. Diese Technologie verändert jetzt alles – uns und unsere Gesellschaft auf einer ganz fundamentalen Ebene."
+                </p>
+            </div>
+        </section>
+        
+        <!-- Section: Interactive Elements -->
+        <section id="interactive" class="mb-20 fade-in-up">
+            <h2 class="section-title text-blue-600">Erleben Sie KI in Aktion</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Snake Game -->
+                <div class="card flex flex-col">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives Spiel: KI-Snake</h3>
+                    <p class="mb-4 text-gray-600">Ein Klassiker, um das Prinzip von einfachen Regeln und emergentem Verhalten zu demonstrieren.</p>
+                    <div class="flex-grow bg-gray-100 rounded-lg p-2 aspect-video relative border">
+                        <canvas id="snakeCanvas" class="w-full h-full"></canvas>
+                        <div id="scoreBoard" class="absolute top-2 left-4 text-gray-800 font-bold text-lg">
+                            Score: <span id="score">0</span> | Highscore: <span id="highScore">0</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-3 gap-2 justify-items-center">
+                        <div></div>
+                        <button id="snake-up" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg></button>
+                        <div></div>
+                        <button id="snake-left" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                        <button id="snake-down" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
+                        <button id="snake-right" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                    </div>
+                </div>
+                <!-- AI Quiz -->
+                <div class="card">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">Wissensquiz: KI-Grundlagen</h3>
+                    <div id="quizContainer">
+                        <!-- Quiz content will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section: Praxis -->
+        <section id="praxis" class="mb-20 fade-in-up">
+            <h2 class="section-title text-blue-600">KI in der Praxis: Umgesetzte Projekte</h2>
+            <p class="mb-8 text-lg text-gray-600">Der wahre Wert von KI zeigt sich in der Anwendung. Hier sind Beispiele, wie ich KI zur Effizienzsteigerung und Problemlösung eingesetzt habe – mit messbaren Erfolgen von bis zu <strong>18% Effizienzsteigerung</strong>.</p>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Automatisierung & Code</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>E-Mail-Automatisierung & Korrespondenz</li>
+                        <li>Entwicklung von Webseiten (mit/ohne Firebase)</li>
+                        <li>Aufbau kompletter Plattformen inkl. Benutzerverwaltung</li>
+                        <li>Erstellung & Überarbeitung von MatLab-Code</li>
+                        <li>Entwicklung von KI-Agenten mit Trigger-Funktionen</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Ingenieurwesen & QM</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>Einsatz in der Messtechnik & bei Messaufbauten</li>
+                        <li>Automatisierte Erstellung von Messprotokollen</li>
+                        <li>Intelligente Messdatenanalyse</li>
+                        <li>Anwendung im Qualitätswesen zur Prozessoptimierung</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Business-Anwendungen</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>KI als Kostenrechner & Amortisationsrechner</li>
+                        <li>Nutzung als Investitionsberater</li>
+                        <li>Erstellung von Chatbots für den Kundenservice</li>
+                        <li>Übersetzungen und Content-Erstellung</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-white border-l-4 border-blue-500 p-8 rounded-r-lg shadow-lg fade-in-up">
+                <h3 class="font-bold text-2xl mb-4 text-blue-700">Praxisbeispiel: Organisation aus dem Alltag</h3>
+                <p class="mb-2 text-gray-600"><strong class="text-gray-800">Die Herausforderung:</strong> Als Mieter eine 400V/16A Starkstromsteckdose für ein Plug-in-Hybrid-Auto in der Tiefgarage installieren lassen.</p>
+                <p class="text-gray-600"><strong class="text-gray-800">Die KI-Lösung:</strong></p>
+                <ul class="list-disc list-inside ml-4 mt-2 space-y-1 text-gray-600">
+                    <li>KI formuliert das Anschreiben für Kostenvoranschläge.</li>
+                    <li>KI recherchiert 12 passende Elektrotechnik-Firmen in Linz.</li>
+                    <li>KI versendet die Anfragen vollautomatisch.</li>
+                    <li>KI koordiniert die Besichtigungstermine.</li>
+                    <li>KI erstellt eine Kostenschätzung (nur 8% Abweichung).</li>
+                </ul>
+                <p class="mt-4 font-semibold text-blue-600">Ergebnis: Enorme Zeitersparnis und eine fundierte Entscheidungsgrundlage durch datengestützte Voranalyse.</p>
+            </div>
+        </section>
+
+        <!-- Section: WIFI Angebot -->
+        <section id="wifi-angebot" class="mb-20 fade-in-up">
+            <h2 class="section-title text-blue-600">Mein Angebot als Trainer für das WIFI</h2>
+            <p class="mb-8 text-lg text-gray-600">Mein Ziel: Menschen in praxisorientierten Workshops befähigen, KI als Werkzeug zu verstehen und sofort anzuwenden. Wir gehen vom "Nachdenken" direkt ins "Machen".</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card bg-blue-50/30">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Grundlagen & Strategie</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Was kann KI?</strong> Chancen, Risiken & realistische Anwendungsfälle.</li>
+                        <li><strong>Rechtssicherheit:</strong> Urheberrecht & Datenschutz verständlich erklärt.</li>
+                        <li><strong>KI für Studium & Wissenschaft:</strong> Richtig recherchieren & formulieren.</li>
+                    </ul>
+                </div>
+                <div class="card bg-blue-50/30">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Praxis-Workshops</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>KI als Sparringspartner:</strong> Für Ingenieure, Planer & Selbstständige.</li>
+                        <li><strong>KI für Rechtsauskünfte:</strong> Gesetze schneller verstehen & anwenden.</li>
+                        <li><strong>Von der Idee zum Prototyp:</strong> Mit KI-Tools schnell Ergebnisse erzielen.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-center py-8">
+        <div class="container mx-auto px-6">
+            <p class="text-white">&copy; 2024 Andreas Neuhold</p>
+            <p class="text-sm text-gray-400 mt-1">Bereit, die Zukunft mitzugestalten.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Particle Animation for Header ---
+    const canvas = document.getElementById('particle-canvas');
+    const container = document.getElementById('particle-container');
+    if (canvas && container) {
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        const resizeCanvas = () => {
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+        };
+
+        const createParticles = () => {
+            particles = [];
+            let particleCount = (canvas.width * canvas.height) / 15000;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: Math.random() * 0.4 - 0.2,
+                    vy: Math.random() * 0.4 - 0.2,
+                    radius: Math.random() * 1.5 + 0.5
+                });
+            }
+        };
+
+        const animateParticles = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 123, 255, 0.3)';
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        };
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            createParticles();
+        });
+
+        resizeCanvas();
+        createParticles();
+        animateParticles();
+    }
+
+    // --- Snake Game ---
+    const snakeCanvas = document.getElementById('snakeCanvas');
+    if (snakeCanvas) {
+        const ctx = snakeCanvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const highScoreEl = document.getElementById('highScore');
+        
+        let gridSize = 20;
+        let tileCountX, tileCountY;
+        let snake, food, dx, dy, score, highScore = 0, gameLoop;
+
+        const resizeSnakeCanvas = () => {
+            const parent = snakeCanvas.parentElement;
+            snakeCanvas.width = parent.clientWidth;
+            snakeCanvas.height = parent.clientHeight;
+            tileCountX = Math.floor(snakeCanvas.width / gridSize);
+            tileCountY = Math.floor(snakeCanvas.height / gridSize);
+        };
+
+        const initGame = () => {
+            clearInterval(gameLoop);
+            snake = [{ x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }];
+            dx = 1; dy = 0;
+            score = 0;
+            spawnFood();
+            updateScores();
+            gameLoop = setInterval(mainLoop, 150); // Slower game speed
+        };
+
+        const spawnFood = () => {
+            let foodOnSnake;
+            do {
+                foodOnSnake = false;
+                food = {
+                    x: Math.floor(Math.random() * tileCountX),
+                    y: Math.floor(Math.random() * tileCountY)
+                };
+                for (const segment of snake) {
+                    if (segment.x === food.x && segment.y === food.y) {
+                        foodOnSnake = true;
+                        break;
+                    }
+                }
+            } while (foodOnSnake);
+        };
+
+        const updateScores = () => {
+            scoreEl.textContent = score;
+            highScoreEl.textContent = highScore;
+        };
+
+        const mainLoop = () => {
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+            if (head.x < 0) head.x = tileCountX - 1;
+            if (head.x >= tileCountX) head.x = 0;
+            if (head.y < 0) head.y = tileCountY - 1;
+            if (head.y >= tileCountY) head.y = 0;
+
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    initGame();
+                    return;
+                }
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                if (score > highScore) highScore = score;
+                updateScores();
+                spawnFood();
+            } else {
+                snake.pop();
+            }
+            draw();
+        };
+
+        const draw = () => {
+            ctx.fillStyle = '#f3f4f6'; // bg-gray-100
+            ctx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+            snake.forEach((segment, index) => {
+                ctx.fillStyle = index === 0 ? '#2563eb' : '#3b82f6'; // blue-600, blue-500
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
+            });
+
+            ctx.fillStyle = '#ef4444'; // red-500
+            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 1, gridSize - 1);
+        };
+        
+        const changeDirection = (newDx, newDy) => {
+            // Prevent reversing
+            if (dx === -newDx && dx !== 0) return;
+            if (dy === -newDy && dy !== 0) return;
+            dx = newDx;
+            dy = newDy;
+        };
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowUp') changeDirection(0, -1);
+            else if (e.key === 'ArrowDown') changeDirection(0, 1);
+            else if (e.key === 'ArrowLeft') changeDirection(-1, 0);
+            else if (e.key === 'ArrowRight') changeDirection(1, 0);
+        });
+        
+        document.getElementById('snake-up').addEventListener('click', () => changeDirection(0, -1));
+        document.getElementById('snake-down').addEventListener('click', () => changeDirection(0, 1));
+        document.getElementById('snake-left').addEventListener('click', () => changeDirection(-1, 0));
+        document.getElementById('snake-right').addEventListener('click', () => changeDirection(1, 0));
+
+
+        window.addEventListener('resize', () => {
+            resizeSnakeCanvas();
+            initGame();
+        });
+
+        resizeSnakeCanvas();
+        initGame();
+    }
+
+    // --- AI Quiz ---
+    const quizContainer = document.getElementById('quizContainer');
+    if (quizContainer) {
+        const quizData = [
+            { question: "Wofür steht die Abkürzung 'KI'?", options: ["Kreative Intelligenz", "Künstliche Intelligenz", "Komplexe Interaktion"], answer: 1 },
+            { question: "Welches Unternehmen entwickelte das Sprachmodell GPT-3?", options: ["Google", "Facebook", "OpenAI"], answer: 2 },
+            { question: "Was ist ein 'Neuronales Netz' im Kontext von KI?", options: ["Ein Computervirus", "Ein biologisches Gehirn", "Ein von Gehirnen inspiriertes Berechnungsmodell"], answer: 2 },
+            { question: "Was beschreibt 'Machine Learning' am besten?", options: ["Computer, die fühlen können", "Systeme, die aus Daten lernen", "Roboter, die Maschinen bauen"], answer: 1 },
+            { question: "Wer prägte den Begriff 'Künstliche Intelligenz'?", options: ["Alan Turing", "John McCarthy", "Isaac Asimov"], answer: 1 },
+            { question: "Was ist der 'Turing-Test'?", options: ["Ein Test für Computer-Hardware", "Ein Test für die Intelligenz eines Menschen", "Ein Test, ob eine Maschine menschenähnlich denken kann"], answer: 2 }
+        ];
+        let currentQuestion = 0;
+        let quizScore = 0;
+
+        const loadQuiz = () => {
+            if (currentQuestion < quizData.length) {
+                const q = quizData[currentQuestion];
+                quizContainer.innerHTML = `
+                    <p class="font-semibold text-lg mb-4 text-gray-700">${currentQuestion + 1}. ${q.question}</p>
+                    <div class="space-y-3">
+                        ${q.options.map((opt, index) => `
+                            <button data-answer="${index}" class="quiz-option w-full text-left p-3 rounded-lg bg-gray-100 hover:bg-blue-100 border border-gray-200 transition-colors duration-200">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div id="feedback" class="mt-4 h-6"></div>
+                `;
+            } else {
+                quizContainer.innerHTML = `
+                    <h4 class="font-bold text-xl text-center text-blue-600">Quiz beendet!</h4>
+                    <p class="text-center my-4 text-lg">Sie haben ${quizScore} von ${quizData.length} Fragen richtig beantwortet.</p>
+                    <button id="restart-quiz" class="w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neustart</button>
+                `;
+            }
+        };
+
+        quizContainer.addEventListener('click', e => {
+            if (e.target.classList.contains('quiz-option')) {
+                const selectedAnswer = parseInt(e.target.dataset.answer);
+                const correctAnswer = quizData[currentQuestion].answer;
+                const feedbackEl = document.getElementById('feedback');
+                
+                document.querySelectorAll('.quiz-option').forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.remove('hover:bg-blue-100');
+                });
+
+                if (selectedAnswer === correctAnswer) {
+                    quizScore++;
+                    e.target.classList.add('bg-green-100', 'border-green-400');
+                    feedbackEl.innerHTML = `<p class="text-green-600 font-semibold">Richtig!</p>`;
+                } else {
+                    e.target.classList.add('bg-red-100', 'border-red-400');
+                    feedbackEl.innerHTML = `<p class="text-red-600 font-semibold">Falsch.</p>`;
+                    document.querySelector(`[data-answer="${correctAnswer}"]`).classList.add('bg-green-100', 'border-green-400');
+                }
+
+                currentQuestion++;
+                setTimeout(loadQuiz, 1500);
+            }
+            if (e.target.id === 'restart-quiz') {
+                currentQuestion = 0;
+                quizScore = 0;
+                loadQuiz();
+            }
+        });
+
+        loadQuiz();
+    }
+    
+    // --- Scroll Animations ---
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+        observer.observe(el);
+    });
+
+});
+</script>
+
+</body>
+</html>
