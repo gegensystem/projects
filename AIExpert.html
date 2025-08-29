@@ -1032,6 +1032,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const chatbotWindow = document.getElementById('chatbot-window');
         const chatbotForm = document.getElementById('chatbot-form');
         const chatbotInput = document.getElementById('chatbot-input');
+        let currentTicket = null;
 
         if(chatbotWindow && chatbotForm && chatbotInput) {
             const ticketData = {
@@ -1041,7 +1042,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     booking: "Projekt 77-Reparatur, Kostenstelle 4020",
                     customerError: `"Maschine heizt nicht mehr richtig auf, Kaffee ist nur lauwarm. Manchmal kommt nur Wasser."`,
                     aiAnalysis: `Problem deutet auf ein defektes Heizelement oder einen verkalkten Thermosensor hin. Wahrscheinlichkeit Heizelement: 75%. Empfohlene erste Schritte:<br>1. Widerstand des Heizelements messen (Sollwert: 25-30 Ohm).<br>2. Thermosensor auf Kalkablagerungen prüfen.`,
+                    tools: ["Multimeter (Lade 1, A2)", "Schraubendreher-Set (Lade 2, C1)", "Entkalker (Lager 5)"],
                     instructions: `Reparaturanleitung R-78B.pdf. <strong>Sicherheitshinweis:</strong> Vor dem Öffnen des Gehäuses Gerät vom Stromnetz trennen und 5 Minuten warten!`,
+                    imageAnalysis: "Bildanalyse: Das ist die Heizelement-Ansteuerung. Prüfen Sie die Lötstellen auf Korrosion.",
                     completion: `Qualitätstest bestanden. Protokoll P-12345-Final.pdf wurde abgelegt. Gerät ist für den Rückversand freigegeben.`
                 },
                 "T-67890": {
@@ -1050,8 +1053,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     booking: "Projekt 77-Reparatur, Kostenstelle 4020",
                     customerError: `"Der Staubsauger hat keine Saugkraft mehr, Motor klingt aber normal."`,
                     aiAnalysis: `Problem deutet auf eine Verstopfung im Saugweg oder einen vollen/defekten Filter hin. Wahrscheinlichkeit Verstopfung: 85%. Empfohlene erste Schritte:<br>1. Alle Filter prüfen und reinigen/ersetzen.<br>2. Saugrohr und Schlauch auf Fremdkörper prüfen.`,
+                    tools: ["Druckluftspray (Lade 4, D2)", "Pfeifenreiniger (Lager 2)", "Ersatzfilter-Set (Regal 7)"],
                     instructions: `Wartungsanleitung W-CM3K.pdf. <strong>Sicherheitshinweis:</strong> Filter nur im Freien ausklopfen.`,
+                     imageAnalysis: "Bildanalyse: Das ist der Hauptfilter. Er scheint stark verschmutzt zu sein und sollte ersetzt werden.",
                     completion: `Qualitätstest bestanden. Protokoll P-67890-Final.pdf wurde abgelegt. Gerät ist für den Rückversand freigegeben.`
+                },
+                "F1250": {
+                    device: `Solarwechselrichter Fronius Verto`,
+                    time: "90 Minuten (erhöhte Dringlichkeit)",
+                    booking: "Projekt 81-Eskalation, Kostenstelle 5010",
+                    customerError: `"Der Wechselrichter ist schon wieder ausgefallen! Das ist das zweite Mal in einem Monat. Die ganze PV-Anlage steht still. Der Kunde ist ein Landwirt und droht mit rechtlichen Schritten."`,
+                    aiAnalysis: `<strong>Hohe Dringlichkeit!</strong> Da es sich um einen Wiederholungsfehler handelt, ist eine Standardreparatur unzureichend. Die KI-Analyse früherer Fälle deutet auf ein mögliches Problem mit der Zwischenkreiskapazität hin. Bitte prüfen Sie die Kondensatoren C5 bis C8 auf der Hauptplatine genau.`,
+                    tools: ["Oszilloskop (Lade 1, A1)", "Multimeter (Lade 1, A2)", "Lötkolben (Lade 2, B3)", "Entlötpumpe (Lade 2, B4)", "ESD-Armband (Lade 3, C1)"],
+                    instructions: `Spezialanleitung ESK-Verto-02.pdf. <strong>Sicherheitshinweis:</strong> Hochspannung! Gerät vollständig entladen lassen (mind. 15 Min. warten) bevor das Gehäuse geöffnet wird!`,
+                    imageAnalysis: "Bildanalyse: Das ist Kondensator C7. Laut Schaltplan sollte dies ein 47nF Keramikkondensator sein. Der aufgedruckte Wert '47µF' ist falsch! Dies ist die Fehlerursache.",
+                    processImprovement: "<strong>Vorschlag zur Prozessverbesserung:</strong> Um diesen Fehler zukünftig zu vermeiden, empfehle ich:<br>1. Implementierung eines visuellen Abgleichs von Bauteilen mittels Kamera vor dem Einbau.<br>2. Getrennte und klar beschriftete Lagerung von Bauteilen mit ähnlichen Bezeichnungen aber unterschiedlichen Werten (z.B. nF vs. µF).",
+                    completion: `Kritischer Fehler gefunden und behoben. Langzeittest unter Last erfolgreich. Protokoll P-F1250-Final.pdf wurde abgelegt und der Fall zur Überprüfung der Prozesssicherheit weitergeleitet.`
                 }
             };
 
@@ -1065,17 +1082,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const handleBotResponse = (userInput) => {
                 const ticketId = userInput.trim().toUpperCase();
+                
+                if (userInput.toLowerCase() === 'bild hochladen') {
+                    if (currentTicket && ticketData[currentTicket]) {
+                        addMessage(ticketData[currentTicket].imageAnalysis, 'bot');
+                    } else {
+                        addMessage("Bitte rufen Sie zuerst ein Ticket auf, bevor Sie ein Bild zur Analyse hochladen.", 'bot');
+                    }
+                    return;
+                }
+
                 const data = ticketData[ticketId];
+                currentTicket = data ? ticketId : null;
 
                 if (data) {
                     setTimeout(() => addMessage(`Okay, ich rufe die Daten für Ticket <strong>${ticketId}</strong> auf...`, 'bot'), 500);
                     setTimeout(() => addMessage(`<strong>Gerät:</strong> ${data.device}<br><strong>Zeitvorgabe:</strong> ${data.time}<br><strong>Zeitbuchung:</strong> ${data.booking}`, 'bot'), 1500);
                     setTimeout(() => addMessage(`<strong>Fehlerbeschreibung des Kunden:</strong><br>${data.customerError}`, 'bot'), 2500);
                     setTimeout(() => addMessage(`<strong>KI-Analyse & Vorschläge:</strong><br>${data.aiAnalysis}`, 'bot'), 4000);
-                    setTimeout(() => addMessage(`<strong>Anleitung & Sicherheit:</strong><br>${data.instructions}`, 'bot'), 5500);
-                    setTimeout(() => addMessage(`Nach Abschluss der Reparatur und Qualitätsprüfung:<br><strong>Status:</strong> ${data.completion}`, 'bot'), 7000);
+                    setTimeout(() => addMessage(`<strong>Benötigte Werkzeuge:</strong><br>${data.tools.join(', ')}`, 'bot'), 5000);
+                    setTimeout(() => addMessage(`<strong>Anleitung & Sicherheit:</strong><br>${data.instructions}<br><br>Wenn Sie bei einem Bauteil unsicher sind, geben Sie <strong>'bild hochladen'</strong> ein.`, 'bot'), 6500);
+                    
+                    if(data.processImprovement) {
+                        setTimeout(() => addMessage(`<strong>KI-Vorschlag zur Prozessoptimierung:</strong><br>${data.processImprovement}`, 'bot'), 8000);
+                    }
+                    setTimeout(() => addMessage(`Nach Abschluss der Reparatur und Qualitätsprüfung:<br><strong>Status:</strong> ${data.completion}`, 'bot'), data.processImprovement ? 9500 : 8000);
                 } else {
-                     setTimeout(() => addMessage(`Entschuldigung, zur Ticketnummer "${userInput}" konnte ich keine Daten finden. Bitte versuchen Sie es mit <strong>T-12345</strong> oder <strong>T-67890</strong>.`, 'bot'), 500);
+                     setTimeout(() => addMessage(`Entschuldigung, zur Ticketnummer "${userInput}" konnte ich keine Daten finden. Bitte versuchen Sie es mit <strong>T-12345</strong>, <strong>T-67890</strong> oder <strong>F1250</strong>.`, 'bot'), 500);
                 }
             };
             
