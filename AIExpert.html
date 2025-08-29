@@ -244,8 +244,8 @@
             <div class="grid lg:grid-cols-2 gap-8 items-start">
                 <!-- 3D Model -->
                 <div class="card">
-                     <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives 3D-Modell</h3>
-                     <p class="mb-4 text-gray-600">Erkunden Sie ein 3D-Modell, öffnen und schließen Sie es und beobachten Sie die Live-Daten im Diagramm.</p>
+                     <h3 class="font-bold text-2xl mb-4 text-blue-700">3D-Visualisierung mit KI</h3>
+                     <p class="mb-4 text-gray-600">Dieses interaktive Modell wurde mit KI-Unterstützung konzipiert. KI kann helfen, komplexe 3D-Szenen zu generieren, Abmessungen anzupassen oder sogar Möbel für einen Raum vorzuschlagen. Ein perfektes Werkzeug für Planung und Prototyping.</p>
                     <div id="three-container" class="bg-gray-200">
                         <div id="three-info">Linke Maustaste: Drehen | Mausrad: Zoomen | Rechte Maustaste: Verschieben</div>
                         <div id="three-controls">
@@ -257,11 +257,11 @@
                         </div>
                     </div>
                 </div>
-                <!-- Snake Game & Quiz -->
+                <!-- Right column for other interactive elements -->
                 <div class="flex flex-col gap-8">
                     <div class="card flex flex-col">
-                        <h3 class="font-bold text-2xl mb-4 text-blue-700">Interaktives Spiel: KI-Snake</h3>
-                        <p class="mb-4 text-gray-600">Ein Klassiker, um das Prinzip von einfachen Regeln und emergentem Verhalten zu demonstrieren.</p>
+                        <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-gestützte Spieleentwicklung</h3>
+                        <p class="mb-4 text-gray-600">Dieses Spiel wurde mit Hilfe von KI programmiert. Es zeigt, wie jeder ohne tiefe Programmierkenntnisse klassische Spiele erschaffen und anpassen kann. KI wird zum Co-Entwickler und beschleunigt die Umsetzung von Ideen.</p>
                         <div class="flex-grow bg-gray-100 rounded-lg p-2 aspect-video relative border">
                             <canvas id="snakeCanvas" class="w-full h-full"></canvas>
                             <div id="scoreBoard" class="absolute top-2 left-4 text-gray-800 font-bold text-lg">
@@ -277,11 +277,13 @@
                             <button id="snake-right" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                         </div>
                     </div>
-                    <div class="card">
-                        <h3 class="font-bold text-2xl mb-4 text-blue-700">Wissensquiz: KI-Grundlagen</h3>
-                        <div id="quizContainer">
-                            <!-- Quiz content will be injected here by JS -->
+                     <div class="card">
+                        <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-Ideen-Generator</h3>
+                        <p class="mb-4 text-gray-600">Als Brettspielfan nutze ich KI, um kreative und einzigartige Spielideen zu generieren. Klicken Sie auf den Button, um zu sehen, wie KI als unendliche Inspirationsquelle dienen kann!</p>
+                        <div id="idea-display" class="p-4 bg-gray-100 rounded-lg min-h-[80px] flex items-center justify-center text-center font-semibold text-gray-700">
+                            Klicken Sie, um eine Idee zu generieren...
                         </div>
+                        <button id="generate-idea" class="mt-4 w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neue Spielidee</button>
                     </div>
                 </div>
             </div>
@@ -677,6 +679,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
+        // --- Idea Generator ---
+        const ideaDisplay = document.getElementById('idea-display');
+        const generateIdeaBtn = document.getElementById('generate-idea');
+        if(ideaDisplay && generateIdeaBtn) {
+            const ideas = [
+                "Ein kooperatives Spiel, in dem man als Bienenstaat den Winter überleben muss.",
+                "Ein Würfelspiel, bei dem man die Schwerkraft auf fremden Planeten manipuliert.",
+                "Ein Kartenspiel über den Aufbau des verrücktesten Freizeitparks.",
+                "Ein Strategiespiel, in dem man als Pilz-Netzwerk einen Wald erobert.",
+                "Ein Deduktionsspiel: Wer hat das letzte Stück Pizza gegessen?",
+                "Ein Rennspiel, bei dem die Fahrzeuge aus Haushaltsgegenständen gebaut werden.",
+                "Ein Wirtschaftsspiel über den Handel mit exotischen Gewürzen im Weltraum.",
+                "Ein Spiel, in dem man als zeitreisender Historiker Ereignisse korrigieren muss."
+            ];
+
+            generateIdeaBtn.addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * ideas.length);
+                ideaDisplay.textContent = ideas[randomIndex];
+            });
+        }
+    } catch(e) {
+        console.error("Error in Idea Generator:", e);
+    }
+
+    try {
         // --- Contact Form ---
         const contactForm = document.getElementById('contact-form');
         if (contactForm) {
@@ -926,5 +953,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-" selected, I'm asking you to: kannst du das 3D Modell in einem kleineren Fenster einbauen? Es ist einfach so heftig groß auf der Webseite. Ich würde mir das wirklich vielkleiner wünschen. Es soll nur die ideen anregen was möglich ist.
 
