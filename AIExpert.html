@@ -50,7 +50,7 @@
     <nav class="bg-white/80 backdrop-blur-md shadow-md fixed top-0 left-0 right-0 z-50">
         <div class="container mx-auto px-6">
             <div class="flex items-center justify-center h-16">
-                <div class="flex space-x-4 md:space-x-8 text-sm md:text-base font-medium text-gray-600">
+                <div class="flex flex-wrap justify-center gap-x-4 md:gap-x-8 text-sm md:text-base font-medium text-gray-600">
                     <a href="#about" class="hover:text-blue-600 transition-colors">Über Mich</a>
                     <a href="#career" class="hover:text-blue-600 transition-colors">Meilensteine</a>
                     <a href="#interactive" class="hover:text-blue-600 transition-colors">Interaktiv</a>
@@ -579,28 +579,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Contact Form ---
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        const captchaLabel = document.getElementById('captcha-label');
         const formStatus = document.getElementById('form-status');
-        let num1, num2;
-
-        const generateCaptcha = () => {
-            num1 = Math.floor(Math.random() * 10) + 1;
-            num2 = Math.floor(Math.random() * 10) + 1;
-            captchaLabel.textContent = `Was ist ${num1} + ${num2}?`;
-        };
-
+        
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             formStatus.textContent = '';
-            formStatus.classList.remove('text-red-600', 'text-green-600');
-
-            const captchaInput = document.getElementById('captcha').value;
-            if (parseInt(captchaInput, 10) !== (num1 + num2)) {
-                formStatus.textContent = 'Falsche Antwort. Bitte versuchen Sie es erneut.';
-                formStatus.classList.add('text-red-600');
-                generateCaptcha();
-                return;
-            }
+            formStatus.classList.remove('text-green-600');
 
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -615,10 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formStatus.classList.add('text-green-600');
             
             contactForm.reset();
-            generateCaptcha();
         });
-
-        generateCaptcha();
     }
     
     // --- Scroll Animations ---
