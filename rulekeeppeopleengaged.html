@@ -244,7 +244,17 @@
              <button id="close-account-modal" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl">&times;</button>
              <h2 class="text-2xl font-bold mb-6">Mein Konto</h2>
              <div class="mb-6 space-y-2"><p><span class="font-semibold text-slate-400">Name:</span> <span id="account-name"></span></p><p><span class="font-semibold text-slate-400">E-Mail:</span> <span id="account-email"></span></p></div>
-             <div class="border-t border-slate-700 pt-6"><h3 class="font-semibold text-lg mb-2">Konto löschen</h3><p class="text-slate-400 mb-4">Wenn du dein Konto löschen möchtest, klicke auf den Button. Eine Anfrage mit deinen Daten wird an den Administrator gesendet.</p><button id="request-deletion-btn" class="w-full text-center block bg-red-800 hover:bg-red-700 text-white font-bold py-3 rounded-lg disabled:bg-slate-600 disabled:cursor-not-allowed">Löschung anfragen</button><p id="deletion-feedback" class="text-green-400 mt-4 text-center h-5"></p></div>
+             <div class="border-t border-slate-700 pt-6">
+                <h3 class="font-semibold text-lg mb-2">Konto löschen</h3>
+                <p class="text-slate-400 mb-4">Wenn du dein Konto löschen möchtest, klicke auf den Button. Eine E-Mail mit deinem Benutzernamen und deiner E-Mail-Adresse wird zur Bearbeitung an den Administrator gesendet.</p>
+                <!-- WICHTIG: Ersetze "YOUR_FORM_ID" mit deiner tatsächlichen Formspree Formular-ID -->
+                <form id="deletion-form" action="https://formspree.io/f/myzdgawa" method="POST">
+                    <input type="hidden" name="Benutzername" id="deletion-displayName">
+                    <input type="hidden" name="Email" id="deletion-email">
+                    <input type="hidden" name="_subject" value="Neue Löschanfrage für Questboard">
+                    <button type="submit" class="w-full text-center block bg-red-800 hover:bg-red-700 text-white font-bold py-3 rounded-lg">Löschanfrage per E-Mail senden</button>
+                </form>
+            </div>
         </div>
     </div>
     <div id="imprint-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
@@ -528,28 +538,6 @@
                 }, 5000);
             }
         });
-
-        document.getElementById('request-deletion-btn').addEventListener('click', async (e) => {
-            const btn = e.target;
-            btn.disabled = true;
-            const feedbackEl = document.getElementById('deletion-feedback');
-            feedbackEl.textContent = 'Sende Anfrage...';
-            try {
-                const deletionRequestsRef = collection(db, 'deletionRequests');
-                await addDoc(deletionRequestsRef, {
-                    uid: currentUser.uid || 'uid_missing',
-                    email: currentUser.email || 'email_missing',
-                    displayName: currentUser.displayName || 'displayName_missing',
-                    requestedAt: Timestamp.now()
-                });
-                feedbackEl.textContent = 'Löschanfrage wurde gesendet.';
-            } catch (error) {
-                console.error("Error requesting deletion:", error);
-                feedbackEl.textContent = 'Fehler beim Senden der Anfrage.';
-                btn.disabled = false;
-            }
-        });
-
 
         // Auth Modal Logic
         document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -1002,7 +990,18 @@
             document.getElementById('close-menu-btn').addEventListener('click', closeMenu);
             if(isLoggedIn) {
                 document.getElementById('logout-btn').addEventListener('click', (e) => { e.preventDefault(); signOut(auth); closeMenu(); });
-                document.getElementById('account-btn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('account-name').textContent = currentUser.displayName || 'Nicht festgelegt'; document.getElementById('account-email').textContent = currentUser.email; document.getElementById('request-deletion-btn').classList.remove('hidden'); document.getElementById('request-deletion-btn').disabled = false; document.getElementById('request-deletion-btn').textContent = 'Löschung anfragen'; document.getElementById('deletion-feedback').textContent = ''; showModal(accountModal); closeMenu(); });
+                document.getElementById('account-btn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('account-name').textContent = currentUser.displayName || 'Nicht festgelegt';
+                    document.getElementById('account-email').textContent = currentUser.email;
+                    
+                    // Populate the hidden fields for the Formspree form
+                    document.getElementById('deletion-displayName').value = currentUser.displayName || 'Nicht festgelegt';
+                    document.getElementById('deletion-email').value = currentUser.email;
+
+                    showModal(accountModal);
+                    closeMenu();
+                });
             } else {
                 document.getElementById('login-register-btn').addEventListener('click', (e) => { e.preventDefault(); showModal(authModal); closeMenu(); });
             }
