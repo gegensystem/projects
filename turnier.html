@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartenspiel-Turnier Wertung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .collapsible-header {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+        .collapsible-content {
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            max-height: 0;
+        }
+        .collapsible-content.expanded {
+            max-height: 1000px; /* Large enough to fit content */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6 flex items-center justify-center min-h-screen">
+
+    <div id="app" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl">
+        <h1 class="text-4xl font-bold text-center mb-4 text-indigo-700">Kartenspiel-Turnier Linz</h1>
+        <p class="text-center text-gray-600 mb-8">Interaktives Wertungstool für euer Turnier</p>
+        
+        <!-- Tournament Rules -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-indigo-600">Turnierregeln</h2>
+            <div class="bg-gray-50 p-6 rounded-lg">
+                <ul class="list-disc list-inside space-y-3 text-gray-700">
+                    <li><b class="font-bold">Qualifikationsrunden:</b> 3 Gruppen mit je 6 Spielern spielen Skyjo, Wizard und Passt nicht!.</li>
+                    <li><b class="font-bold">Punktevergabe:</b> 1. Platz: 10 P., 2. Platz: 8 P., 3. Platz: 6 P., 4. Platz: 4 P., 5. Platz: 2 P., 6. Platz: 1 P.</li>
+                    <li><b class="font-bold">Finalisten:</b> Die beiden Spieler mit den höchsten Gesamtpunkten jeder Gruppe qualifizieren sich.</li>
+                    <li><b class="font-bold">Finalspiel:</b> Das Spiel mit den meisten Gesamtpunkten der Finalisten wird für die letzte Runde gewählt.</li>
+                    <li><b class="font-bold">Sieger:</b> Der Spieler mit der höchsten Gesamtpunktzahl am Ende des Finalspiels ist der Turniersieger.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Groups Section -->
+        <div id="groups-container">
+            <!-- Group 1 -->
+            <div id="group-1" class="mb-6 rounded-lg shadow-md bg-gray-100">
+                <div class="collapsible-header flex items-center justify-between p-4 bg-gray-200 rounded-t-lg">
+                    <h3 class="text-xl font-semibold">Gruppe 1</h3>
+                    <span class="text-2xl transform transition-transform duration-300 rotate-0" id="arrow-1">&#x25BC;</span>
+                </div>
+                <div class="collapsible-content p-4 border-t border-gray-300" id="content-1">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="text-left text-gray-600 font-semibold">
+                                <th class="p-2">Spieler</th>
+                                <th class="p-2">Skyjo</th>
+                                <th class="p-2">Wizard</th>
+                                <th class="p-2">Passt nicht!</th>
+                                <th class="p-2">Gesamt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="group-1-body"></tbody>
+                    </table>
+                    <button class="mt-4 w-full md:w-auto px-6 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition-colors" onclick="calculateGroupScores('1')">Punkte berechnen</button>
+                    <div id="group-1-results" class="mt-4 hidden p-3 bg-indigo-50 rounded-lg text-indigo-800"></div>
+                </div>
+            </div>
+
+            <!-- Group 2 -->
+            <div id="group-2" class="mb-6 rounded-lg shadow-md bg-gray-100">
+                <div class="collapsible-header flex items-center justify-between p-4 bg-gray-200 rounded-t-lg">
+                    <h3 class="text-xl font-semibold">Gruppe 2</h3>
+                    <span class="text-2xl transform transition-transform duration-300 rotate-0" id="arrow-2">&#x25BC;</span>
+                </div>
+                <div class="collapsible-content p-4 border-t border-gray-300" id="content-2">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="text-left text-gray-600 font-semibold">
+                                <th class="p-2">Spieler</th>
+                                <th class="p-2">Skyjo</th>
+                                <th class="p-2">Wizard</th>
+                                <th class="p-2">Passt nicht!</th>
+                                <th class="p-2">Gesamt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="group-2-body"></tbody>
+                    </table>
+                    <button class="mt-4 w-full md:w-auto px-6 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition-colors" onclick="calculateGroupScores('2')">Punkte berechnen</button>
+                    <div id="group-2-results" class="mt-4 hidden p-3 bg-indigo-50 rounded-lg text-indigo-800"></div>
+                </div>
+            </div>
+
+            <!-- Group 3 -->
+            <div id="group-3" class="mb-6 rounded-lg shadow-md bg-gray-100">
+                <div class="collapsible-header flex items-center justify-between p-4 bg-gray-200 rounded-t-lg">
+                    <h3 class="text-xl font-semibold">Gruppe 3</h3>
+                    <span class="text-2xl transform transition-transform duration-300 rotate-0" id="arrow-3">&#x25BC;</span>
+                </div>
+                <div class="collapsible-content p-4 border-t border-gray-300" id="content-3">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="text-left text-gray-600 font-semibold">
+                                <th class="p-2">Spieler</th>
+                                <th class="p-2">Skyjo</th>
+                                <th class="p-2">Wizard</th>
+                                <th class="p-2">Passt nicht!</th>
+                                <th class="p-2">Gesamt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="group-3-body"></tbody>
+                    </table>
+                    <button class="mt-4 w-full md:w-auto px-6 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition-colors" onclick="calculateGroupScores('3')">Punkte berechnen</button>
+                    <div id="group-3-results" class="mt-4 hidden p-3 bg-indigo-50 rounded-lg text-indigo-800"></div>
+                </div>
+            </div>
+            
+            <!-- Button to start final round -->
+            <div class="mt-8 flex justify-center">
+                <button id="start-final-btn" class="hidden px-6 py-3 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-colors" onclick="determineFinalGame()">Finalrunde starten</button>
+            </div>
+        </div>
+
+        <!-- Finalists and Final Game Section (hidden by default) -->
+        <div id="final-section" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-indigo-600">Finalisten & Finalspiel</h2>
+            <div class="bg-yellow-50 p-6 rounded-lg mb-6">
+                <h3 class="text-lg font-bold text-yellow-800">Finalisten:</h3>
+                <ul id="finalists-list" class="list-disc list-inside mt-2 text-gray-700"></ul>
+            </div>
+
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 text-indigo-700 p-4 rounded-md shadow-inner text-center mb-6">
+                <p class="font-bold text-xl mb-2">Das Finalspiel ist:</p>
+                <p id="final-game-text" class="text-2xl font-bold"></p>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-4 text-indigo-600">Finalrunde Wertung</h3>
+            <table class="min-w-full bg-white border-collapse rounded-lg shadow-md">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="py-3 px-4 text-left font-semibold text-gray-700 rounded-tl-lg">Spieler</th>
+                        <th class="py-3 px-4 text-left font-semibold text-gray-700">Quali-Punkte</th>
+                        <th class="py-3 px-4 text-left font-semibold text-gray-700">Platzierung Finale</th>
+                        <th class="py-3 px-4 text-left font-semibold text-gray-700">Finale-Punkte</th>
+                        <th class="py-3 px-4 text-left font-semibold text-gray-700 rounded-tr-lg">Gesamtpunkte</th>
+                    </tr>
+                </thead>
+                <tbody id="final-scoreboard-body"></tbody>
+            </table>
+            
+            <div class="mt-8 flex justify-center">
+                 <button onclick="endTournament()" class="px-6 py-3 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors">Turnier beenden & Sieger küren!</button>
+            </div>
+        </div>
+
+        <!-- Winner Display Section -->
+        <div id="winner-display" class="hidden mt-8">
+             <h2 class="text-2xl font-semibold mb-4 text-center text-green-600">Herzlichen Glückwunsch!</h2>
+             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-inner">
+                <p id="winner-text" class="text-xl font-bold text-center"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const POINT_VALUES = {
+            1: 10, 2: 8, 3: 6, 4: 4, 5: 2, 6: 1
+        };
+        const GAME_NAMES = {
+            'skyjo': 'Skyjo', 'wizard': 'Wizard', 'passtNicht': 'Passt nicht!'
+        };
+        const groupsData = {
+            '1': { players: [] },
+            '2': { players: [] },
+            '3': { players: [] }
+        };
+        let allGroupsCalculated = { '1': false, '2': false, '3': false };
+        let finalists = [];
+
+        // UI Setup
+        document.addEventListener('DOMContentLoaded', () => {
+            const playerNames = ["A", "B", "C", "D", "E", "F"];
+            for (let i = 1; i <= 3; i++) {
+                const tbody = document.getElementById(`group-${i}-body`);
+                playerNames.forEach((name, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b last:border-0 hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="p-2"><input type="text" value="Spieler ${i}${name}" class="w-24 p-1 rounded-md border text-sm" data-player-id="g${i}-p${index}"></td>
+                        <td class="p-2"><input type="number" min="1" max="6" class="w-16 p-1 rounded-md border text-center text-sm" data-game="skyjo"></td>
+                        <td class="p-2"><input type="number" min="1" max="6" class="w-16 p-1 rounded-md border text-center text-sm" data-game="wizard"></td>
+                        <td class="p-2"><input type="number" min="1" max="6" class="w-16 p-1 rounded-md border text-center text-sm" data-game="passtNicht"></td>
+                        <td class="p-2 font-bold text-gray-800" data-total="true">0</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Collapsible logic
+            document.querySelectorAll('.collapsible-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const contentId = header.id.split('-')[1];
+                    const content = document.getElementById(`content-${contentId}`);
+                    const arrow = document.getElementById(`arrow-${contentId}`);
+                    content.classList.toggle('expanded');
+                    arrow.classList.toggle('rotate-180');
+                });
+            });
+        });
+
+        function calculateGroupScores(groupId) {
+            const tableBody = document.getElementById(`group-${groupId}-body`);
+            const rows = tableBody.querySelectorAll('tr');
+            let players = [];
+
+            let allValid = true;
+            rows.forEach(row => {
+                const nameInput = row.querySelector('input[type="text"]');
+                const scoreInputs = row.querySelectorAll('input[type="number"]');
+                const name = nameInput.value;
+                const scores = {};
+                let total = 0;
+
+                scoreInputs.forEach(input => {
+                    const game = input.dataset.game;
+                    const rank = parseInt(input.value, 10);
+                    if (isNaN(rank) || rank < 1 || rank > 6) {
+                        allValid = false;
+                    }
+                    scores[game] = POINT_VALUES[rank];
+                    total += POINT_VALUES[rank];
+                });
+
+                players.push({ name, scores, total });
+                row.querySelector('td[data-total]').textContent = total;
+            });
+            
+            if (!allValid) {
+                alert('Bitte geben Sie für alle Spieler in dieser Gruppe eine gültige Platzierung (1-6) ein.');
+                return;
+            }
+
+            // Sort players and find finalists
+            players.sort((a, b) => b.total - a.total);
+            groupsData[groupId].players = players;
+            
+            const finalistsDiv = document.getElementById(`group-${groupId}-results`);
+            finalistsDiv.classList.remove('hidden');
+            finalistsDiv.innerHTML = `
+                <p class="font-bold">Qualifiziert:</p>
+                <p>1. ${players[0].name} (${players[0].total} Punkte)</p>
+                <p>2. ${players[1].name} (${players[1].total} Punkte)</p>
+            `;
+
+            allGroupsCalculated[groupId] = true;
+            checkAllGroupsCalculated();
+        }
+
+        function checkAllGroupsCalculated() {
+            if (allGroupsCalculated['1'] && allGroupsCalculated['2'] && allGroupsCalculated['3']) {
+                document.getElementById('start-final-btn').classList.remove('hidden');
+            }
+        }
+
+        function determineFinalGame() {
+            finalists = [];
+            const finalistsList = document.getElementById('finalists-list');
+            finalistsList.innerHTML = '';
+            
+            let gameTotals = { 'skyjo': 0, 'wizard': 0, 'passtNicht': 0 };
+
+            for (let i = 1; i <= 3; i++) {
+                const groupFinalists = groupsData[i].players.slice(0, 2);
+                groupFinalists.forEach(p => {
+                    finalists.push(p);
+                    finalistsList.innerHTML += `<li>${p.name} aus Gruppe ${i}</li>`;
+                    gameTotals.skyjo += p.scores.skyjo;
+                    gameTotals.wizard += p.scores.wizard;
+                    gameTotals.passtNicht += p.scores.passtNicht;
+                });
+            }
+
+            const finalGame = Object.keys(gameTotals).reduce((a, b) => gameTotals[a] > gameTotals[b] ? a : b);
+            document.getElementById('final-game-text').textContent = GAME_NAMES[finalGame];
+
+            // Populate the final scoreboard
+            const finalScoreboardBody = document.getElementById('final-scoreboard-body');
+            finalScoreboardBody.innerHTML = '';
+            finalists.forEach((p, index) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b last:border-0 hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="py-3 px-4 font-bold text-gray-900">${p.name}</td>
+                    <td class="py-3 px-4">${p.total}</td>
+                    <td class="py-3 px-4">
+                        <select id="final-rank-${index}" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-1">
+                            <option value="">Wähle Platzierung</option>
+                            <option value="1">1. Platz</option>
+                            <option value="2">2. Platz</option>
+                            <option value="3">3. Platz</option>
+                            <option value="4">4. Platz</option>
+                            <option value="5">5. Platz</option>
+                            <option value="6">6. Platz</option>
+                        </select>
+                    </td>
+                    <td id="final-score-${index}" class="py-3 px-4 font-bold text-indigo-600">0</td>
+                    <td id="total-score-${index}" class="py-3 px-4 font-bold text-green-600">${p.total}</td>
+                `;
+                finalScoreboardBody.appendChild(row);
+
+                // Add event listener for real-time total update
+                document.getElementById(`final-rank-${index}`).addEventListener('change', (e) => {
+                    const rank = parseInt(e.target.value, 10);
+                    const finalScore = POINT_VALUES[rank] || 0;
+                    document.getElementById(`final-score-${index}`).textContent = finalScore;
+                    const totalScore = p.total + finalScore;
+                    document.getElementById(`total-score-${index}`).textContent = totalScore;
+                });
+            });
+
+            document.getElementById('groups-container').classList.add('hidden');
+            document.getElementById('final-section').classList.remove('hidden');
+        }
+
+        function endTournament() {
+            let allRanksSelected = true;
+            let finalResults = [];
+
+            finalists.forEach((p, index) => {
+                const rankInput = document.getElementById(`final-rank-${index}`);
+                if (!rankInput.value) {
+                    allRanksSelected = false;
+                }
+                const finalPoints = POINT_VALUES[parseInt(rankInput.value, 10)] || 0;
+                const grandTotal = p.total + finalPoints;
+                finalResults.push({ name: p.name, total: grandTotal });
+            });
+
+            if (!allRanksSelected) {
+                alert('Bitte weisen Sie jedem Finalisten eine Platzierung zu.');
+                return;
+            }
+
+            finalResults.sort((a, b) => b.total - a.total);
+            
+            let winnerText = `Der Turniersieger ist: ${finalResults[0].name} mit ${finalResults[0].total} Punkten!`;
+            if (finalResults.length > 1 && finalResults[0].total === finalResults[1].total) {
+                winnerText = `Es gibt einen Gleichstand! Die Turniersieger sind:`;
+                finalResults.forEach(s => {
+                    if (s.total === finalResults[0].total) {
+                        winnerText += `\n- ${s.name} mit ${s.total} Punkten`;
+                    }
+                });
+            }
+
+            document.getElementById('final-section').classList.add('hidden');
+            document.getElementById('winner-text').innerText = winnerText;
+            document.getElementById('winner-display').classList.remove('hidden');
+        }
+
+    </script>
+</body>
+</html>
