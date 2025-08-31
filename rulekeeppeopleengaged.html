@@ -3,237 +3,1258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografik: 5 Regeln für fesselnde Vorträge</title>
+    <title>Questboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #F8FAFC; /* Slate 50 */
+        body { font-family: 'Inter', sans-serif; }
+        .modal-enter { animation: fadeIn 0.3s ease-out; }
+        .modal-leave { animation: fadeOut 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+        .filter-btn.active { background-color: #06b6d4; color: white; }
+        .highlight-quest {
+            transition: box-shadow 0.5s ease-in-out;
+            box-shadow: 0 0 20px 5px #06b6d4;
         }
-        .infographic-title {
-            background: linear-gradient(135deg, #868F96 0%, #596164 100%);
+        /* Styles for sortable table headers */
+        .sortable {
+            cursor: pointer;
+            position: relative;
+            user-select: none;
         }
-        .card-1 { background-color: #F3E8FF; border-left: 5px solid #C084FC; } /* Purple */
-        .card-2 { background-color: #E0F2F1; border-left: 5px solid #4DB6AC; } /* Teal */
-        .card-3 { background-color: #FFF3E0; border-left: 5px solid #FFB74D; } /* Orange */
-        .card-4 { background-color: #FCE4EC; border-left: 5px solid #F06292; } /* Pink */
-        .card-5 { background-color: #E3F2FD; border-left: 5px solid #64B5F6; } /* Blue */
-
-        .flow-item {
-            @apply text-center p-2 rounded-lg shadow-sm text-sm md:text-base;
+        .sortable:hover {
+            color: #06b6d4;
         }
-        .arrow {
-            @apply text-gray-400 text-2xl mx-1 md:mx-2 flex items-center justify-center;
+        .sortable::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            margin-top: -6px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            opacity: 0.5;
         }
-        .icon-correct {
-            @apply w-6 h-6 text-green-500;
+        .sortable.asc::after {
+            border-bottom: 5px solid;
         }
-        .icon-wrong {
-            @apply w-6 h-6 text-red-500;
+        .sortable.desc::after {
+            border-top: 5px solid;
+        }
+        .table-game-name {
+            cursor: pointer;
+        }
+        .table-game-name:hover {
+            color: #06b6d4;
+        }
+        /* New styles for expandable rows */
+        .expandable-row {
+            cursor: pointer;
+        }
+        .details-row > td {
+            background-color: rgba(15, 23, 42, 0.5); /* bg-slate-900/50 */
         }
     </style>
 </head>
-<body class="bg-slate-50 flex justify-center p-4 sm:p-6 md:p-8">
-    <div class="w-full max-w-4xl space-y-8">
-        
-        <!-- Titel der Infografik -->
-        <header class="text-center p-6 md:p-10 rounded-2xl shadow-lg infographic-title text-white">
-            <h1 class="text-3xl md:text-5xl font-bold">5 Regeln für fesselnde Vorträge</h1>
-            <p class="mt-2 text-lg md:text-xl opacity-90">So bleibt dein Publikum während deines Vortrags aufmerksam</p>
-        </header>
+<body class="bg-slate-900 text-white antialiased">
 
-        <main class="space-y-8">
-            <!-- Regel 1: Abstraktion -->
-            <section class="card-1 p-6 rounded-2xl shadow-md">
-                <div class="flex items-center mb-4">
-                    <span class="text-5xl font-bold text-purple-500 mr-4">#1</span>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Die Regel der Abstraktion</h2>
-                        <p class="text-gray-600">Strukturiere jeden Abschnitt vom Abstrakten zum Konkreten.</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <!-- Falsch -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-red-200">
-                        <div class="flex items-center font-semibold text-red-600 mb-3">
-                            <svg class="icon-wrong mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Falsch
-                        </div>
-                        <div class="flex items-center justify-center flex-wrap">
-                            <div class="flow-item bg-red-100 text-red-800">Handlung</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-red-100 text-red-800">Analogien</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-red-100 text-red-800">Konzepte</div>
-                        </div>
-                    </div>
-                    <!-- Richtig -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-green-200">
-                        <div class="flex items-center font-semibold text-green-600 mb-3">
-                            <svg class="icon-correct mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Richtig
-                        </div>
-                        <div class="flex items-center justify-center flex-wrap">
-                            <div class="flow-item bg-green-100 text-green-800">Konzepte</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-green-100 text-green-800">Analogien</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-green-100 text-green-800">Beispiele</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-green-100 text-green-800">Handlung</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    <!-- Header -->
+    <header class="bg-slate-800/70 backdrop-blur-sm sticky top-0 z-20 shadow-lg">
+        <div class="container mx-auto px-4 py-4 max-w-7xl flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-cyan-400">📜🎲 Questboard</h1>
+                <p class="text-slate-400 mt-1">Finde Mitspieler für deine nächste Runde.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://www.paypal.com/ncp/payment/Q47XPP7KQQVLQ" target="_blank" rel="noopener noreferrer" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-transform transform hover:scale-105">
+                    <span>☕</span>
+                    <span class="hidden sm:inline">Kaffee ausgeben</span>
+                </a>
+                <button id="menu-toggle-btn" class="p-2 rounded-md hover:bg-slate-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
 
-            <!-- Regel 2: Kontroverse -->
-            <section class="card-2 p-6 rounded-2xl shadow-md">
-                <div class="flex items-center mb-4">
-                    <span class="text-5xl font-bold text-teal-500 mr-4">#2</span>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Die Regel der Kontroverse</h2>
-                        <p class="text-gray-600">Präsentiere eine gängige Gegenmeinung vor deinem Standpunkt.</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <!-- Falsch -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-red-200">
-                        <div class="flex items-center font-semibold text-red-600 mb-3">
-                             <svg class="icon-wrong mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Falsch
-                        </div>
-                        <div class="mt-4 p-3 bg-red-50 rounded-lg italic text-center">"Ich glaube 'x'."</div>
-                    </div>
-                    <!-- Richtig -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-green-200">
-                        <div class="flex items-center font-semibold text-green-600 mb-3">
-                           <svg class="icon-correct mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Richtig
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-100 rounded-lg text-center text-gray-600">"Viele Leute glauben 'y'..."</div>
-                        <div class="mt-2 p-3 bg-green-100 rounded-lg italic text-center text-green-800">"...aber ich bin überzeugt von 'x'."</div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Regel 3: Ein-Problem-Regel -->
-            <section class="card-3 p-6 rounded-2xl shadow-md">
-                <div class="flex items-center mb-4">
-                    <span class="text-5xl font-bold text-orange-500 mr-4">#3</span>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Die Ein-Problem-Regel</h2>
-                        <p class="text-gray-600">Löse nur ein Problem pro Vortrag, nicht mehrere.</p>
-                    </div>
-                </div>
-                 <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <!-- Falsch -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-red-200">
-                        <div class="flex items-center font-semibold text-red-600 mb-3">
-                             <svg class="icon-wrong mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Falsch
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center"><div class="flow-item bg-red-100">Problem A</div><span class="arrow">&rarr;</span><div class="flow-item bg-red-100">Lösung A</div></div>
-                            <div class="flex items-center"><div class="flow-item bg-red-100">Problem B</div><span class="arrow">&rarr;</span><div class="flow-item bg-red-100">Lösung B</div></div>
-                            <div class="flex items-center"><div class="flow-item bg-red-100">Problem C</div><span class="arrow">&rarr;</span><div class="flow-item bg-red-100">Lösung C</div></div>
-                        </div>
-                    </div>
-                    <!-- Richtig -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-green-200">
-                        <div class="flex items-center font-semibold text-green-600 mb-3">
-                            <svg class="icon-correct mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Richtig
-                        </div>
-                        <div class="flex items-center justify-center flex-wrap">
-                            <div class="flow-item bg-green-100">Problem</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-green-100">Lösung 1</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-green-100">Lösung 2</div><span class="arrow">&rarr;</span>
-                            <div class="flow-item bg-green-100">Lösung 3</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Regel 4: Spannung -->
-            <section class="card-4 p-6 rounded-2xl shadow-md">
-                <div class="flex items-center mb-4">
-                    <span class="text-5xl font-bold text-pink-500 mr-4">#4</span>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Die Regel der Spannung</h2>
-                        <p class="text-gray-600">Verrate deine Punkte nacheinander, nicht alle auf einmal.</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <!-- Falsch -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-red-200">
-                        <div class="flex items-center font-semibold text-red-600 mb-3">
-                             <svg class="icon-wrong mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Falsch
-                        </div>
-                        <p class="mb-2 text-gray-700">"Ich habe drei Ideen, hier sind sie:"</p>
-                        <div class="flex justify-around">
-                            <div class="flow-item bg-red-100 w-1/4">Punkt 1</div>
-                            <div class="flow-item bg-red-100 w-1/4">Punkt 2</div>
-                            <div class="flow-item bg-red-100 w-1/4">Punkt 3</div>
-                        </div>
-                    </div>
-                    <!-- Richtig -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-green-200">
-                        <div class="flex items-center font-semibold text-green-600 mb-3">
-                            <svg class="icon-correct mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Richtig
-                        </div>
-                         <p class="mb-2 text-gray-700">"Ich habe drei Ideen. Die erste ist..."</p>
-                        <div class="flex justify-around items-center">
-                            <div class="flow-item bg-green-100 w-1/4">Punkt 1</div>
-                            <div class="flow-item bg-gray-200 text-gray-400 w-1/4">Punkt 2?</div>
-                            <div class="flow-item bg-gray-200 text-gray-400 w-1/4">Punkt 3?</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Regel 5: 2-Minuten-Regel -->
-            <section class="card-5 p-6 rounded-2xl shadow-md">
-                 <div class="flex items-center mb-4">
-                    <span class="text-5xl font-bold text-blue-500 mr-4">#5</span>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Die 2-Minuten-Regel</h2>
-                        <p class="text-gray-600">Ändere die Art des Inhalts alle zwei Minuten.</p>
-                    </div>
-                </div>
-                 <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <!-- Falsch -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-red-200">
-                        <div class="flex items-center font-semibold text-red-600 mb-3">
-                             <svg class="icon-wrong mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Falsch
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-4 mt-4">
-                            <div class="bg-red-300 h-4 rounded-l-full" style="width: 25%"></div>
-                            <div class="bg-red-400 h-4" style="width: 15%; margin-left: 25%;"></div>
-                            <div class="bg-red-500 h-4" style="width: 50%; margin-left: 40%;"></div>
-                            <div class="bg-red-600 h-4 rounded-r-full" style="width: 10%; margin-left: 90%;"></div>
-                        </div>
-                        <p class="text-center text-sm text-red-700 mt-2">Du verlierst hier dein Publikum.</p>
-                    </div>
-                    <!-- Richtig -->
-                    <div class="bg-white/50 p-4 rounded-lg border border-green-200">
-                        <div class="flex items-center font-semibold text-green-600 mb-3">
-                           <svg class="icon-correct mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Richtig
-                        </div>
-                        <div class="flex w-full bg-gray-200 rounded-full h-4 mt-4">
-                           <div class="bg-green-300 h-4" style="width: 20%"></div>
-                           <div class="bg-green-400 h-4" style="width: 20%"></div>
-                           <div class="bg-green-500 h-4" style="width: 20%"></div>
-                           <div class="bg-green-600 h-4" style="width: 20%"></div>
-                           <div class="bg-green-700 h-4 rounded-r-full" style="width: 20%"></div>
-                        </div>
-                        <p class="text-center text-sm text-green-700 mt-2">Das Publikum bleibt durchgehend dabei.</p>
-                    </div>
-                </div>
-            </section>
-        </main>
-
+    <!-- Side Menu -->
+    <div id="side-menu" class="fixed top-0 right-0 h-full w-64 bg-slate-800 shadow-2xl transform translate-x-full transition-transform z-30">
+        <div id="side-menu-content" class="p-6">
+            <!-- Menu content will be dynamically inserted here -->
+        </div>
     </div>
+    <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden"></div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto p-4 max-w-7xl">
+        <!-- Verification Banner -->
+        <div id="verification-banner" class="hidden bg-yellow-500/20 border border-yellow-500 text-yellow-300 px-4 py-3 rounded-lg text-center mb-4">
+            Bitte bestätige deine E-Mail-Adresse. Wir haben dir einen Link geschickt. 
+            <button id="resend-verification-btn" class="font-bold underline hover:text-white disabled:opacity-50 disabled:cursor-not-allowed">Erneut senden</button>
+            <span id="resend-feedback" class="ml-2 text-green-400"></span>
+        </div>
+
+        <!-- Action & Filter Buttons -->
+        <div class="my-6 flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button id="add-game-btn" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105 w-full sm:w-auto order-1 sm:order-2">
+                (+) Neues Quest anbieten
+            </button>
+            <div class="flex flex-col lg:flex-row gap-4 w-full lg:w-auto order-2 sm:order-1">
+                <div class="flex flex-col sm:flex-row gap-4">
+                     <div class="flex gap-4">
+                        <input type="text" id="name-filter" placeholder="Nach Spiel suchen..." class="bg-slate-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 w-full sm:w-auto" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
+                        <input type="text" id="location-filter" placeholder="Nach Ort suchen..." class="bg-slate-800 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 w-full sm:w-auto" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
+                    </div>
+                </div>
+                <div id="day-filter-container" class="flex gap-2 p-1 bg-slate-800 rounded-lg">
+                    <button class="filter-btn day-filter-btn active px-2 py-1 rounded-md transition" data-day="all">Alle</button>
+                    <button class="filter-btn day-filter-btn px-2 py-1 rounded-md transition" data-day="1">Mo</button>
+                    <button class="filter-btn day-filter-btn px-2 py-1 rounded-md transition" data-day="2">Di</button>
+                    <button class="filter-btn day-filter-btn px-2 py-1 rounded-md transition" data-day="3">Mi</button>
+                    <button class="filter-btn day-filter-btn px-2 py-1 rounded-md transition" data-day="4">Do</button>
+                    <button class="filter-btn day-filter-btn px-2 py-1 rounded-md transition" data-day="5">Fr</button>
+                    <button class="filter-btn day-filter-btn px-2 py-1 rounded-md transition" data-day="6">Sa</button>
+                    <button class="filter-btn day-filter-btn px-2 py-1 rounded-md transition" data-day="0">So</button>
+                </div>
+            </div>
+        </div>
+         <!-- Location Filter -->
+        <div id="location-filter-container" class="mb-6 flex flex-wrap justify-center gap-2 p-2 bg-slate-800/50 rounded-lg">
+            <button class="filter-btn location-filter-btn active px-3 py-1 rounded-md transition" data-location="all">Alle Orte</button>
+            <button class="filter-btn location-filter-btn px-3 py-1 rounded-md transition" data-location="Genduron">Genduron</button>
+            <button class="filter-btn location-filter-btn px-3 py-1 rounded-md transition" data-location="Knobelritter">Knobelritter</button>
+            <button class="filter-btn location-filter-btn px-3 py-1 rounded-md transition" data-location="Spieleversum">Spieleversum</button>
+            <button class="filter-btn location-filter-btn px-3 py-1 rounded-md transition" data-location="Games Toys and more">Games Toys and more</button>
+            <button class="filter-btn location-filter-btn px-3 py-1 rounded-md transition" data-location="Brettspielfreunde">Brettspielfreunde</button>
+        </div>
+        
+        <!-- Game List Container (for responsive switch) -->
+        <div id="quest-list-container">
+            <!-- Mobile Card View -->
+            <div id="game-list-cards" class="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-6">
+                <!-- Mobile cards will be rendered here -->
+            </div>
+
+            <!-- Desktop Table View -->
+            <div id="game-list-table" class="hidden lg:block bg-slate-800 rounded-lg shadow-lg overflow-x-auto">
+                <table class="w-full text-sm text-left text-slate-300">
+                    <thead class="text-xs text-slate-400 uppercase bg-slate-700/50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 sortable asc" data-sort="gameName">Spiel</th>
+                            <th scope="col" class="px-6 py-3 sortable" data-sort="location">Ort</th>
+                            <th scope="col" class="px-6 py-3 sortable" data-sort="dateTime">Datum</th>
+                            <th scope="col" class="px-6 py-3">Dauer</th>
+                            <th scope="col" class="px-6 py-3">Plätze</th>
+                            <th scope="col" class="px-6 py-3 text-center">Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="game-list-table-body">
+                        <!-- Table rows will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+             <div id="loading-indicator" class="text-center col-span-full py-10">
+                <p class="text-slate-400 text-lg">Lade verfügbare Quests...</p>
+            </div>
+        </div>
+
+         <!-- Pagination Controls -->
+        <div id="pagination-controls" class="mt-6 flex justify-center items-center gap-4 text-slate-400">
+            <!-- Pagination buttons will be rendered here -->
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="text-center py-8 mt-8 text-slate-500 border-t border-slate-800">
+        <div class="container mx-auto px-4 max-w-5xl space-x-4">
+            <a href="#" id="imprint-link" class="hover:text-cyan-400 transition">Impressum</a>
+            <span>|</span>
+            <a href="#" id="privacy-link" class="hover:text-cyan-400 transition">Datenschutz</a>
+        </div>
+    </footer>
+
+    <!-- All Modals -->
+    <div id="shared-quest-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div id="shared-quest-content" class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-lg m-4 modal-enter relative"></div>
+    </div>
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-md m-4 modal-enter relative">
+            <button id="close-auth-modal" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl">&times;</button>
+            <div id="auth-tabs" class="flex border-b border-slate-700 mb-6">
+                <button data-tab="login" class="auth-tab flex-1 py-2 font-semibold border-b-2 border-cyan-500 text-white">Login</button>
+                <button data-tab="register" class="auth-tab flex-1 py-2 font-semibold border-b-2 border-transparent text-slate-400">Registrieren</button>
+            </div>
+            <form id="login-form">
+                <div class="mb-4"><label for="login-email" class="block text-slate-400 mb-2">E-Mail</label><input type="email" id="login-email" class="w-full bg-slate-700 p-2 rounded-md" required autocomplete="username"></div>
+                <div class="mb-4"><label for="login-password" class="block text-slate-400 mb-2">Passwort</label><input type="password" id="login-password" class="w-full bg-slate-700 p-2 rounded-md" required autocomplete="current-password"></div>
+                <div class="text-center mb-6"><a href="#" id="forgot-password-link" class="text-sm text-cyan-400 hover:underline">Passwort vergessen?</a></div>
+                <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 rounded-lg transition-colors disabled:bg-slate-600">Einloggen</button>
+            </form>
+            <form id="register-form" class="hidden">
+                 <div class="mb-4"><label for="register-name" class="block text-slate-400 mb-2">Dein Anzeigename</label><input type="text" id="register-name" class="w-full bg-slate-700 p-2 rounded-md" required></div>
+                <div class="mb-4"><label for="register-email" class="block text-slate-400 mb-2">E-Mail</label><input type="email" id="register-email" class="w-full bg-slate-700 p-2 rounded-md" required autocomplete="email"></div>
+                <div class="mb-4"><label for="register-password" class="block text-slate-400 mb-2">Passwort</label><input type="password" id="register-password" class="w-full bg-slate-700 p-2 rounded-md" required minlength="6" autocomplete="new-password"></div>
+                <div class="mb-6"><label for="register-password-confirm" class="block text-slate-400 mb-2">Passwort bestätigen</label><input type="password" id="register-password-confirm" class="w-full bg-slate-700 p-2 rounded-md" required minlength="6" autocomplete="new-password"></div>
+                <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 rounded-lg">Registrieren</button>
+            </form>
+            <p id="auth-error" class="text-red-400 mt-4 text-center h-5"></p>
+        </div>
+    </div>
+    <div id="add-edit-game-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-md m-4 modal-enter">
+            <h2 id="modal-title" class="text-2xl font-bold mb-6">Neues Quest erstellen</h2>
+            <form id="add-edit-game-form">
+                <input type="hidden" id="edit-game-id">
+                <div class="mb-4"><label for="game-name" class="block text-slate-400 mb-2">Spiel (Quest)</label><input type="text" id="game-name" class="w-full bg-slate-700 p-2 rounded-md" required></div>
+                <div class="mb-4">
+                    <label for="location-type" class="block text-slate-400 mb-2">Spielort</label>
+                    <select id="location-type" class="w-full bg-slate-700 p-2 rounded-md">
+                        <option value="Genduron">Genduron</option>
+                        <option value="Knobelritter">Knobelritter</option>
+                        <option value="Spieleversum">Spieleversum</option>
+                        <option value="Games Toys and more">Games Toys and more</option>
+                        <option value="Brettspielfreunde">Brettspielfreunde</option>
+                        <option value="other">Anderer Ort...</option>
+                    </select>
+                </div>
+                <div id="custom-location-container" class="mb-4 hidden"><label for="custom-location" class="block text-slate-400 mb-2">Benutzerdefinierter Ort</label><input type="text" id="custom-location" class="w-full bg-slate-700 p-2 rounded-md" placeholder="z.B. Spieleverein Graz"></div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div><label for="game-date" class="block text-slate-400 mb-2">Datum</label><input type="date" id="game-date" class="w-full bg-slate-700 p-2 rounded-md" required></div>
+                    <div><label for="game-time" class="block text-slate-400 mb-2">Uhrzeit</label><input type="time" id="game-time" class="w-full bg-slate-700 p-2 rounded-md" required></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div><label for="total-seats" class="block text-slate-400 mb-2">Plätze</label><input type="number" id="total-seats" min="1" max="20" class="w-full bg-slate-700 p-2 rounded-md" required></div>
+                    <div><label for="game-duration" class="block text-slate-400 mb-2">Dauer (Min.)</label><input type="number" id="game-duration" min="10" step="5" class="w-full bg-slate-700 p-2 rounded-md" placeholder="z.B. 90"></div>
+                </div>
+                <div class="mb-4"><label class="block text-slate-400 mb-2">Optionale Tags</label><div id="tags-container" class="grid grid-cols-2 gap-2 text-sm"><label class="flex items-center"><input type="checkbox" name="tags" value="für Anfänger:innen geeignet" class="h-4 w-4 bg-slate-700 rounded"><span class="ml-2">für Anfänger:innen geeignet</span></label><label class="flex items-center"><input type="checkbox" name="tags" value="Expertenspiel" class="h-4 w-4 bg-slate-700 rounded"><span class="ml-2">Expertenspiel</span></label><label class="flex items-center"><input type="checkbox" name="tags" value="Kooperativ" class="h-4 w-4 bg-slate-700 rounded"><span class="ml-2">Kooperativ</span></label><label class="flex items-center"><input type="checkbox" name="tags" value="Regeln werden erklärt!" class="h-4 w-4 bg-slate-700 rounded"><span class="ml-2">Regeln werden erklärt!</span></label></div></div>
+                <div id="organizer-participates-container" class="mb-4"><label class="flex items-center text-slate-400"><input type="checkbox" id="organizer-participates" class="h-4 w-4 bg-slate-700 rounded" checked><span class="ml-2">Ich nehme selbst teil</span></label></div>
+                <div id="opening-hours-warning" class="text-yellow-400 text-sm mb-4"></div>
+                <div class="flex justify-between items-center">
+                    <div><button type="button" id="delete-game-btn" class="bg-red-800 hover:bg-red-700 text-white py-2 px-4 rounded-lg transition hidden">Löschen</button><button type="button" id="reactivate-game-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition hidden ml-2">Reaktivieren</button></div>
+                    <div class="flex gap-4"><button type="button" id="cancel-add-game" class="bg-slate-600 hover:bg-slate-700 text-white py-2 px-4 rounded-lg transition">Abbrechen</button><button type="submit" id="submit-btn" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg transition">Erstellen</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="account-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-md m-4 modal-enter relative">
+             <button id="close-account-modal" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl">&times;</button>
+             <h2 class="text-2xl font-bold mb-6">Mein Konto</h2>
+             <div class="mb-6 space-y-2"><p><span class="font-semibold text-slate-400">Name:</span> <span id="account-name"></span></p><p><span class="font-semibold text-slate-400">E-Mail:</span> <span id="account-email"></span></p></div>
+             <div class="border-t border-slate-700 pt-6"><h3 class="font-semibold text-lg mb-2">Konto löschen</h3><p class="text-slate-400 mb-4">Wenn du dein Konto löschen möchtest, klicke auf den Button. Eine Anfrage mit deinen Daten wird an den Administrator gesendet.</p><button id="request-deletion-btn" class="w-full text-center block bg-red-800 hover:bg-red-700 text-white font-bold py-3 rounded-lg disabled:bg-slate-600 disabled:cursor-not-allowed">Löschung anfragen</button><p id="deletion-feedback" class="text-green-400 mt-4 text-center h-5"></p></div>
+        </div>
+    </div>
+    <div id="imprint-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-lg m-4 modal-enter relative flex flex-col">
+             <button id="close-imprint-modal" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl z-10">&times;</button>
+             <h2 class="text-2xl font-bold mb-6 flex-shrink-0">Impressum</h2>
+             <div class="text-slate-300 space-y-4 text-sm max-h-[60vh] overflow-y-auto pr-4">
+                <h3 class="font-semibold text-slate-100 text-base">Angaben gemäß § 5 ECG</h3><p>Dipl.-Ing. Ing. Andreas E. Neuhold, BSc.<br>Haushoferstraße 25<br>4020 Linz<br>Österreich</p>
+                <h3 class="font-semibold text-slate-100 text-base mt-4">Kontakt</h3><p>Telefon: +43 677 624 639 01<br>E-Mail: andreas.neuhold@gmail.com</p>
+                <h3 class="font-semibold text-slate-100 text-base mt-4">Ausrichtung der Webseite</h3><p>Private, nicht-kommerzielle Plattform zur Organisation von Spieletreffen. Die Nutzung der Seite ist kostenlos. Es besteht die Möglichkeit, das Projekt durch freiwillige Zuwendungen (Trinkgelder) zu unterstützen, die über externe Zahlungsdienstleister abgewickelt werden.</p>
+                <h3 class="font-semibold text-slate-100 text-base mt-4">Online-Streitbeilegung</h3><p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline">https://ec.europa.eu/consumers/odr</a>. Unsere E-Mail-Adresse findest du oben im Impressum. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+             </div>
+        </div>
+    </div>
+    <div id="privacy-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-slate-800 p-8 rounded-lg shadow-2xl w-full max-w-lg m-4 modal-enter relative flex flex-col">
+             <button id="close-privacy-modal" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl z-10">&times;</button>
+             <h2 class="text-2xl font-bold mb-6 flex-shrink-0">Datenschutzerklärung</h2>
+             <div class="text-slate-300 space-y-4 text-sm max-h-[60vh] overflow-y-auto pr-4">
+                <p>Der Schutz deiner persönlichen Daten ist uns wichtig. Nachfolgend informieren wir dich über die Verarbeitung deiner personenbezogenen Daten.</p>
+                <p><strong class="text-slate-100">Verantwortlicher:</strong> Andreas Neuhold, andreas.neuhold@gmail.com</p>
+                <p><strong class="text-slate-100">Zweck der Datenverarbeitung:</strong> Die Verarbeitung deiner Daten (Anzeigename, E-Mail-Adresse) dient ausschließlich der Organisation von Spielrunden über diese Webseite. Dies umfasst das Erstellen von Spielrunden (Quests), die Teilnahme an diesen und die Verwaltung deines Benutzerkontos.</p>
+                <p><strong class="text-slate-100">Datenweitergabe:</strong> Deine Daten werden grundsätzlich nicht an Dritte weitergegeben.</p>
+                <p><strong class="text-slate-100">Freiwillige Zuwendungen (Trinkgelder):</strong> Auf unserer Webseite besteht die Möglichkeit, das Projekt durch freiwillige Zuwendungen zu unterstützen. Wenn du dich dafür entscheidest, wirst du zu einem externen Zahlungsdienstleister (z.B. PayPal) weitergeleitet. Wir selbst erheben oder speichern keine Zahlungsdaten wie Kreditkartennummern oder Bankverbindungen. Die gesamte Zahlungsabwicklung erfolgt ausschließlich über die sicheren Server des jeweiligen Anbieters. Es gelten die Datenschutzbestimmungen des jeweiligen Zahlungsdienstleisters.</p>
+                <p><strong class="text-slate-100">Speicherung:</strong> Die Datenverarbeitung erfolgt mithilfe einer Firebase Datenbank von Google. Der Serverstandort ist Frankfurt (Deutschland). Mit Google wurde ein Auftragsverarbeitungsvertrag abgeschlossen, der den Schutz deiner Daten gewährleistet.</p>
+                <p><strong class="text-slate-100">Deine Rechte:</strong> Du hast das Recht auf Auskunft, Berichtigung und Löschung deiner Daten. Für die Löschung deines Kontos und der damit verbundenen Daten, kontaktiere bitte den oben genannten Verantwortlichen.</p>
+                <p><strong class="text-slate-100">Anwendbares Recht und Gerichtsstand:</strong> Es gilt österreichisches Recht. Der Gerichtsstand ist Linz.</p>
+             </div>
+        </div>
+    </div>
+
+
+    <!-- Firebase and App Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, updateDoc, deleteDoc, query, where, Timestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // --- Config and Initialization ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAm62EYO-knD48Gv_8h4asS_DsdiCVYhAo",
+            authDomain: "spielrunde2.firebaseapp.com",
+            projectId: "spielrunde2",
+            storageBucket: "spielrunde2.firebasestorage.app",
+            messagingSenderId: "718528869080",
+            appId: "1:718528869080:web:28fdf441af5187c0725dad",
+            measurementId: "G-1HPY49Q9DK"
+        };
+        let db, auth;
+        let currentUser = null;
+        let verificationCheckInterval = null;
+        let initialSharedQuestId = null;
+        let allQuests = [];
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 50;
+        let sortConfig = { key: 'dateTime', direction: 'asc' };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            const urlParams = new URLSearchParams(window.location.search);
+            initialSharedQuestId = urlParams.get('quest');
+        } catch (e) { console.error("Error initializing Firebase: ", e); }
+
+        // --- DOM Elements ---
+        const gameListCards = document.getElementById('game-list-cards');
+        const gameListTableBody = document.getElementById('game-list-table-body');
+        const authModal = document.getElementById('auth-modal');
+        const nameFilterInput = document.getElementById('name-filter');
+        const dayFilterContainer = document.getElementById('day-filter-container');
+        const locationFilterContainer = document.getElementById('location-filter-container');
+        const sideMenu = document.getElementById('side-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const sharedQuestModal = document.getElementById('shared-quest-modal');
+        const locationFilterInput = document.getElementById('location-filter');
+        const paginationControls = document.getElementById('pagination-controls');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const authError = document.getElementById('auth-error');
+        const addGameBtn = document.getElementById('add-game-btn');
+        const verificationBanner = document.getElementById('verification-banner');
+        const addEditGameForm = document.getElementById('add-edit-game-form');
+        const gameDateInput = document.getElementById('game-date');
+        const gameTimeInput = document.getElementById('game-time');
+        const warningDiv = document.getElementById('opening-hours-warning');
+        const locationTypeSelect = document.getElementById('location-type');
+        const customLocationContainer = document.getElementById('custom-location-container');
+        const sideMenuContent = document.getElementById('side-menu-content');
+        const sharedQuestContent = document.getElementById('shared-quest-content');
+        const addEditGameModal = document.getElementById('add-edit-game-modal');
+        const accountModal = document.getElementById('account-modal');
+        const imprintModal = document.getElementById('imprint-modal');
+        const privacyModal = document.getElementById('privacy-modal');
+        const questListContainer = document.getElementById('quest-list-container');
+        
+        // --- Helper Functions ---
+        const showModal = (modal) => modal.classList.remove('hidden');
+        const hideModal = (modal) => modal.classList.add('hidden');
+        const openMenu = () => { sideMenu.classList.remove('translate-x-full'); menuOverlay.classList.remove('hidden'); };
+        const closeMenu = () => { sideMenu.classList.add('translate-x-full'); menuOverlay.classList.add('hidden'); };
+        
+        function copyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed'; // Prevent scrolling to bottom
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('Link in die Zwischenablage kopiert!');
+                } else {
+                     alert('Kopieren fehlgeschlagen. Bitte manuell kopieren.');
+                }
+            } catch (err) {
+                console.error('Fehler beim Kopieren:', err);
+                alert('Kopieren fehlgeschlagen. Bitte manuell kopieren.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // --- Event Delegation for dynamic content ---
+        questListContainer.addEventListener('click', async (e) => {
+            const editBtn = e.target.closest('.edit-game-btn');
+            const viewBtn = e.target.closest('.table-game-name');
+            const shareBtn = e.target.closest('.share-quest-btn');
+            const joinLeaveBtn = e.target.closest('.join-leave-btn');
+            const cancelBtn = e.target.closest('.cancel-game-btn');
+            const removeParticipantBtn = e.target.closest('.remove-participant-btn');
+
+            if (editBtn) {
+                const gameId = editBtn.dataset.gameId;
+                const gameRef = doc(db, "spielrunden", gameId);
+                const docSnap = await getDoc(gameRef);
+                if (docSnap.exists()) {
+                    openEditModal(docSnap);
+                }
+            } else if (viewBtn) {
+                 const gameId = viewBtn.dataset.gameId;
+                 const gameRef = doc(db, "spielrunden", gameId);
+                 const docSnap = await getDoc(gameRef);
+                 if (docSnap.exists()) {
+                    renderSharedQuestModal(docSnap.data(), docSnap.id);
+                    showModal(sharedQuestModal);
+                 }
+            } else if (shareBtn) {
+                 const gameId = shareBtn.dataset.gameId;
+                 const shareUrl = `${window.location.origin}${window.location.pathname}?quest=${gameId}`;
+                 copyToClipboard(shareUrl);
+            } else if (joinLeaveBtn) {
+                if (!currentUser) { showModal(authModal); return; }
+                const gameId = joinLeaveBtn.dataset.gameId;
+                joinLeaveBtn.disabled = true;
+                const gameRef = doc(db, "spielrunden", gameId);
+                try {
+                    const docSnap = await getDoc(gameRef);
+                    if (docSnap.exists()) {
+                        const gameData = docSnap.data();
+                        const isParticipant = gameData.participants.some(p => p.uid === currentUser.uid);
+                        let newParticipants;
+                        if (isParticipant) {
+                            newParticipants = gameData.participants.filter(p => p.uid !== currentUser.uid);
+                        } else {
+                            if (gameData.participants.length < gameData.totalSeats) {
+                                newParticipants = [...gameData.participants, { uid: currentUser.uid, displayName: currentUser.displayName }];
+                            } else {
+                                alert("Diese Runde ist bereits voll.");
+                                joinLeaveBtn.disabled = false;
+                                return;
+                            }
+                        }
+                        await updateDoc(gameRef, { participants: newParticipants });
+                    }
+                } catch (error) { console.error("Fehler beim Beitreten/Verlassen:", error); } 
+                finally { joinLeaveBtn.disabled = false; }
+            } else if (cancelBtn) {
+                const gameId = cancelBtn.dataset.gameId;
+                if (confirm('Bist du sicher, dass du dieses Quest absagen möchtest?')) {
+                    const gameRef = doc(db, "spielrunden", gameId);
+                    await updateDoc(gameRef, { cancelled: true });
+                }
+            } else if (removeParticipantBtn) {
+                const gameId = removeParticipantBtn.dataset.gameId;
+                const participantUid = removeParticipantBtn.dataset.participantUid;
+                if (confirm('Bist du sicher, dass du diesen Teilnehmer entfernen möchtest?')) {
+                    const gameRef = doc(db, "spielrunden", gameId);
+                    try {
+                        const docSnap = await getDoc(gameRef);
+                        if (docSnap.exists()) {
+                            const gameData = docSnap.data();
+                            const newParticipants = gameData.participants.filter(p => p.uid !== participantUid);
+                            await updateDoc(gameRef, { participants: newParticipants });
+                        }
+                    } catch (error) {
+                        console.error("Fehler beim Entfernen des Teilnehmers:", error);
+                        alert("Der Teilnehmer konnte nicht entfernt werden.");
+                    }
+                }
+            } else {
+                 const expandableRow = e.target.closest('.expandable-row');
+                if (expandableRow) {
+                    const targetId = expandableRow.dataset.targetId;
+                    const detailsRow = document.getElementById(targetId);
+                    if (detailsRow) {
+                        const isCurrentlyOpen = !detailsRow.classList.contains('hidden');
+                        document.querySelectorAll('.details-row').forEach(row => row.classList.add('hidden'));
+                        if (!isCurrentlyOpen) {
+                            detailsRow.classList.remove('hidden');
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- Event Listeners ---
+        menuToggleBtn.addEventListener('click', openMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+        addGameBtn.addEventListener('click', () => {
+             if (!currentUser) { showModal(authModal); return; }
+             const modalTitle = document.getElementById('modal-title');
+             const submitBtn = document.getElementById('submit-btn');
+             modalTitle.textContent = 'Neues Quest erstellen';
+             submitBtn.textContent = 'Erstellen';
+             addEditGameForm.reset();
+             document.getElementById('edit-game-id').value = '';
+             document.getElementById('delete-game-btn').classList.add('hidden');
+             document.getElementById('reactivate-game-btn').classList.add('hidden');
+             showModal(addEditGameModal);
+        });
+
+        document.getElementById('cancel-add-game').addEventListener('click', () => hideModal(addEditGameModal));
+        document.getElementById('close-auth-modal').addEventListener('click', () => hideModal(authModal));
+        document.getElementById('close-account-modal').addEventListener('click', () => hideModal(accountModal));
+        document.getElementById('close-imprint-modal').addEventListener('click', () => hideModal(imprintModal));
+        document.getElementById('close-privacy-modal').addEventListener('click', () => hideModal(privacyModal));
+        document.getElementById('imprint-link').addEventListener('click', (e) => { e.preventDefault(); showModal(imprintModal); });
+        document.getElementById('privacy-link').addEventListener('click', (e) => { e.preventDefault(); showModal(privacyModal); });
+
+        document.getElementById('delete-game-btn').addEventListener('click', async () => {
+            const gameId = document.getElementById('edit-game-id').value;
+            if (gameId && confirm('Bist du sicher, dass du dieses Quest absagen möchtest?')) {
+                const gameRef = doc(db, "spielrunden", gameId);
+                await updateDoc(gameRef, { cancelled: true });
+                hideModal(addEditGameModal);
+            }
+        });
+
+        document.getElementById('reactivate-game-btn').addEventListener('click', async () => {
+            const gameId = document.getElementById('edit-game-id').value;
+            if (gameId) {
+                const gameRef = doc(db, "spielrunden", gameId);
+                await updateDoc(gameRef, { cancelled: false });
+                hideModal(addEditGameModal);
+            }
+        });
+        
+        document.getElementById('resend-verification-btn').addEventListener('click', async (e) => {
+            const btn = e.target;
+            const feedback = document.getElementById('resend-feedback');
+            btn.disabled = true;
+            feedback.textContent = '';
+            try {
+                await sendEmailVerification(auth.currentUser);
+                feedback.textContent = 'Erneut gesendet!';
+                setTimeout(() => {
+                    feedback.textContent = '';
+                    btn.disabled = false;
+                }, 5000);
+            } catch (error) {
+                console.error("Error resending verification email:", error);
+                feedback.textContent = 'Fehler.';
+                 setTimeout(() => {
+                    feedback.textContent = '';
+                    btn.disabled = false;
+                }, 5000);
+            }
+        });
+
+        document.getElementById('request-deletion-btn').addEventListener('click', async (e) => {
+            const btn = e.target;
+            btn.disabled = true;
+            const feedbackEl = document.getElementById('deletion-feedback');
+            feedbackEl.textContent = 'Sende Anfrage...';
+            try {
+                const deletionRequestsRef = collection(db, 'deletionRequests');
+                await addDoc(deletionRequestsRef, {
+                    uid: currentUser.uid || 'uid_missing',
+                    email: currentUser.email || 'email_missing',
+                    displayName: currentUser.displayName || 'displayName_missing',
+                    requestedAt: Timestamp.now()
+                });
+                feedbackEl.textContent = 'Löschanfrage wurde gesendet.';
+            } catch (error) {
+                console.error("Error requesting deletion:", error);
+                feedbackEl.textContent = 'Fehler beim Senden der Anfrage.';
+                btn.disabled = false;
+            }
+        });
+
+
+        // Auth Modal Logic
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                document.querySelectorAll('.auth-tab').forEach(t => {
+                    t.classList.remove('border-cyan-500', 'text-white');
+                    t.classList.add('border-transparent', 'text-slate-400');
+                });
+                tab.classList.add('border-cyan-500', 'text-white');
+                tab.classList.remove('border-transparent', 'text-slate-400');
+                
+                if (targetTab === 'login') {
+                    loginForm.classList.remove('hidden');
+                    registerForm.classList.add('hidden');
+                } else {
+                    loginForm.classList.add('hidden');
+                    registerForm.classList.remove('hidden');
+                }
+                authError.textContent = '';
+            });
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const loginButton = loginForm.querySelector('button[type="submit"]');
+            authError.textContent = '';
+            loginButton.disabled = true;
+            loginButton.textContent = 'Logge ein...';
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged will handle hiding the modal
+            } catch (error) {
+                console.error("Login-Fehler:", error.code);
+                authError.textContent = getGermanAuthError(error.code);
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = 'Einloggen';
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value.trim();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+            authError.textContent = '';
+
+            if (password !== passwordConfirm) {
+                authError.textContent = 'Die Passwörter stimmen nicht überein.';
+                return;
+            }
+            if(name.length < 3) {
+                 authError.textContent = 'Dein Anzeigename muss mindestens 3 Zeichen lang sein.';
+                 return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { displayName: name });
+                await sendEmailVerification(userCredential.user);
+                alert('Registrierung erfolgreich! Bitte überprüfe dein E-Mail-Postfach, um deine Adresse zu bestätigen. Logge dich danach ein.');
+                signOut(auth);
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                document.querySelector('.auth-tab[data-tab="login"]').click();
+            } catch (error) {
+                console.error("Registrierungsfehler:", error.code);
+                authError.textContent = getGermanAuthError(error.code);
+            }
+        });
+        
+        document.getElementById('forgot-password-link').addEventListener('click', async (e) => {
+             e.preventDefault();
+             const email = document.getElementById('login-email').value;
+             if (!email) {
+                 authError.textContent = 'Bitte gib deine E-Mail-Adresse ein, um dein Passwort zurückzusetzen.';
+                 return;
+             }
+             try {
+                 await sendPasswordResetEmail(auth, email);
+                 authError.textContent = 'E-Mail zum Zurücksetzen des Passworts wurde gesendet.';
+             } catch (error) {
+                 authError.textContent = getGermanAuthError(error.code);
+             }
+        });
+
+        function getGermanAuthError(errorCode) {
+            switch (errorCode) {
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                case 'auth/invalid-credential':
+                    return 'E-Mail oder Passwort ist ungültig.';
+                case 'auth/email-already-in-use':
+                    return 'Diese E-Mail-Adresse wird bereits verwendet.';
+                case 'auth/weak-password':
+                    return 'Das Passwort muss mindestens 6 Zeichen lang sein.';
+                case 'auth/invalid-email':
+                    return 'Bitte gib eine gültige E-Mail-Adresse ein.';
+                default:
+                    return 'Ein unerwarteter Fehler ist aufgetreten.';
+            }
+        }
+
+        // --- Opening Hours Logic for Add/Edit Modal ---
+        function checkOpeningHours() {
+            const location = locationTypeSelect.value;
+            const date = new Date(gameDateInput.value);
+            const day = date.getDay(); // Sunday is 0
+            const time = gameTimeInput.value;
+            warningDiv.textContent = ''; // Clear previous warning
+
+            const openingHours = {
+                'Genduron': { '1': 'Ruhetag', '2-5': '14:00-22:00', '6': '14:00-22:00', '0': 'Ruhetag' },
+                'Knobelritter': { '1-5': '17:00-23:00', '6': '17:00-23:00', '0': 'geschlossen' },
+                'Spieleversum': { '1': 'geschlossen', '2-4': '16:00-22:00', '5': '16:00-23:00', '6': '14:00-23:00', '0': 'geschlossen' },
+            };
+
+            if (openingHours[location] && time && date.valueOf()) {
+                const hours = openingHours[location];
+                let ruleForDay = null;
+                // Direct match for single day (e.g., '1')
+                if (hours[day.toString()]) {
+                    ruleForDay = hours[day.toString()];
+                } else {
+                    // Check for ranges (e.g., '2-5')
+                    const range = Object.keys(hours).find(r => {
+                        if (r.includes('-')) {
+                            const [start, end] = r.split('-').map(Number);
+                            return day >= start && day <= end;
+                        }
+                        return false;
+                    });
+                    if (range) ruleForDay = hours[range];
+                }
+
+                if (ruleForDay) {
+                    if (ruleForDay === 'Ruhetag' || ruleForDay === 'geschlossen') {
+                        warningDiv.textContent = `Achtung: ${location} ist an diesem Tag voraussichtlich geschlossen/hat Ruhetag.`;
+                    } else {
+                        const [openTime, closeTime] = ruleForDay.split('-');
+                        if (time < openTime || time > closeTime) {
+                            warningDiv.textContent = `Achtung: ${location} hat an diesem Tag von ${openTime} bis ${closeTime} Uhr geöffnet.`;
+                        }
+                    }
+                }
+            }
+        }
+        locationTypeSelect.addEventListener('change', () => {
+            if (locationTypeSelect.value === 'other') {
+                customLocationContainer.classList.remove('hidden');
+            } else {
+                customLocationContainer.classList.add('hidden');
+            }
+            checkOpeningHours();
+        });
+        gameDateInput.addEventListener('change', checkOpeningHours);
+        gameTimeInput.addEventListener('input', checkOpeningHours);
+
+        addEditGameForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                alert("Bitte zuerst einloggen.");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Speichere...';
+
+            try {
+                const gameId = document.getElementById('edit-game-id').value;
+                const locationType = document.getElementById('location-type').value;
+                const location = locationType === 'other' ? document.getElementById('custom-location').value.trim() : locationType;
+                const date = document.getElementById('game-date').value;
+                const time = document.getElementById('game-time').value;
+                const dateTime = new Date(`${date}T${time}`);
+                
+                if (!location) throw new Error("Der Spielort darf nicht leer sein.");
+                if (isNaN(dateTime.getTime())) throw new Error("Ungültiges Datum oder Uhrzeit.");
+
+                const selectedTags = Array.from(document.querySelectorAll('#tags-container input:checked')).map(cb => cb.value);
+
+                const questData = {
+                    gameName: document.getElementById('game-name').value.trim(),
+                    location: location,
+                    dateTime: Timestamp.fromDate(dateTime),
+                    totalSeats: parseInt(document.getElementById('total-seats').value, 10),
+                    duration: parseInt(document.getElementById('game-duration').value, 10) || null,
+                    tags: selectedTags,
+                };
+
+                if (gameId) {
+                    // Updating existing quest
+                    const gameRef = doc(db, "spielrunden", gameId);
+                    const docSnap = await getDoc(gameRef);
+                    if (docSnap.exists()) {
+                        const existingData = docSnap.data();
+                        let participants = existingData.participants;
+                        const organizerParticipates = document.getElementById('organizer-participates').checked;
+                        const isOrganizerInList = participants.some(p => p.uid === currentUser.uid);
+
+                        if (organizerParticipates && !isOrganizerInList) {
+                            participants.push({ uid: currentUser.uid, displayName: currentUser.displayName });
+                        } else if (!organizerParticipates && isOrganizerInList) {
+                            participants = participants.filter(p => p.uid !== currentUser.uid);
+                        }
+                        questData.participants = participants;
+
+                        // DO NOT update/preserve creatorId, creatorName, or createdAt on update.
+                        // These fields should be immutable after creation.
+                        await updateDoc(gameRef, questData);
+                    }
+                } else {
+                    // Creating new quest
+                    questData.creatorId = currentUser.uid;
+                    questData.creatorName = currentUser.displayName;
+                    questData.createdAt = Timestamp.now();
+                    questData.cancelled = false;
+                    questData.participants = [];
+                    
+                    if (document.getElementById('organizer-participates').checked) {
+                        questData.participants.push({ uid: currentUser.uid, displayName: currentUser.displayName });
+                    }
+                    await addDoc(collection(db, "spielrunden"), questData);
+                }
+
+                hideModal(addEditGameModal);
+
+            } catch (error) {
+                console.error("Fehler beim Speichern des Quests:", error);
+                alert(`Fehler: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                // Text will be reset when modal is opened next time
+            }
+        });
+        
+        function applyAllTransformsAndRender() {
+            const selectedDays = Array.from(dayFilterContainer.querySelectorAll('.day-filter-btn.active')).map(btn => btn.dataset.day);
+            const selectedLocations = Array.from(locationFilterContainer.querySelectorAll('.location-filter-btn.active')).map(btn => btn.dataset.location);
+            const nameText = nameFilterInput.value.toLowerCase().trim();
+            const locationText = locationFilterInput ? locationFilterInput.value.toLowerCase().trim() : "";
+
+            const filteredQuests = allQuests.filter(quest => {
+                const cardDay = quest.dateTime.toDate().getDay().toString();
+                const cardLocation = quest.location;
+                const cardLocationLower = cardLocation.toLowerCase();
+                const cardName = quest.gameName.toLowerCase();
+
+                const dayMatch = selectedDays.includes('all') || selectedDays.length === 0 || selectedDays.includes(cardDay);
+                const locationButtonMatch = selectedLocations.includes('all') || selectedLocations.length === 0 || selectedLocations.includes(cardLocation);
+                const locationTextMatch = locationText === '' || cardLocationLower.includes(locationText);
+                const nameMatch = (nameText === '' || cardName.includes(nameText));
+
+                return dayMatch && locationButtonMatch && locationTextMatch && nameMatch;
+            });
+
+            filteredQuests.sort((a, b) => {
+                let valA = a[sortConfig.key];
+                let valB = b[sortConfig.key];
+                if (sortConfig.key === 'dateTime') {
+                    valA = valA.toMillis();
+                    valB = valB.toMillis();
+                } else {
+                    valA = typeof valA === 'string' ? valA.toLowerCase() : valA;
+                    valB = typeof valB === 'string' ? valB.toLowerCase() : valB;
+                }
+                if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+                if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            const totalPages = Math.ceil(filteredQuests.length / ITEMS_PER_PAGE);
+            if (currentPage > totalPages) currentPage = totalPages || 1;
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const paginatedQuests = filteredQuests.slice(start, end);
+
+            renderQuestLists(paginatedQuests);
+            renderPaginationControls(totalPages);
+        }
+
+        function renderQuestLists(quests) {
+            gameListCards.innerHTML = '';
+            gameListTableBody.innerHTML = '';
+            if (quests.length === 0 && allQuests.length > 0) {
+                 gameListCards.innerHTML = '<p class="text-slate-400 text-center col-span-full">Keine Quests für diese Filter gefunden.</p>';
+                 gameListTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-slate-400">Keine Quests für diese Filter gefunden.</td></tr>';
+            } else if (quests.length === 0 && allQuests.length === 0) {
+                 gameListCards.innerHTML = '<p class="text-slate-400 text-center col-span-full">Aktuell sind keine Quests verfügbar. Erstelle das erste!</p>';
+                 gameListTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-slate-400">Aktuell sind keine Quests verfügbar. Erstelle das erste!</td></tr>';
+            }
+            else {
+                quests.forEach(quest => {
+                    const docWrapper = { id: quest.id, data: () => quest };
+                    gameListCards.appendChild(renderGameCard(docWrapper));
+                    const [mainRow, detailsRow] = renderGameTableRow(docWrapper);
+                    gameListTableBody.appendChild(mainRow);
+                    gameListTableBody.appendChild(detailsRow);
+                });
+            }
+        }
+        
+        function renderPaginationControls(totalPages) {
+            paginationControls.innerHTML = '';
+            if (totalPages > 1) {
+                const prevDisabled = currentPage === 1 ? 'disabled' : '';
+                const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+                paginationControls.innerHTML = `
+                    <button id="prev-page-btn" class="px-3 py-1 bg-slate-700 rounded-md disabled:opacity-50" ${prevDisabled}>&lt; Zurück</button>
+                    <span>Seite ${currentPage} von ${totalPages}</span>
+                    <button id="next-page-btn" class="px-3 py-1 bg-slate-700 rounded-md disabled:opacity-50" ${nextDisabled}>Weiter &gt;</button>
+                `;
+                 document.getElementById('prev-page-btn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; applyAllTransformsAndRender(); } });
+                 document.getElementById('next-page-btn').addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; applyAllTransformsAndRender(); } });
+            }
+        }
+
+        document.querySelectorAll('.sortable').forEach(header => {
+            header.addEventListener('click', () => {
+                const key = header.dataset.sort;
+                if (sortConfig.key === key) {
+                    sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    document.querySelector('.sortable.asc, .sortable.desc')?.classList.remove('asc', 'desc');
+                    sortConfig.key = key;
+                    sortConfig.direction = 'asc';
+                }
+                document.querySelectorAll('.sortable').forEach(h => h.classList.remove('asc', 'desc'));
+                header.classList.add(sortConfig.direction);
+                applyAllTransformsAndRender();
+            });
+        });
+
+        dayFilterContainer.addEventListener('click', (e) => { if (e.target.classList.contains('day-filter-btn')) { const clickedDay = e.target.dataset.day; if (clickedDay === 'all') { dayFilterContainer.querySelectorAll('.day-filter-btn').forEach(btn => btn.classList.remove('active')); e.target.classList.add('active'); } else { dayFilterContainer.querySelector('[data-day="all"]').classList.remove('active'); e.target.classList.toggle('active'); if (dayFilterContainer.querySelectorAll('.day-filter-btn.active').length === 0) { dayFilterContainer.querySelector('[data-day="all"]').classList.add('active'); } } applyAllTransformsAndRender(); } });
+        locationFilterContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('location-filter-btn')) {
+                const clickedLocation = e.target.dataset.location;
+                if (clickedLocation === 'all') {
+                    locationFilterContainer.querySelectorAll('.location-filter-btn').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                } else {
+                    locationFilterContainer.querySelector('[data-location="all"]').classList.remove('active');
+                    e.target.classList.toggle('active');
+                    if (locationFilterContainer.querySelectorAll('.location-filter-btn.active').length === 0) {
+                        locationFilterContainer.querySelector('[data-location="all"]').classList.add('active');
+                    }
+                }
+                applyAllTransformsAndRender();
+            }
+        });
+        nameFilterInput.addEventListener('input', applyAllTransformsAndRender);
+        if (locationFilterInput) {
+            locationFilterInput.addEventListener('input', applyAllTransformsAndRender);
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (verificationCheckInterval) clearInterval(verificationCheckInterval);
+            const wasJustLoggedIn = !currentUser && user;
+            currentUser = user ? { uid: user.uid, displayName: user.displayName, email: user.email, emailVerified: user.emailVerified } : null;
+            
+            if (wasJustLoggedIn) {
+                hideModal(authModal);
+            }
+
+            updateUserUI(!!user);
+            updateSideMenu(!!user);
+            listenToGames(); 
+
+            if (initialSharedQuestId) {
+                const questId = initialSharedQuestId;
+                initialSharedQuestId = null; 
+
+                const newUrl = new URL(window.location.href);
+                newUrl.searchParams.delete('quest');
+                window.history.replaceState({}, document.title, newUrl.href);
+
+                const questRef = doc(db, "spielrunden", questId);
+                try {
+                    const docSnap = await getDoc(questRef);
+                    if (docSnap.exists()) {
+                        renderSharedQuestModal(docSnap.data(), docSnap.id);
+                        showModal(sharedQuestModal);
+                    }
+                } catch (error) { console.error("Error fetching shared quest on load:", error); }
+            } else if (wasJustLoggedIn && !sharedQuestModal.classList.contains('hidden')) {
+                const questId = sharedQuestContent.dataset.questId;
+                if (questId) {
+                    const questRef = doc(db, "spielrunden", questId);
+                    const docSnap = await getDoc(questRef);
+                    if (docSnap.exists()) {
+                        renderSharedQuestModal(docSnap.data(), docSnap.id);
+                    }
+                }
+            }
+
+            if (user && !user.emailVerified) {
+                verificationCheckInterval = setInterval(async () => {
+                    const freshUser = auth.currentUser;
+                    if (freshUser) {
+                        await freshUser.reload();
+                        if (freshUser.emailVerified) {
+                            clearInterval(verificationCheckInterval);
+                            setTimeout(() => { alert("Deine E-Mail wurde erfolgreich bestätigt. Bitte logge dich nun ein, um fortzufahren."); signOut(auth); }, 500);
+                        }
+                    }
+                }, 5000);
+            }
+        });
+
+        function updateUserUI(isLoggedIn) {
+            const verificationBanner = document.getElementById('verification-banner');
+            verificationBanner.classList.add('hidden');
+            if (isLoggedIn && !currentUser.emailVerified) {
+                verificationBanner.classList.remove('hidden');
+            }
+        }
+        
+        function updateSideMenu(isLoggedIn) {
+            let menuHTML = `<button id="close-menu-btn" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl">&times;</button>`;
+            if (isLoggedIn) {
+                menuHTML += `
+                    <div class="mb-6">
+                        <p class="font-semibold text-white">${currentUser.displayName || currentUser.email}</p>
+                        <p class="text-sm text-slate-400">${currentUser.email}</p>
+                    </div>
+                    <nav class="flex flex-col space-y-2">
+                        <a href="#" id="account-btn" class="p-2 rounded-md hover:bg-slate-700">Mein Konto</a>
+                        <a href="anleitung.html" class="p-2 rounded-md hover:bg-slate-700">Anleitung</a>
+                        <a href="faq.html" class="p-2 rounded-md hover:bg-slate-700">FAQ</a>
+                        <a href="#" id="logout-btn" class="p-2 rounded-md hover:bg-slate-700 border-t border-slate-700 mt-2 pt-3">Ausloggen</a>
+                    </nav>
+                `;
+            } else {
+                menuHTML += `
+                     <h2 class="text-xl font-bold mb-6">Menü</h2>
+                     <nav class="flex flex-col space-y-2">
+                        <a href="#" id="login-register-btn" class="p-2 rounded-md hover:bg-slate-700">Login / Registrieren</a>
+                        <a href="anleitung.html" class="p-2 rounded-md hover:bg-slate-700">Anleitung</a>
+                        <a href="faq.html" class="p-2 rounded-md hover:bg-slate-700">FAQ</a>
+                    </nav>
+                `;
+            }
+            sideMenuContent.innerHTML = menuHTML;
+
+            document.getElementById('close-menu-btn').addEventListener('click', closeMenu);
+            if(isLoggedIn) {
+                document.getElementById('logout-btn').addEventListener('click', (e) => { e.preventDefault(); signOut(auth); closeMenu(); });
+                document.getElementById('account-btn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('account-name').textContent = currentUser.displayName || 'Nicht festgelegt'; document.getElementById('account-email').textContent = currentUser.email; document.getElementById('request-deletion-btn').classList.remove('hidden'); document.getElementById('request-deletion-btn').disabled = false; document.getElementById('request-deletion-btn').textContent = 'Löschung anfragen'; document.getElementById('deletion-feedback').textContent = ''; showModal(accountModal); closeMenu(); });
+            } else {
+                document.getElementById('login-register-btn').addEventListener('click', (e) => { e.preventDefault(); showModal(authModal); closeMenu(); });
+            }
+        }
+        
+        let unsubscribeFromGames = null;
+        function listenToGames() { 
+            if (unsubscribeFromGames) unsubscribeFromGames(); 
+            const gamesCol = collection(db, "spielrunden"); 
+            const q = query(gamesCol, where("dateTime", ">=", Timestamp.now()), orderBy("dateTime", "asc")); 
+            unsubscribeFromGames = onSnapshot(q, (snapshot) => { 
+                loadingIndicator.style.display = 'none';
+                allQuests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                applyAllTransformsAndRender();
+            }, (error) => { 
+                console.error("Firestore Error:", error); 
+                loadingIndicator.innerHTML = '<p class="text-red-400 text-center col-span-full">Fehler beim Laden der Quests.</p>'; 
+            }); 
+        }
+        
+        function renderGameCard(doc) {
+            const game = doc.data(); 
+            const gameId = doc.id;
+            const isCreator = currentUser && currentUser.uid === game.creatorId; 
+            const isParticipant = currentUser && game.participants.some(p => p.uid === currentUser.uid); 
+            const participantsCount = game.participants.length; 
+            const freeSeats = game.totalSeats - participantsCount; 
+            const isFull = freeSeats <= 0; 
+            const isCancelled = game.cancelled || false; 
+            const gameDate = game.dateTime.toDate(); 
+            const formattedDate = gameDate.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }); 
+            const formattedTime = gameDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); 
+            
+            const card = document.createElement('div');
+            card.className = `quest-card bg-slate-800 rounded-lg shadow-lg p-6 flex flex-col relative`; 
+            card.dataset.id = gameId;
+            
+            let participantsHTML = game.participants.map(p => `
+                <span class="bg-slate-700 text-slate-300 text-sm font-medium pl-2.5 pr-1.5 py-1 rounded-full flex items-center gap-1">
+                    ${p.displayName}
+                    ${isCreator && currentUser && p.uid !== currentUser.uid ? `<button class="remove-participant-btn text-red-400 hover:text-red-200" data-game-id="${gameId}" data-participant-uid="${p.uid}" title="Teilnehmer entfernen">&times;</button>` : ''}
+                </span>`).join('');
+            if (!participantsHTML) participantsHTML = '<p class="text-slate-500 text-sm">Noch keine Teilnehmer.</p>';
+            let tagsHTML = (game.tags && game.tags.length > 0) ? game.tags.map(tag => `<span class="bg-cyan-800 text-cyan-200 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded-full">${tag}</span>`).join('') : ''; 
+
+            card.innerHTML = `${isCancelled ? '<div class="absolute inset-0 bg-red-900/70 flex items-center justify-center rounded-lg z-0"><span class="text-2xl font-bold text-white transform -rotate-12">ABGESAGT</span></div>' : ''}<div class="flex-grow"><div class="flex justify-between items-start"><h3 class="text-2xl font-bold text-cyan-400 mb-2">${game.gameName}</h3><div class="flex items-center gap-2 text-xl relative z-10"><button class="share-quest-btn text-slate-500 hover:text-cyan-400" title="Quest teilen" data-game-id="${gameId}">🔗</button>${isCreator ? `<button class="edit-game-btn text-slate-500 hover:text-cyan-400" title="Quest bearbeiten" data-game-id="${gameId}">✏️</button>${!isCancelled ? `<button class="cancel-game-btn text-slate-500 hover:text-red-400" title="Quest absagen" data-game-id="${gameId}">⨷</button>`: ''}` : ''}</div></div><p class="text-slate-400 mb-2">von <span class="font-semibold">${game.creatorName}</span></p><div class="flex items-center text-slate-400 mb-4 text-sm"><svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg><span>${game.location}</span></div><div class="flex flex-wrap mb-4">${tagsHTML}</div><div class="flex items-center text-slate-300 mb-2"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"></path></svg><span>${formattedDate}, ${formattedTime} Uhr</span></div>${game.duration ? `<div class="flex items-center text-slate-400 mb-4"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg><span>ca. ${game.duration} Minuten</span></div>` : ''}<div class="flex items-center text-slate-300 mb-6"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 1 1 0 5.292M15 21H3v-1a6 6 0 0 1 12 0v1Zm0 0h6v-1a6 6 0 0 0-9-5.197M15 21a6 6 0 0 0-9-5.197m0 0A5.995 5.995 0 0 0 12 12a5.995 5.995 0 0 0-3-5.197M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path></svg><span class="${isFull ? 'text-red-400' : 'text-green-400'} font-semibold">${freeSeats > 0 ? `${freeSeats} Plätze frei` : 'Runde ist voll'}</span></div><h4 class="font-semibold text-slate-300 mb-2">Teilnehmer (${participantsCount}/${game.totalSeats}):</h4><div class="flex flex-wrap gap-2">${participantsHTML}</div></div><div class="mt-6"><button class="join-leave-btn w-full font-bold py-3 px-4 rounded-lg transition ${isCancelled ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : (isParticipant ? 'bg-amber-600 hover:bg-amber-700' : (isFull ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-cyan-500 hover:bg-cyan-600'))}" data-game-id="${gameId}" ${isCancelled || (isFull && !isParticipant) ? 'disabled' : ''}>${isCancelled ? 'Abgesagt' : (isParticipant ? 'Verlassen' : (isFull ? 'Voll' : 'Ich bin dabei!'))}</button></div>`;
+            return card;
+        }
+        
+        function renderGameTableRow(doc) {
+            const game = doc.data();
+            const gameId = doc.id;
+            const isCreator = currentUser && currentUser.uid === game.creatorId; 
+            const isParticipant = currentUser && game.participants.some(p => p.uid === currentUser.uid); 
+            const participantsCount = game.participants.length; 
+            const freeSeats = game.totalSeats - participantsCount;
+            const isFull = freeSeats <= 0;
+            const isCancelled = game.cancelled || false; 
+            const gameDate = game.dateTime.toDate(); 
+            const formattedDate = gameDate.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' }); 
+            const formattedTime = gameDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); 
+
+            const row = document.createElement('tr');
+            row.className = `expandable-row border-b border-slate-700 ${isCancelled ? 'opacity-60 bg-red-900/20' : 'hover:bg-slate-700/50'}`;
+            row.dataset.id = gameId;
+            row.dataset.targetId = `details-${gameId}`;
+            
+            row.innerHTML = `<td class="px-6 py-4 font-bold text-white">
+                    <div class="flex items-center gap-3">
+                        <button class="table-game-name text-left ${isCancelled ? '' : 'hover:text-cyan-400 transition'}" data-game-id="${gameId}">${game.gameName} ${isCancelled ? '<span class="text-xs font-normal text-red-400">(Abgesagt)</span>' : ''}</button>
+                        <div class="flex items-center gap-2 text-lg">
+                            <button class="share-quest-btn ${isCancelled ? 'text-slate-700 cursor-not-allowed' : 'text-slate-500 hover:text-cyan-400'}" title="Quest teilen" data-game-id="${gameId}" ${isCancelled ? 'disabled' : ''}>🔗</button>
+                            ${isCreator ? `<button class="edit-game-btn text-slate-500 hover:text-cyan-400" title="Quest bearbeiten/reaktivieren" data-game-id="${gameId}">✏️</button>` : ''}
+                        </div>
+                    </div>
+                </td><td class="px-6 py-4">${game.location}</td><td class="px-6 py-4">${formattedDate} ${formattedTime}</td><td class="px-6 py-4">${game.duration || '-'} Min.</td><td class="px-6 py-4">${participantsCount}/${game.totalSeats}</td><td class="px-6 py-4 text-center"><div class="flex items-center justify-center gap-2"><button class="join-leave-btn font-bold py-2 px-4 rounded-lg transition ${isCancelled ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : (isParticipant ? 'bg-amber-600 hover:bg-amber-700' : (isFull && !isParticipant ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-cyan-500 hover:bg-cyan-600'))}" data-game-id="${gameId}" ${isCancelled || (isFull && !isParticipant) ? 'disabled' : ''}>${isCancelled ? 'Abgesagt' : (isParticipant ? 'Verlassen' : (isFull ? 'Voll' : 'Beitreten'))}</button>${isCreator && !isCancelled ? `<button class="cancel-game-btn text-slate-500 hover:text-red-400 text-xl" title="Quest absagen" data-game-id="${gameId}">⨷</button>` : ''}</div></td>`;
+            
+            const detailsRow = document.createElement('tr');
+            detailsRow.id = `details-${gameId}`;
+            detailsRow.className = 'details-row hidden';
+
+            let participantsHTML = game.participants.map(p => `
+                 <span class="bg-slate-700 text-slate-300 text-sm font-medium pl-2.5 pr-1.5 py-1 rounded-full flex items-center gap-1">
+                    ${p.displayName}
+                    ${isCreator && currentUser && p.uid !== currentUser.uid ? `<button class="remove-participant-btn text-red-400 hover:text-red-200" data-game-id="${gameId}" data-participant-uid="${p.uid}" title="Teilnehmer entfernen">&times;</button>` : ''}
+                </span>`).join('');
+            if (!participantsHTML) participantsHTML = '<p class="text-slate-500 text-sm">Noch keine Teilnehmer.</p>';
+
+            detailsRow.innerHTML = `<td colspan="6" class="p-4"><h4 class="font-semibold text-slate-300 mb-2">Teilnehmer (${participantsCount}/${game.totalSeats}):</h4><div class="flex flex-wrap gap-2">${participantsHTML}</div></td>`;
+
+            return [row, detailsRow];
+        }
+
+        function openEditModal(doc) {
+            const game = doc.data();
+            const modalTitle = document.getElementById('modal-title');
+            const submitBtn = document.getElementById('submit-btn');
+            const deleteBtn = document.getElementById('delete-game-btn');
+            const reactivateBtn = document.getElementById('reactivate-game-btn');
+            
+            modalTitle.textContent = 'Quest bearbeiten';
+            submitBtn.textContent = 'Speichern';
+            
+            addEditGameForm.reset();
+            document.getElementById('edit-game-id').value = doc.id;
+            document.getElementById('game-name').value = game.gameName;
+            
+            const locationSelect = document.getElementById('location-type');
+            const customLocationInput = document.getElementById('custom-location');
+            const isPredefinedLocation = Array.from(locationSelect.options).some(opt => opt.value === game.location);
+            if (isPredefinedLocation) {
+                locationSelect.value = game.location;
+                customLocationContainer.classList.add('hidden');
+            } else {
+                locationSelect.value = 'other';
+                customLocationContainer.classList.remove('hidden');
+                customLocationInput.value = game.location;
+            }
+
+            const gameDate = game.dateTime.toDate();
+            const yyyy = gameDate.getFullYear();
+            const mm = String(gameDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(gameDate.getDate()).padStart(2, '0');
+            document.getElementById('game-date').value = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('game-time').value = gameDate.toTimeString().slice(0, 5);
+
+            document.getElementById('total-seats').value = game.totalSeats;
+            document.getElementById('game-duration').value = game.duration || '';
+
+            document.querySelectorAll('#tags-container input[type="checkbox"]').forEach(cb => {
+                cb.checked = game.tags && game.tags.includes(cb.value);
+            });
+            
+            const organizerParticipatesCheckbox = document.getElementById('organizer-participates');
+            const organizerInParticipants = game.participants.some(p => p.uid === game.creatorId);
+            organizerParticipatesCheckbox.checked = organizerInParticipants;
+
+            if (game.cancelled) {
+                deleteBtn.classList.add('hidden');
+                reactivateBtn.classList.remove('hidden');
+            } else {
+                deleteBtn.classList.remove('hidden');
+                reactivateBtn.classList.add('hidden');
+            }
+
+            showModal(addEditGameModal);
+        }
+
+        function renderSharedQuestModal(game, gameId) {
+            const isCreator = currentUser && currentUser.uid === game.creatorId;
+            const isParticipant = currentUser && game.participants.some(p => p.uid === currentUser.uid);
+            const participantsCount = game.participants.length;
+            const freeSeats = game.totalSeats - participantsCount;
+            const isFull = freeSeats <= 0;
+            const isCancelled = game.cancelled || false;
+            const gameDate = game.dateTime.toDate();
+            const formattedDate = gameDate.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+            const formattedTime = gameDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+            let participantsHTML = game.participants.map(p => `
+                 <span class="bg-slate-700 text-slate-300 text-sm font-medium pl-2.5 pr-1.5 py-1 rounded-full flex items-center gap-1">
+                    ${p.displayName}
+                    ${isCreator && currentUser && p.uid !== currentUser.uid ? `<button class="remove-participant-btn text-red-400 hover:text-red-200" data-game-id="${gameId}" data-participant-uid="${p.uid}" title="Teilnehmer entfernen">&times;</button>` : ''}
+                </span>`).join('');
+            if (!participantsHTML) participantsHTML = '<p class="text-slate-500 text-sm">Noch keine Teilnehmer.</p>';
+            let tagsHTML = (game.tags && game.tags.length > 0) ? game.tags.map(tag => `<span class="bg-cyan-800 text-cyan-200 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded-full">${tag}</span>`).join('') : '';
+
+            sharedQuestContent.dataset.questId = gameId; // Store questId for re-rendering
+            sharedQuestContent.innerHTML = `
+                <button id="close-shared-quest-modal" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl">&times;</button>
+                <h3 class="text-3xl font-bold text-cyan-400 mb-2">${game.gameName}</h3>
+                <p class="text-slate-400 mb-4">Organisiert von <span class="font-semibold">${game.creatorName}</span></p>
+                <div class="space-y-4 mb-6">
+                    <div class="flex items-center text-slate-300"><svg class="w-5 h-5 mr-3 text-slate-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg><span>${game.location}</span></div>
+                    <div class="flex items-center text-slate-300"><svg class="w-5 h-5 mr-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"></path></svg><span>${formattedDate} um ${formattedTime} Uhr</span></div>
+                    ${game.duration ? `<div class="flex items-center text-slate-300"><svg class="w-5 h-5 mr-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg><span>ca. ${game.duration} Minuten</span></div>` : ''}
+                    <div class="flex items-center text-slate-300"><svg class="w-5 h-5 mr-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 1 1 0 5.292M15 21H3v-1a6 6 0 0 1 12 0v1Zm0 0h6v-1a6 6 0 0 0-9-5.197M15 21a6 6 0 0 0-9-5.197m0 0A5.995 5.995 0 0 0 12 12a5.995 5.995 0 0 0-3-5.197M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path></svg><span class="${isFull ? 'text-red-400' : 'text-green-400'} font-semibold">${freeSeats > 0 ? `${freeSeats} von ${game.totalSeats} Plätzen frei` : 'Runde ist voll'}</span></div>
+                </div>
+                ${tagsHTML ? `<div class="flex flex-wrap mb-4">${tagsHTML}</div>` : ''}
+                <div class="border-t border-slate-700 pt-4">
+                    <h4 class="font-semibold text-slate-300 mb-2">Teilnehmer (${participantsCount}/${game.totalSeats}):</h4>
+                    <div class="flex flex-wrap gap-2">${participantsHTML}</div>
+                </div>
+                <div class="mt-6">
+                    <button class="join-leave-btn w-full font-bold py-3 px-4 rounded-lg transition ${isCancelled ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : (isParticipant ? 'bg-amber-600 hover:bg-amber-700' : (isFull ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-cyan-500 hover:bg-cyan-600'))}" data-game-id="${gameId}" ${isCancelled || (isFull && !isParticipant) ? 'disabled' : ''}>${isCancelled ? 'Abgesagt' : (isParticipant ? 'Teilnahme zurückziehen' : (isFull ? 'Voll' : 'An Quest teilnehmen'))}</button>
+                </div>
+            `;
+        }
+
+        sharedQuestModal.addEventListener('click', async (e) => {
+            if (e.target.id === 'close-shared-quest-modal' || e.target === sharedQuestModal) {
+                hideModal(sharedQuestModal);
+                return;
+            }
+
+            const removeParticipantBtn = e.target.closest('.remove-participant-btn');
+            const joinLeaveBtn = e.target.closest('.join-leave-btn');
+
+            if (removeParticipantBtn) {
+                const gameId = removeParticipantBtn.dataset.gameId;
+                const participantUid = removeParticipantBtn.dataset.participantUid;
+                if (confirm('Bist du sicher, dass du diesen Teilnehmer entfernen möchtest?')) {
+                    const gameRef = doc(db, "spielrunden", gameId);
+                    try {
+                        const docSnap = await getDoc(gameRef);
+                        if (docSnap.exists()) {
+                            const newParticipants = docSnap.data().participants.filter(p => p.uid !== participantUid);
+                            await updateDoc(gameRef, { participants: newParticipants });
+                            const updatedDoc = await getDoc(gameRef);
+                            renderSharedQuestModal(updatedDoc.data(), gameId);
+                        }
+                    } catch (error) {
+                        console.error("Fehler beim Entfernen des Teilnehmers:", error);
+                        alert("Der Teilnehmer konnte nicht entfernt werden.");
+                    }
+                }
+            } else if (joinLeaveBtn) {
+                if (!currentUser) {
+                    hideModal(sharedQuestModal);
+                    showModal(authModal);
+                    return;
+                }
+                const gameId = joinLeaveBtn.dataset.gameId;
+                joinLeaveBtn.disabled = true;
+                const gameRef = doc(db, "spielrunden", gameId);
+                try {
+                    const docSnap = await getDoc(gameRef);
+                    if (docSnap.exists()) {
+                        const gameData = docSnap.data();
+                        const isParticipant = gameData.participants.some(p => p.uid === currentUser.uid);
+                        let newParticipants;
+                        if (isParticipant) {
+                            newParticipants = gameData.participants.filter(p => p.uid !== currentUser.uid);
+                        } else {
+                            if (gameData.participants.length < gameData.totalSeats) {
+                                newParticipants = [...gameData.participants, { uid: currentUser.uid, displayName: currentUser.displayName }];
+                            } else {
+                                alert("Diese Runde ist bereits voll.");
+                                return;
+                            }
+                        }
+                        await updateDoc(gameRef, { participants: newParticipants });
+                        const updatedDoc = await getDoc(gameRef);
+                        renderSharedQuestModal(updatedDoc.data(), gameId);
+                    }
+                } catch (error) {
+                    console.error("Fehler beim Beitreten/Verlassen:", error);
+                }
+            }
+        });
+
+    </script>
 </body>
 </html>
+
