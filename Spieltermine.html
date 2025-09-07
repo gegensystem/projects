@@ -232,6 +232,8 @@
             measurementId: "G-5940R8W5F6"
         };
 
+        const baseUrl = "https://gegensystem.github.io/projects/Spieltermine.html";
+
         let app, db, auth;
         try {
             app = initializeApp(firebaseConfig);
@@ -306,7 +308,7 @@
                     <div id="termin-list" class="space-y-4"></div>
                 </div>`;
             
-            const q = query(terminCollection, where("status", "==", "frei"));
+            const q = query(terminCollection, orderBy("datum", "asc"));
             onSnapshot(q, (snapshot) => {
                 loadingView.classList.add('hidden');
                 const terminList = document.getElementById('termin-list');
@@ -317,7 +319,8 @@
                     return;
                 }
                 
-                const docs = snapshot.docs.sort((a, b) => a.data().datum.toDate() - b.data().datum.toDate());
+                // Client-side sort to avoid composite index requirement
+                const docs = snapshot.docs.sort((a, b) => a.data().datum.toMillis() - b.data().datum.toMillis());
                 terminList.innerHTML = '';
                 docs.forEach(doc => {
                     const termin = doc.data();
@@ -325,14 +328,20 @@
                     const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                     const timeRange = formatTerminTime(terminDate, termin.dauer);
 
+                    const isBooked = termin.status === 'gebucht';
+                    
+                    const buttonHtml = isBooked 
+                        ? `<button class="mt-4 md:mt-0 px-5 py-2 bg-gray-300 text-gray-500 font-semibold rounded-md cursor-not-allowed" disabled>Gebucht</button>`
+                        : `<button data-id="${doc.id}" data-date="${formattedDate}" data-time="${timeRange}" class="buchen-btn mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">Buchen</button>`;
+
                     const terminElement = document.createElement('div');
-                    terminElement.className = 'flex flex-col md:flex-row justify-between items-center p-4 bg-gray-50 rounded-lg border';
+                    terminElement.className = `flex flex-col md:flex-row justify-between items-center p-4 rounded-lg border ${isBooked ? 'bg-gray-100' : 'bg-gray-50'}`;
                     terminElement.innerHTML = `
                         <div>
-                            <p class="font-semibold text-lg">${formattedDate}</p>
+                            <p class="font-semibold text-lg ${isBooked ? 'text-gray-500' : ''}">${formattedDate}</p>
                             <p class="text-gray-600">${timeRange}</p>
                         </div>
-                        <button data-id="${doc.id}" data-date="${formattedDate}" data-time="${timeRange}" class="buchen-btn mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">Buchen</button>`;
+                        ${buttonHtml}`;
                     terminList.appendChild(terminElement);
                 });
             }, (error) => {
@@ -384,7 +393,8 @@
                 const adminTerminList = document.getElementById('admin-termin-list');
                 if (!adminTerminList) return;
                 adminTerminList.innerHTML = '';
-                snapshot.forEach(doc => {
+                 const docs = snapshot.docs.sort((a, b) => a.data().datum.toMillis() - b.data().datum.toMillis());
+                docs.forEach(doc => {
                     const termin = doc.data();
                     const terminDate = termin.datum.toDate();
                     const formattedDate = terminDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -440,7 +450,7 @@
             document.getElementById('logout-btn').addEventListener('click', async () => {
                 await signOut(auth);
                 document.getElementById('admin-login-link').classList.remove('hidden');
-                window.location.search = "";
+                window.location.href = baseUrl;
             });
         }
         
@@ -473,7 +483,7 @@
                     </div>
                     <div>
                         <button id="confirm-storno-btn" data-id="${terminDoc.id}" class="px-6 py-3 bg-red-600 text-white font-bold rounded-md hover:bg-red-700 mr-4">Ja, stornieren</button>
-                        <a href="/" class="px-6 py-3 bg-gray-200 text-gray-800 font-bold rounded-md hover:bg-gray-300">Nein, zurück zur Übersicht</a>
+                        <a href="${baseUrl}" class="px-6 py-3 bg-gray-200 text-gray-800 font-bold rounded-md hover:bg-gray-300">Nein, zurück zur Übersicht</a>
                     </div>
                 </div>`;
                 
@@ -484,7 +494,7 @@
                     <div class="bg-green-100 text-green-800 p-4 rounded-lg shadow-md text-center">
                         <h2 class="text-2xl font-semibold">Termin erfolgreich storniert!</h2>
                         <p>Der Termin ist nun wieder für andere verfügbar.</p>
-                        <a href="/" class="mt-4 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
+                        <a href="${baseUrl}" class="mt-4 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
                     </div>`;
             });
         }
@@ -633,28 +643,50 @@
                 const terminDate = result.terminData.datum.toDate();
                 const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 const timeRange = formatTerminTime(terminDate, result.terminData.dauer);
-                const stornoLink = `${window.location.origin}${window.location.pathname}?storno=${result.stornoId}`;
+                const stornoLink = `${baseUrl}?storno=${result.stornoId}`;
+
+                const subject = "Bestätigung: Ihr Termin für das Spielekarussell";
+                const body = `Vielen Dank für Ihre Buchung!\n\n` +
+                            `Hier sind die Details zu Ihrem Termin für das Spielekarussell:\n\n` +
+                            `Datum: ${formattedDate}\n` +
+                            `Zeit: ${timeRange}\n` +
+                            `Einrichtung: ${institution}\n` +
+                            `Ansprechperson: ${person}\n\n` +
+                            `--------------------------------------------------\n` +
+                            `WICHTIG - Ihr persönlicher Stornierungs-Link:\n` +
+                            `${stornoLink}\n` +
+                            `--------------------------------------------------\n\n` +
+                            `Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n\n` +
+                            `Mit spielerischen Grüßen,\n` +
+                            `Ihr Spielekarussell-Team`;
+
+                const mailtoHref = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
                 mainContent.innerHTML = `
                     <div class="bg-green-100 text-green-800 p-6 rounded-lg shadow-md">
-                        <h2 class="text-2xl font-semibold text-center">Vielen Dank für Ihre Buchung!</h2>
-                        <p class="mt-2 text-center">Ihr Termin am <strong>${formattedDate} (${timeRange})</strong> wurde erfolgreich reserviert.</p>
-                        <div class="mt-6 text-left border-t border-green-200 pt-4">
-                            <h3 class="font-bold">Nächste Schritte & Kontakt</h3>
-                            <p class="text-sm mt-2">Wir werden uns in Kürze mit Ihnen in Verbindung setzen, um weitere Details zu besprechen. Bei Fragen erreichen Sie uns unter:</p>
+                        <h2 class="text-2xl font-semibold text-center">Vielen Dank, Ihre Buchung ist reserviert!</h2>
+                        <p class="mt-2 text-center">Ihr Termin am <strong>${formattedDate} (${timeRange})</strong> wurde erfolgreich für Sie vorgemerkt.</p>
+                        
+                        <div class="mt-6 text-center border-t border-b border-green-200 py-4">
+                            <h3 class="font-bold text-lg">Wichtiger letzter Schritt:</h3>
+                            <p class="mt-2">Bitte senden Sie sich die Buchungsdetails und Ihren persönlichen Stornierungs-Link per E-Mail zu.</p>
+                            <a href="${mailtoHref}" class="mt-4 inline-block bg-blue-600 text-white font-bold px-8 py-3 rounded-md hover:bg-blue-700 text-lg">
+                                Buchungsdetails jetzt per E-Mail senden
+                            </a>
+                        </div>
+
+                        <div class="mt-6 text-left">
+                            <h3 class="font-bold">Kontakt bei Fragen</h3>
+                            <p class="text-sm mt-2">Sollten Sie Fragen haben, erreichen Sie uns unter:</p>
                             <div class="mt-2 text-sm p-3 bg-green-50 rounded-md">
                                 <p><strong>Dipl.-Ing. Ing. Andreas E. Neuhold, BSc.</strong> (Spieleverein Spieleversum)</p>
                                 <p><strong>E-Mail:</strong> andreas.neuhold@gmail.com</p>
                                 <p><strong>Telefon:</strong> +43 677 624 639 01</p>
                             </div>
                         </div>
-                        <div class="mt-6 bg-yellow-100 text-yellow-800 p-4 rounded-lg border border-yellow-300">
-                           <p class="font-bold text-lg text-center">WICHTIG: Link zur Stornierung</p>
-                           <p class="mt-2 text-center">Bitte bewahren Sie diesen Link gut auf. Nur mit diesem Link können Sie Ihren Termin wieder stornieren.</p>
-                           <input type="text" readonly value="${stornoLink}" class="w-full mt-2 p-2 bg-white rounded-md border border-yellow-400 text-center font-mono">
+                        <div class="text-center">
+                            <a href="${baseUrl}" class="mt-6 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
                         </div>
-                         <div class="text-center">
-                            <a href="/" class="mt-6 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
-                         </div>
                     </div>`;
             } else {
                 showNotification(result.message, true);
