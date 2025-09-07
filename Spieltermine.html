@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spielekarussell Linz - Terminbuchung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple spinner for loading state */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Custom styles for modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="app" class="container mx-auto p-4 md:p-8 max-w-4xl">
+        
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-600">Spielekarussell Linz</h1>
+            <p class="text-lg text-gray-600 mt-2">Einfach und schnell einen Termin für Ihre Schule oder Ihren Hort buchen.</p>
+        </header>
+
+        <main id="main-content">
+            <!-- Content wird per JavaScript geladen -->
+        </main>
+
+        <div id="loading-view" class="flex justify-center items-center py-20">
+             <div class="loader"></div>
+        </div>
+
+    </div>
+
+    <!-- Modal für die Buchung -->
+    <div id="booking-modal" class="modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md m-4">
+            <h2 class="text-2xl font-bold mb-4">Termin buchen</h2>
+            <p id="modal-termin-info" class="mb-6 text-gray-600"></p>
+            <form id="booking-form">
+                <input type="hidden" id="termin-id-input">
+                <div class="mb-4">
+                    <label for="institution-name" class="block text-sm font-medium text-gray-700 mb-1">Name der Einrichtung (Schule/Hort)</label>
+                    <input type="text" id="institution-name" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="contact-person" class="block text-sm font-medium text-gray-700 mb-1">Ansprechperson</label>
+                    <input type="text" id="contact-person" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <div class="mb-6">
+                    <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail Adresse</label>
+                    <input type="email" id="contact-email" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <div class="flex justify-end gap-4">
+                    <button type="button" id="cancel-booking-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Abbrechen</button>
+                    <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700">Jetzt verbindlich buchen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <footer class="text-center mt-12 text-sm text-gray-500">
+        <p>Ein Projekt im Rahmen von 4030 der Stadt Linz.</p>
+    </footer>
+
+    <script type="module">
+        // WICHTIG: Firebase SDK Importe
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, updateDoc, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ===================================================================================
+        // HIER DEINE FIREBASE KONFIGURATION EINFÜGEN
+        // Du findest diese in deinem Firebase Projekt unter:
+        // Projekteinstellungen > Allgemein > Deine Apps > Web-App > SDK-Einrichtung und Konfiguration > CDN
+        // ===================================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBdQX7fc8iACTX4DqBt6KNDmt31hUfKtsA",
+            authDomain: "private-c25ce.firebaseapp.com",
+            projectId: "private-c25ce",
+            storageBucket: "private-c25ce.firebasestorage.app",
+            messagingSenderId: "669741086329",
+            appId: "1:669741086329:web:1a270f74a95d374cc146a8",
+            measurementId: "G-5940R8W5F6"
+        };
+        // ===================================================================================
+
+        // Firebase initialisieren
+        let app, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch (e) {
+            console.error("Firebase Initialisierung fehlgeschlagen:", e);
+            document.getElementById('main-content').innerHTML = `
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
+                    <strong class="font-bold">Fehler!</strong>
+                    <span class="block sm:inline">Die Firebase Konfiguration ist ungültig. Bitte trage deine Daten in der index.html ein.</span>
+                </div>`;
+            document.getElementById('loading-view').classList.add('hidden');
+            // Stop further execution if firebase is not configured
+            throw new Error("Firebase not configured");
+        }
+
+        const mainContent = document.getElementById('main-content');
+        const loadingView = document.getElementById('loading-view');
+        const terminCollection = collection(db, "termine");
+        const ADMIN_PASSWORD = "spiele-linz-2025"; // Simples Passwort für Admin-Aktionen
+
+        // --- Hauptlogik basierend auf der URL ---
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('storno')) {
+                handleStorno(params.get('storno'));
+            } else if (params.has('admin')) {
+                handleAdmin();
+            } else {
+                displayUserView();
+            }
+        };
+
+        // --- Ansichten / Views ---
+        
+        // NORMALE BENUTZERANSICHT
+        function displayUserView() {
+            mainContent.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold mb-4">Verfügbare Termine</h2>
+                    <div id="termin-list" class="space-y-4">
+                        <!-- Termine werden hier geladen -->
+                    </div>
+                </div>`;
+            
+            const q = query(terminCollection, where("status", "==", "frei"), orderBy("datum", "asc"));
+
+            onSnapshot(q, (snapshot) => {
+                loadingView.classList.add('hidden');
+                const terminList = document.getElementById('termin-list');
+                if (!terminList) return;
+
+                if (snapshot.empty) {
+                    terminList.innerHTML = `<p class="text-gray-500">Aktuell sind leider keine Termine verfügbar.</p>`;
+                    return;
+                }
+                
+                terminList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const termin = doc.data();
+                    const terminDate = termin.datum.toDate();
+                    const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+                    const terminElement = document.createElement('div');
+                    terminElement.className = 'flex flex-col md:flex-row justify-between items-center p-4 bg-gray-50 rounded-lg border';
+                    terminElement.innerHTML = `
+                        <div>
+                            <p class="font-semibold text-lg">${formattedDate}</p>
+                            <p class="text-gray-600">${formattedTime} Uhr</p>
+                        </div>
+                        <button data-id="${doc.id}" data-date="${formattedDate}" data-time="${formattedTime}" class="buchen-btn mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">
+                            Buchen
+                        </button>`;
+                    terminList.appendChild(terminElement);
+                });
+            }, (error) => {
+                console.error("Fehler beim Laden der Termine: ", error);
+                mainContent.innerHTML = `<p class="text-red-500">Termine konnten nicht geladen werden.</p>`;
+            });
+        }
+
+        // ADMIN ANSICHT
+        function handleAdmin() {
+            const password = prompt("Bitte Admin-Passwort eingeben:", "");
+            if (password !== ADMIN_PASSWORD) {
+                alert("Falsches Passwort.");
+                window.location.search = ""; // Redirect to user view
+                return;
+            }
+
+            mainContent.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-2xl font-semibold mb-4">Neuen Termin anlegen</h2>
+                        <form id="add-termin-form" class="space-y-4">
+                            <div>
+                                <label for="termin-date" class="block text-sm font-medium text-gray-700">Datum</label>
+                                <input type="date" id="termin-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" required>
+                            </div>
+                            <div>
+                                <label for="termin-time" class="block text-sm font-medium text-gray-700">Uhrzeit</label>
+                                <input type="time" id="termin-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" required>
+                            </div>
+                            <button type="submit" class="w-full px-4 py-2 bg-sky-600 text-white font-semibold rounded-md hover:bg-sky-700">Termin erstellen</button>
+                        </form>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-2xl font-semibold mb-4">Alle Termine</h2>
+                        <div id="admin-termin-list" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Admin Terminliste -->
+                        </div>
+                    </div>
+                </div>`;
+            
+            const q = query(terminCollection, orderBy("datum", "asc"));
+            onSnapshot(q, (snapshot) => {
+                loadingView.classList.add('hidden');
+                const adminTerminList = document.getElementById('admin-termin-list');
+                if (!adminTerminList) return;
+                adminTerminList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const termin = doc.data();
+                    const terminDate = termin.datum.toDate();
+                    const formattedDate = terminDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                    
+                    const isBooked = termin.status === 'gebucht';
+                    const element = document.createElement('div');
+                    element.className = `p-3 rounded-md border ${isBooked ? 'bg-amber-50 border-amber-200' : 'bg-gray-50'}`;
+                    element.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold">${formattedDate} - ${formattedTime} Uhr</p>
+                                <p class="text-sm ${isBooked ? 'text-amber-800' : 'text-green-700'} font-semibold">${isBooked ? 'Gebucht' : 'Frei'}</p>
+                                ${isBooked ? `<p class="text-xs text-gray-600">${termin.gebuchtVonName} (${termin.gebuchtVonEmail})</p>` : ''}
+                            </div>
+                            ${isBooked ? `<button data-id="${doc.id}" class="admin-storno-btn px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">Stornieren</button>` : ''}
+                        </div>`;
+                    adminTerminList.appendChild(element);
+                });
+            });
+
+            document.getElementById('add-termin-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const date = document.getElementById('termin-date').value;
+                const time = document.getElementById('termin-time').value;
+                if (!date || !time) {
+                    alert('Bitte Datum und Uhrzeit angeben.');
+                    return;
+                }
+                const combinedDateTime = new Date(`${date}T${time}`);
+                
+                try {
+                    await addDoc(terminCollection, {
+                        datum: combinedDateTime,
+                        status: 'frei'
+                    });
+                    e.target.reset();
+                    alert('Termin erfolgreich erstellt!');
+                } catch (error) {
+                    console.error("Fehler beim Erstellen des Termins: ", error);
+                    alert('Fehler: Termin konnte nicht erstellt werden.');
+                }
+            });
+        }
+        
+        // STORNO ANSICHT
+        async function handleStorno(stornoId) {
+            loadingView.classList.remove('hidden');
+            mainContent.innerHTML = '';
+
+            const q = query(terminCollection, where("stornoId", "==", stornoId));
+            const snapshot = await getDocs(q);
+
+            loadingView.classList.add('hidden');
+            if (snapshot.empty) {
+                mainContent.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg shadow-md">Dieser Stornierungs-Link ist ungültig oder der Termin wurde bereits storniert.</div>`;
+                return;
+            }
+
+            const terminDoc = snapshot.docs[0];
+            const termin = terminDoc.data();
+            const terminDate = termin.datum.toDate();
+            const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+            mainContent.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-semibold mb-2">Termin stornieren</h2>
+                    <p class="mb-6">Möchten Sie den folgenden Termin wirklich stornieren?</p>
+                    <div class="bg-gray-100 p-4 rounded-lg mb-6 inline-block">
+                        <p class="font-bold text-lg">${formattedDate} - ${formattedTime} Uhr</p>
+                        <p>Gebucht von: ${termin.gebuchtVonName}</p>
+                    </div>
+                    <div>
+                        <button id="confirm-storno-btn" data-id="${terminDoc.id}" class="px-6 py-3 bg-red-600 text-white font-bold rounded-md hover:bg-red-700 mr-4">Ja, stornieren</button>
+                        <a href="/" class="px-6 py-3 bg-gray-200 text-gray-800 font-bold rounded-md hover:bg-gray-300">Nein, zurück zur Übersicht</a>
+                    </div>
+                </div>`;
+                
+            document.getElementById('confirm-storno-btn').addEventListener('click', async (e) => {
+                const docId = e.target.dataset.id;
+                await cancelAppointment(docId);
+                mainContent.innerHTML = `
+                    <div class="bg-green-100 text-green-800 p-4 rounded-lg shadow-md text-center">
+                        <h2 class="text-2xl font-semibold">Termin erfolgreich storniert!</h2>
+                        <p>Der Termin ist nun wieder für andere verfügbar.</p>
+                        <a href="/" class="mt-4 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
+                    </div>`;
+            });
+        }
+
+
+        // --- Aktionen & Datenbank-Funktionen ---
+        
+        // Einen Termin buchen
+        async function bookAppointment(terminId, institution, person, email) {
+            const terminRef = doc(db, "termine", terminId);
+            try {
+                // Sicherheitscheck: Ist der Termin noch frei?
+                const terminSnap = await getDoc(terminRef);
+                if (terminSnap.exists() && terminSnap.data().status === 'frei') {
+                    const stornoId = crypto.randomUUID();
+                    await updateDoc(terminRef, {
+                        status: 'gebucht',
+                        gebuchtVonName: institution,
+                        gebuchtVonKontakt: person,
+                        gebuchtVonEmail: email,
+                        stornoId: stornoId
+                    });
+                    return { success: true, stornoId: stornoId, terminData: terminSnap.data() };
+                } else {
+                    return { success: false, message: "Dieser Termin ist leider nicht mehr verfügbar." };
+                }
+            } catch (error) {
+                console.error("Fehler beim Buchen: ", error);
+                return { success: false, message: "Ein technischer Fehler ist aufgetreten." };
+            }
+        }
+        
+        // Einen Termin stornieren (für User und Admin)
+        async function cancelAppointment(terminId) {
+            const terminRef = doc(db, "termine", terminId);
+             try {
+                await updateDoc(terminRef, {
+                    status: 'frei',
+                    gebuchtVonName: '',
+                    gebuchtVonKontakt: '',
+                    gebuchtVonEmail: '',
+                    stornoId: ''
+                });
+                return true;
+            } catch (error) {
+                console.error("Fehler beim stornieren: ", error);
+                return false;
+            }
+        }
+
+
+        // --- Event Listeners ---
+        const modal = document.getElementById('booking-modal');
+        
+        document.body.addEventListener('click', (e) => {
+            // Buchungs-Button in der User-Liste
+            if (e.target.classList.contains('buchen-btn')) {
+                const terminId = e.target.dataset.id;
+                const terminDate = e.target.dataset.date;
+                const terminTime = e.target.dataset.time;
+                document.getElementById('termin-id-input').value = terminId;
+                document.getElementById('modal-termin-info').innerText = `Termin am ${terminDate} um ${terminTime} Uhr.`;
+                modal.classList.remove('hidden');
+            }
+            // Admin-Storno-Button
+            if (e.target.classList.contains('admin-storno-btn')) {
+                const terminId = e.target.dataset.id;
+                if(confirm('Möchtest du diesen Termin wirklich stornieren? Der Nutzer wird NICHT automatisch benachrichtigt.')){
+                    cancelAppointment(terminId).then(success => {
+                       if(success) alert('Termin storniert.');
+                       else alert('Fehler beim Stornieren.');
+                    });
+                }
+            }
+        });
+
+        document.getElementById('cancel-booking-btn').addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        document.getElementById('booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const terminId = document.getElementById('termin-id-input').value;
+            const institution = document.getElementById('institution-name').value;
+            const person = document.getElementById('contact-person').value;
+            const email = document.getElementById('contact-email').value;
+
+            const result = await bookAppointment(terminId, institution, person, email);
+
+            if (result.success) {
+                modal.classList.add('hidden');
+                e.target.reset();
+                const terminDate = result.terminData.datum.toDate();
+                const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                const stornoLink = `${window.location.origin}${window.location.pathname}?storno=${result.stornoId}`;
+                mainContent.innerHTML = `
+                    <div class="bg-green-100 text-green-800 p-6 rounded-lg shadow-md text-center">
+                        <h2 class="text-2xl font-semibold">Vielen Dank für Ihre Buchung!</h2>
+                        <p class="mt-2">Ihr Termin am <strong>${formattedDate} um ${formattedTime} Uhr</strong> wurde erfolgreich reserviert.</p>
+                        <div class="mt-6 bg-yellow-100 text-yellow-800 p-4 rounded-lg border border-yellow-300">
+                           <p class="font-bold text-lg">WICHTIG: Link zur Stornierung</p>
+                           <p class="mt-2">Bitte bewahren Sie diesen Link gut auf. Nur mit diesem Link können Sie Ihren Termin wieder stornieren.</p>
+                           <input type="text" readonly value="${stornoLink}" class="w-full mt-2 p-2 bg-white rounded-md border border-yellow-400 text-center font-mono">
+                        </div>
+                         <a href="/" class="mt-6 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
+                    </div>`;
+            } else {
+                alert(result.message);
+            }
+        });
+
+    </script>
+</body>
+</html>
+
