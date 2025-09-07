@@ -35,6 +35,9 @@
             z-index: 1000;
         }
         .prose { max-width: 65ch; }
+        .notification {
+            transition: opacity 0.5s, transform 0.5s;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -61,7 +64,12 @@
 
     </div>
 
-    <!-- Modals (Buchung, Impressum, Datenschutz, Admin-Login) -->
+    <!-- Notification Element -->
+    <div id="notification" class="notification fixed bottom-4 right-4 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transform translate-y-10 pointer-events-none">
+        Notification Text
+    </div>
+
+    <!-- Modals -->
     <div id="booking-modal" class="modal-backdrop hidden">
         <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md m-4 max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold mb-4">Termin buchen</h2>
@@ -166,6 +174,40 @@
             </form>
         </div>
     </div>
+     <div id="edit-termin-modal" class="modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md m-4">
+            <h2 class="text-2xl font-bold mb-4">Termin bearbeiten</h2>
+            <form id="edit-termin-form" class="space-y-4">
+                <input type="hidden" id="edit-termin-id">
+                <div>
+                    <label for="edit-termin-date" class="block text-sm font-medium text-gray-700">Datum</label>
+                    <input type="date" id="edit-termin-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                </div>
+                <div>
+                    <label for="edit-termin-time" class="block text-sm font-medium text-gray-700">Startzeit</label>
+                    <input type="time" id="edit-termin-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                </div>
+                <div>
+                    <label for="edit-termin-duration" class="block text-sm font-medium text-gray-700">Dauer (in Minuten)</label>
+                    <input type="number" id="edit-termin-duration" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required min="30" step="15" value="90">
+                </div>
+                <div class="flex justify-end gap-4 pt-4">
+                    <button type="button" id="cancel-edit-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Abbrechen</button>
+                    <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700">Änderungen speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="confirm-modal" class="modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-sm m-4">
+            <h2 id="confirm-title" class="text-xl font-bold mb-4">Bestätigung</h2>
+            <p id="confirm-message" class="text-gray-600 mb-6"></p>
+            <div class="flex justify-end gap-4">
+                <button type="button" id="confirm-cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Abbrechen</button>
+                <button type="button" id="confirm-ok-btn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Bestätigen</button>
+            </div>
+        </div>
+    </div>
     
     <footer class="text-center mt-12 text-sm text-gray-500">
         <p>Ein Projekt des <a href="https://spieleversum.at/" target="_blank" class="underline hover:text-sky-600">Spieleverein Spieleversum</a> im Rahmen von 4030 der Stadt Linz.</p>
@@ -206,6 +248,46 @@
         const loadingView = document.getElementById('loading-view');
         const terminCollection = collection(db, "termine");
 
+        // --- Helper Functions ---
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.remove('bg-green-500', 'bg-red-500', 'opacity-0', 'translate-y-10');
+            notification.classList.add(isError ? 'bg-red-500' : 'bg-green-500');
+
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'translate-y-10');
+            }, 3000);
+        }
+
+        let confirmCallback = null;
+        const confirmModal = document.getElementById('confirm-modal');
+        function showConfirm(title, message, callback) {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+            confirmCallback = callback;
+            confirmModal.classList.remove('hidden');
+        }
+        document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+            if (confirmCallback) confirmCallback(true);
+            confirmModal.classList.add('hidden');
+        });
+        document.getElementById('confirm-cancel-btn').addEventListener('click', () => {
+            if (confirmCallback) confirmCallback(false);
+            confirmModal.classList.add('hidden');
+        });
+
+        function formatTerminTime(startDate, duration) {
+            if (!duration) {
+                return startDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+            }
+            const endDate = new Date(startDate.getTime() + duration * 60000);
+            const startTimeStr = startDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            const endTimeStr = endDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            return `${startTimeStr} - ${endTimeStr} Uhr (${duration} Min.)`;
+        }
+
+        // --- View Logic ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('storno')) {
@@ -241,16 +323,16 @@
                     const termin = doc.data();
                     const terminDate = termin.datum.toDate();
                     const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                    const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                    const timeRange = formatTerminTime(terminDate, termin.dauer);
 
                     const terminElement = document.createElement('div');
                     terminElement.className = 'flex flex-col md:flex-row justify-between items-center p-4 bg-gray-50 rounded-lg border';
                     terminElement.innerHTML = `
                         <div>
                             <p class="font-semibold text-lg">${formattedDate}</p>
-                            <p class="text-gray-600">${formattedTime} Uhr</p>
+                            <p class="text-gray-600">${timeRange}</p>
                         </div>
-                        <button data-id="${doc.id}" data-date="${formattedDate}" data-time="${formattedTime}" class="buchen-btn mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">Buchen</button>`;
+                        <button data-id="${doc.id}" data-date="${formattedDate}" data-time="${timeRange}" class="buchen-btn mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">Buchen</button>`;
                     terminList.appendChild(terminElement);
                 });
             }, (error) => {
@@ -280,8 +362,12 @@
                                 <input type="date" id="termin-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                             </div>
                             <div>
-                                <label for="termin-time" class="block text-sm font-medium text-gray-700">Uhrzeit</label>
+                                <label for="termin-time" class="block text-sm font-medium text-gray-700">Startzeit</label>
                                 <input type="time" id="termin-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                            </div>
+                             <div>
+                                <label for="termin-duration" class="block text-sm font-medium text-gray-700">Dauer (in Minuten)</label>
+                                <input type="number" id="termin-duration" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required min="30" step="15" value="90">
                             </div>
                             <button type="submit" class="w-full px-4 py-2 bg-sky-600 text-white font-semibold rounded-md hover:bg-sky-700">Termin erstellen</button>
                         </form>
@@ -302,7 +388,7 @@
                     const termin = doc.data();
                     const terminDate = termin.datum.toDate();
                     const formattedDate = terminDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                    const timeRange = formatTerminTime(terminDate, termin.dauer);
                     
                     const isBooked = termin.status === 'gebucht';
                     const element = document.createElement('div');
@@ -310,7 +396,7 @@
                     element.innerHTML = `
                         <div class="flex justify-between items-start gap-2">
                             <div class="flex-grow">
-                                <p class="font-bold">${formattedDate} - ${formattedTime} Uhr</p>
+                                <p class="font-bold">${formattedDate} - ${timeRange}</p>
                                 <p class="text-sm ${isBooked ? 'text-amber-800' : 'text-green-700'} font-semibold">${isBooked ? 'Gebucht' : 'Frei'}</p>
                                 ${isBooked ? `<p class="text-xs text-gray-600">${termin.gebuchtVonName} (${termin.gebuchtVonEmail})</p>` : ''}
                                 ${isBooked ? `
@@ -326,6 +412,7 @@
                                 ` : ''}
                             </div>
                             <div class="flex flex-col items-end gap-1 flex-shrink-0">
+                                <button data-id="${doc.id}" class="admin-edit-btn px-3 py-1 bg-blue-500 text-white text-xs rounded-md hover:bg-blue-600">Bearbeiten</button>
                                 <button data-id="${doc.id}" class="admin-delete-btn px-3 py-1 bg-gray-500 text-white text-xs rounded-md hover:bg-gray-600">Löschen</button>
                                 ${isBooked ? `<button data-id="${doc.id}" class="admin-storno-btn px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700">Stornieren</button>` : ''}
                             </div>
@@ -338,20 +425,22 @@
                 e.preventDefault();
                 const date = document.getElementById('termin-date').value;
                 const time = document.getElementById('termin-time').value;
+                const duration = parseInt(document.getElementById('termin-duration').value, 10);
                 const combinedDateTime = new Date(`${date}T${time}`);
                 try {
-                    await addDoc(terminCollection, { datum: combinedDateTime, status: 'frei' });
+                    await addDoc(terminCollection, { datum: combinedDateTime, status: 'frei', dauer: duration });
                     e.target.reset();
-                    alert('Termin erfolgreich erstellt!');
+                    showNotification('Termin erfolgreich erstellt!');
                 } catch (error) {
                     console.error("Fehler beim Erstellen des Termins: ", error);
-                    alert('Fehler: Termin konnte nicht erstellt werden.');
+                    showNotification('Fehler: Termin konnte nicht erstellt werden.', true);
                 }
             });
 
             document.getElementById('logout-btn').addEventListener('click', async () => {
                 await signOut(auth);
-                window.location.search = ""; // Redirect to user view
+                document.getElementById('admin-login-link').classList.remove('hidden');
+                window.location.search = "";
             });
         }
         
@@ -372,14 +461,14 @@
             const termin = terminDoc.data();
             const terminDate = termin.datum.toDate();
             const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            const timeRange = formatTerminTime(terminDate, termin.dauer);
 
             mainContent.innerHTML = `
                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h2 class="text-2xl font-semibold mb-2">Termin stornieren</h2>
                     <p class="mb-6">Möchten Sie den folgenden Termin wirklich stornieren?</p>
                     <div class="bg-gray-100 p-4 rounded-lg mb-6 inline-block">
-                        <p class="font-bold text-lg">${formattedDate} - ${formattedTime} Uhr</p>
+                        <p class="font-bold text-lg">${formattedDate} - ${timeRange}</p>
                         <p>Gebucht von: ${termin.gebuchtVonName}</p>
                     </div>
                     <div>
@@ -400,6 +489,7 @@
             });
         }
 
+        // --- Database Functions ---
         async function bookAppointment(terminId, institution, person, email, address, phone, notes) {
             const terminRef = doc(db, "termine", terminId);
             try {
@@ -457,6 +547,31 @@
             }
         }
 
+        async function openEditModal(terminId) {
+            const terminRef = doc(db, "termine", terminId);
+            const terminSnap = await getDoc(terminRef);
+            if (terminSnap.exists()) {
+                const termin = terminSnap.data();
+                const terminDate = termin.datum.toDate();
+
+                document.getElementById('edit-termin-id').value = terminId;
+                const yyyy = terminDate.getFullYear();
+                const mm = String(terminDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(terminDate.getDate()).padStart(2, '0');
+                const hh = String(terminDate.getHours()).padStart(2, '0');
+                const min = String(terminDate.getMinutes()).padStart(2, '0');
+
+                document.getElementById('edit-termin-date').value = `${yyyy}-${mm}-${dd}`;
+                document.getElementById('edit-termin-time').value = `${hh}:${min}`;
+                document.getElementById('edit-termin-duration').value = termin.dauer || 90;
+
+                document.getElementById('edit-termin-modal').classList.remove('hidden');
+            } else {
+                showNotification("Termin nicht gefunden.", true);
+            }
+        }
+
+        // --- Event Listeners ---
         const bookingModal = document.getElementById('booking-modal');
         
         document.body.addEventListener('click', (e) => {
@@ -465,26 +580,34 @@
                 const terminDate = e.target.dataset.date;
                 const terminTime = e.target.dataset.time;
                 document.getElementById('termin-id-input').value = terminId;
-                document.getElementById('modal-termin-info').innerText = `Termin am ${terminDate} um ${terminTime} Uhr.`;
+                document.getElementById('modal-termin-info').innerText = `Termin am ${terminDate} um ${terminTime}.`;
                 bookingModal.classList.remove('hidden');
+            }
+            if (e.target.classList.contains('admin-edit-btn')) {
+                const terminId = e.target.dataset.id;
+                openEditModal(terminId);
             }
             if (e.target.classList.contains('admin-storno-btn')) {
                 const terminId = e.target.dataset.id;
-                if(confirm('Möchtest du diese Buchung wirklich stornieren?')){
-                    cancelAppointment(terminId).then(success => {
-                       if(success) alert('Buchung storniert. Der Termin ist wieder frei.');
-                       else alert('Fehler beim Stornieren.');
-                    });
-                }
+                showConfirm('Buchung stornieren', 'Möchtest du diese Buchung wirklich stornieren?', (confirmed) => {
+                    if (confirmed) {
+                        cancelAppointment(terminId).then(success => {
+                            if (success) showNotification('Buchung storniert. Der Termin ist wieder frei.');
+                            else showNotification('Fehler beim Stornieren.', true);
+                        });
+                    }
+                });
             }
             if (e.target.classList.contains('admin-delete-btn')) {
                 const terminId = e.target.dataset.id;
-                if(confirm('Diesen Termin endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden!')){
-                    deleteAppointment(terminId).then(success => {
-                       if(success) alert('Termin gelöscht.');
-                       else alert('Fehler beim Löschen.');
-                    });
-                }
+                showConfirm('Termin löschen', 'Diesen Termin endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden!', (confirmed) => {
+                    if (confirmed) {
+                        deleteAppointment(terminId).then(success => {
+                            if (success) showNotification('Termin gelöscht.');
+                            else showNotification('Fehler beim Löschen.', true);
+                        });
+                    }
+                });
             }
         });
 
@@ -509,12 +632,12 @@
                 e.target.reset();
                 const terminDate = result.terminData.datum.toDate();
                 const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+                const timeRange = formatTerminTime(terminDate, result.terminData.dauer);
                 const stornoLink = `${window.location.origin}${window.location.pathname}?storno=${result.stornoId}`;
                 mainContent.innerHTML = `
                     <div class="bg-green-100 text-green-800 p-6 rounded-lg shadow-md">
                         <h2 class="text-2xl font-semibold text-center">Vielen Dank für Ihre Buchung!</h2>
-                        <p class="mt-2 text-center">Ihr Termin am <strong>${formattedDate} um ${formattedTime} Uhr</strong> wurde erfolgreich reserviert.</p>
+                        <p class="mt-2 text-center">Ihr Termin am <strong>${formattedDate} (${timeRange})</strong> wurde erfolgreich reserviert.</p>
                         <div class="mt-6 text-left border-t border-green-200 pt-4">
                             <h3 class="font-bold">Nächste Schritte & Kontakt</h3>
                             <p class="text-sm mt-2">Wir werden uns in Kürze mit Ihnen in Verbindung setzen, um weitere Details zu besprechen. Bei Fragen erreichen Sie uns unter:</p>
@@ -534,7 +657,7 @@
                          </div>
                     </div>`;
             } else {
-                alert(result.message);
+                showNotification(result.message, true);
             }
         });
         
@@ -542,14 +665,8 @@
         const datenschutzModal = document.getElementById('datenschutz-modal');
         const adminLoginModal = document.getElementById('admin-login-modal');
 
-        document.getElementById('impressum-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            impressumModal.classList.remove('hidden');
-        });
-        document.getElementById('datenschutz-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            datenschutzModal.classList.remove('hidden');
-        });
+        document.getElementById('impressum-link').addEventListener('click', (e) => { e.preventDefault(); impressumModal.classList.remove('hidden'); });
+        document.getElementById('datenschutz-link').addEventListener('click', (e) => { e.preventDefault(); datenschutzModal.classList.remove('hidden'); });
         document.querySelectorAll('.close-modal-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 impressumModal.classList.add('hidden');
@@ -557,15 +674,9 @@
             });
         });
 
-        document.getElementById('admin-login-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            handleAdmin();
-        });
-
-        document.getElementById('cancel-login-btn').addEventListener('click', () => {
-            adminLoginModal.classList.add('hidden');
-            // Do not change url, just hide the modal
-        });
+        document.getElementById('admin-login-link').addEventListener('click', (e) => { e.preventDefault(); handleAdmin(); });
+        document.getElementById('cancel-login-btn').addEventListener('click', () => { adminLoginModal.classList.add('hidden'); });
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => { document.getElementById('edit-termin-modal').classList.add('hidden'); });
 
         document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -584,10 +695,29 @@
             }
         });
 
+        document.getElementById('edit-termin-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const terminId = document.getElementById('edit-termin-id').value;
+            const date = document.getElementById('edit-termin-date').value;
+            const time = document.getElementById('edit-termin-time').value;
+            const duration = parseInt(document.getElementById('edit-termin-duration').value, 10);
+            
+            const combinedDateTime = new Date(`${date}T${time}`);
+            const terminRef = doc(db, "termine", terminId);
+            
+            try {
+                await updateDoc(terminRef, { datum: combinedDateTime, dauer: duration });
+                showNotification('Termin erfolgreich aktualisiert!');
+                document.getElementById('edit-termin-modal').classList.add('hidden');
+            } catch (error) {
+                console.error("Fehler beim Aktualisieren: ", error);
+                showNotification('Fehler: Termin konnte nicht aktualisiert werden.', true);
+            }
+        });
+
         onAuthStateChanged(auth, user => {
             const params = new URLSearchParams(window.location.search);
             if (user && params.has('admin')) {
-                // User is signed in and trying to access admin page
                 adminLoginModal.classList.add('hidden');
                 showAdminDashboard();
             }
@@ -596,5 +726,4 @@
     </script>
 </body>
 </html>
-
 
