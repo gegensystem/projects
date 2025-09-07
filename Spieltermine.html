@@ -36,6 +36,7 @@
             align-items: center;
             z-index: 1000;
         }
+        .prose { max-width: 65ch; } /* Basic prose styling for legal text */
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -44,7 +45,8 @@
         
         <header class="text-center mb-8 md:mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-sky-600">Spielekarussell Linz</h1>
-            <p class="text-lg text-gray-600 mt-2">Einfach und schnell einen Termin für Ihre Schule oder Ihren Hort buchen.</p>
+            <p class="text-lg text-gray-600 mt-2">Ein Projekt des <a href="https://spieleversum.at/" target="_blank" class="text-sky-700 underline">Spieleverein Spieleversum</a></p>
+            <p class="text-md text-gray-500 mt-1">Einfach und schnell einen Termin für Ihre Schule oder Ihren Hort buchen.</p>
         </header>
 
         <main id="main-content">
@@ -59,7 +61,7 @@
 
     <!-- Modal für die Buchung -->
     <div id="booking-modal" class="modal-backdrop hidden">
-        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md m-4">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md m-4 max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold mb-4">Termin buchen</h2>
             <p id="modal-termin-info" class="mb-6 text-gray-600"></p>
             <form id="booking-form">
@@ -72,9 +74,21 @@
                     <label for="contact-person" class="block text-sm font-medium text-gray-700 mb-1">Ansprechperson</label>
                     <input type="text" id="contact-person" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
                 </div>
-                <div class="mb-6">
+                 <div class="mb-4">
+                    <label for="contact-address" class="block text-sm font-medium text-gray-700 mb-1">Adresse der Einrichtung</label>
+                    <input type="text" id="contact-address" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="contact-phone" class="block text-sm font-medium text-gray-700 mb-1">Telefonnummer</label>
+                    <input type="tel" id="contact-phone" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <div class="mb-4">
                     <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail Adresse</label>
                     <input type="email" id="contact-email" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <div class="mb-6">
+                    <label for="contact-notes" class="block text-sm font-medium text-gray-700 mb-1">Anmerkungen / Wunschuhrzeit</label>
+                    <textarea id="contact-notes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" placeholder="z.B. Beginn bitte erst um 13:00 Uhr"></textarea>
                 </div>
                 <div class="flex justify-end gap-4">
                     <button type="button" id="cancel-booking-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Abbrechen</button>
@@ -83,20 +97,91 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal für Impressum -->
+    <div id="impressum-modal" class="modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-2xl m-4 overflow-y-auto max-h-[80vh]">
+            <h2 class="text-2xl font-bold mb-4">Impressum</h2>
+            <div class="prose prose-sm max-w-none text-gray-600">
+                <p><strong>Angaben gemäß § 5 ECG</strong></p>
+                <p>
+                    Dipl.-Ing. Ing. Andreas E. Neuhold, BSc.<br>
+                    Haushoferstraße 25<br>
+                    4020 Linz<br>
+                    Österreich
+                </p>
+                <p>
+                    <strong>Kontakt:</strong><br>
+                    Telefon: +43 677 624 639 01<br>
+                    E-Mail: <a href="mailto:andreas.neuhold@gmail.com">andreas.neuhold@gmail.com</a>
+                </p>
+                <p>
+                    <strong>Projektträger:</strong><br>
+                    <a href="https://spieleversum.at/" target="_blank">Spieleverein Spieleversum</a>
+                </p>
+                <p>
+                    <strong>Ausrichtung der Webseite:</strong><br>
+                    Private, nicht-kommerzielle Plattform zur Organisation des Projekts "Spielekarussell Linz". Die Nutzung der Seite ist für die teilnehmenden Schulen und Horte kostenlos.
+                </p>
+                <p>
+                    <strong>Online-Streitbeilegung:</strong><br>
+                    Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a>. Unsere E-Mail-Adresse finden Sie oben im Impressum.
+                </p>
+            </div>
+            <div class="flex justify-end mt-6">
+                 <button type="button" class="close-modal-btn px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal für Datenschutz -->
+    <div id="datenschutz-modal" class="modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-2xl m-4 overflow-y-auto max-h-[80vh]">
+            <h2 class="text-2xl font-bold mb-4">Datenschutzerklärung</h2>
+            <div class="prose prose-sm max-w-none text-gray-600">
+                <p>Verantwortlicher für die Datenverarbeitung auf dieser Webseite ist:</p>
+                <p>
+                    Dipl.-Ing. Ing. Andreas E. Neuhold, BSc.<br>
+                    Haushoferstraße 25<br>
+                    4020 Linz, Österreich<br>
+                    E-Mail: andreas.neuhold@gmail.com
+                </p>
+                <p>
+                    <strong>Erhebung und Verarbeitung von Daten:</strong><br>
+                    Im Rahmen der Terminbuchung für das Projekt "Spielekarussell Linz" erheben wir folgende Daten: Name der Einrichtung, Name der Ansprechperson, Adresse, Telefonnummer, E-Mail Adresse sowie allfällige Anmerkungen.
+                </p>
+                <p>
+                    <strong>Zweck der Datenverarbeitung:</strong><br>
+                    Die von Ihnen bereitgestellten Daten werden ausschließlich zur Organisation, Koordination und Durchführung der gebuchten Spieletage verwendet.
+                </p>
+                <p>
+                    <strong>Datenspeicherung:</strong><br>
+                    Ihre Daten werden in einer Firestore-Datenbank (ein Dienst von Google Cloud) gespeichert. Der Serverstandort befindet sich in Frankfurt, Deutschland. Nach Abschluss des Projekts werden alle personenbezogenen Daten gelöscht.
+                </p>
+                 <p>
+                    <strong>Ihre Rechte:</strong><br>
+                    Sie haben jederzeit das Recht auf Auskunft, Berichtigung, Löschung oder Einschränkung der Verarbeitung Ihrer gespeicherten Daten. Bitte kontaktieren Sie uns hierfür unter der oben angegebenen E-Mail-Adresse.
+                </p>
+            </div>
+             <div class="flex justify-end mt-6">
+                 <button type="button" class="close-modal-btn px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700">Schließen</button>
+            </div>
+        </div>
+    </div>
     
     <footer class="text-center mt-12 text-sm text-gray-500">
-        <p>Ein Projekt im Rahmen von 4030 der Stadt Linz.</p>
+        <p>Ein Projekt des <a href="https://spieleversum.at/" target="_blank" class="underline hover:text-sky-600">Spieleverein Spieleversum</a> im Rahmen von 4030 der Stadt Linz.</p>
+        <div class="mt-2 space-x-4">
+            <a href="#" id="impressum-link" class="underline hover:text-sky-600">Impressum</a>
+            <a href="#" id="datenschutz-link" class="underline hover:text-sky-600">Datenschutz</a>
+        </div>
     </footer>
 
     <script type="module">
         // WICHTIG: Firebase SDK Importe
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, updateDoc, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, updateDoc, addDoc, serverTimestamp, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // ===================================================================================
-        // HIER DEINE FIREBASE KONFIGURATION EINFÜGEN
-        // Du findest diese in deinem Firebase Projekt unter:
-        // Projekteinstellungen > Allgemein > Deine Apps > Web-App > SDK-Einrichtung und Konfiguration > CDN
         // ===================================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBdQX7fc8iACTX4DqBt6KNDmt31hUfKtsA",
@@ -155,7 +240,8 @@
                     </div>
                 </div>`;
             
-            const q = query(terminCollection, where("status", "==", "frei"), orderBy("datum", "asc"));
+            // Query is simplified to avoid composite index. Sorting is done client-side.
+            const q = query(terminCollection, where("status", "==", "frei"));
 
             onSnapshot(q, (snapshot) => {
                 loadingView.classList.add('hidden');
@@ -167,8 +253,12 @@
                     return;
                 }
                 
+                // Sort documents by date client-side
+                const docs = snapshot.docs;
+                docs.sort((a, b) => a.data().datum.toDate() - b.data().datum.toDate());
+
                 terminList.innerHTML = '';
-                snapshot.forEach(doc => {
+                docs.forEach(doc => {
                     const termin = doc.data();
                     const terminDate = termin.datum.toDate();
                     const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -246,6 +336,17 @@
                                 <p class="font-bold">${formattedDate} - ${formattedTime} Uhr</p>
                                 <p class="text-sm ${isBooked ? 'text-amber-800' : 'text-green-700'} font-semibold">${isBooked ? 'Gebucht' : 'Frei'}</p>
                                 ${isBooked ? `<p class="text-xs text-gray-600">${termin.gebuchtVonName} (${termin.gebuchtVonEmail})</p>` : ''}
+                                ${isBooked ? `
+                                    <details class="text-xs text-gray-500 mt-1 cursor-pointer">
+                                        <summary>Mehr Details</summary>
+                                        <div class="mt-1 pl-2 border-l-2 border-gray-200">
+                                            <p><strong>Kontakt:</strong> ${termin.gebuchtVonKontakt}</p>
+                                            <p><strong>Tel:</strong> ${termin.gebuchtVonTelefon}</p>
+                                            <p><strong>Adresse:</strong> ${termin.gebuchtVonAdresse}</p>
+                                            ${termin.gebuchtVonAnmerkung ? `<p><strong>Anmerkung:</strong> ${termin.gebuchtVonAnmerkung}</p>` : ''}
+                                        </div>
+                                    </details>
+                                ` : ''}
                             </div>
                             ${isBooked ? `<button data-id="${doc.id}" class="admin-storno-btn px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">Stornieren</button>` : ''}
                         </div>`;
@@ -327,7 +428,7 @@
         // --- Aktionen & Datenbank-Funktionen ---
         
         // Einen Termin buchen
-        async function bookAppointment(terminId, institution, person, email) {
+        async function bookAppointment(terminId, institution, person, email, address, phone, notes) {
             const terminRef = doc(db, "termine", terminId);
             try {
                 // Sicherheitscheck: Ist der Termin noch frei?
@@ -339,6 +440,9 @@
                         gebuchtVonName: institution,
                         gebuchtVonKontakt: person,
                         gebuchtVonEmail: email,
+                        gebuchtVonAdresse: address,
+                        gebuchtVonTelefon: phone,
+                        gebuchtVonAnmerkung: notes,
                         stornoId: stornoId
                     });
                     return { success: true, stornoId: stornoId, terminData: terminSnap.data() };
@@ -357,10 +461,13 @@
              try {
                 await updateDoc(terminRef, {
                     status: 'frei',
-                    gebuchtVonName: '',
-                    gebuchtVonKontakt: '',
-                    gebuchtVonEmail: '',
-                    stornoId: ''
+                    gebuchtVonName: null,
+                    gebuchtVonKontakt: null,
+                    gebuchtVonEmail: null,
+                    gebuchtVonAdresse: null,
+                    gebuchtVonTelefon: null,
+                    gebuchtVonAnmerkung: null,
+                    stornoId: null
                 });
                 return true;
             } catch (error) {
@@ -405,8 +512,11 @@
             const institution = document.getElementById('institution-name').value;
             const person = document.getElementById('contact-person').value;
             const email = document.getElementById('contact-email').value;
+            const address = document.getElementById('contact-address').value;
+            const phone = document.getElementById('contact-phone').value;
+            const notes = document.getElementById('contact-notes').value;
 
-            const result = await bookAppointment(terminId, institution, person, email);
+            const result = await bookAppointment(terminId, institution, person, email, address, phone, notes);
 
             if (result.success) {
                 modal.classList.add('hidden');
@@ -416,19 +526,52 @@
                 const formattedTime = terminDate.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
                 const stornoLink = `${window.location.origin}${window.location.pathname}?storno=${result.stornoId}`;
                 mainContent.innerHTML = `
-                    <div class="bg-green-100 text-green-800 p-6 rounded-lg shadow-md text-center">
-                        <h2 class="text-2xl font-semibold">Vielen Dank für Ihre Buchung!</h2>
-                        <p class="mt-2">Ihr Termin am <strong>${formattedDate} um ${formattedTime} Uhr</strong> wurde erfolgreich reserviert.</p>
+                    <div class="bg-green-100 text-green-800 p-6 rounded-lg shadow-md">
+                        <h2 class="text-2xl font-semibold text-center">Vielen Dank für Ihre Buchung!</h2>
+                        <p class="mt-2 text-center">Ihr Termin am <strong>${formattedDate} um ${formattedTime} Uhr</strong> wurde erfolgreich reserviert.</p>
+                        
+                        <div class="mt-6 text-left border-t border-green-200 pt-4">
+                            <h3 class="font-bold">Nächste Schritte & Kontakt</h3>
+                            <p class="text-sm mt-2">Wir werden uns in Kürze mit Ihnen in Verbindung setzen, um weitere Details zu besprechen. Bei Fragen erreichen Sie uns unter:</p>
+                            <div class="mt-2 text-sm p-3 bg-green-50 rounded-md">
+                                <p><strong>Dipl.-Ing. Ing. Andreas E. Neuhold, BSc.</strong> (Spieleverein Spieleversum)</p>
+                                <p><strong>E-Mail:</strong> andreas.neuhold@gmail.com</p>
+                                <p><strong>Telefon:</strong> +43 677 624 639 01</p>
+                            </div>
+                        </div>
+
                         <div class="mt-6 bg-yellow-100 text-yellow-800 p-4 rounded-lg border border-yellow-300">
-                           <p class="font-bold text-lg">WICHTIG: Link zur Stornierung</p>
-                           <p class="mt-2">Bitte bewahren Sie diesen Link gut auf. Nur mit diesem Link können Sie Ihren Termin wieder stornieren.</p>
+                           <p class="font-bold text-lg text-center">WICHTIG: Link zur Stornierung</p>
+                           <p class="mt-2 text-center">Bitte bewahren Sie diesen Link gut auf. Nur mit diesem Link können Sie Ihren Termin wieder stornieren.</p>
                            <input type="text" readonly value="${stornoLink}" class="w-full mt-2 p-2 bg-white rounded-md border border-yellow-400 text-center font-mono">
                         </div>
-                         <a href="/" class="mt-6 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
+                         <div class="text-center">
+                            <a href="/" class="mt-6 inline-block bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700">Zurück zur Startseite</a>
+                         </div>
                     </div>`;
             } else {
                 alert(result.message);
             }
+        });
+        
+        const impressumModal = document.getElementById('impressum-modal');
+        const datenschutzModal = document.getElementById('datenschutz-modal');
+
+        document.getElementById('impressum-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            impressumModal.classList.remove('hidden');
+        });
+
+        document.getElementById('datenschutz-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            datenschutzModal.classList.remove('hidden');
+        });
+
+        document.querySelectorAll('.close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                impressumModal.classList.add('hidden');
+                datenschutzModal.classList.add('hidden');
+            });
         });
 
     </script>
