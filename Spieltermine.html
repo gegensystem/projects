@@ -10,7 +10,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Simple spinner for loading state */
         .loader {
             border: 4px solid #f3f3f3;
             border-radius: 50%;
@@ -23,7 +22,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* Custom styles for modal */
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -36,13 +34,17 @@
             align-items: center;
             z-index: 1000;
         }
-        .prose { max-width: 65ch; } /* Basic prose styling for legal text */
+        .prose { max-width: 65ch; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <div id="app" class="container mx-auto p-4 md:p-8 max-w-4xl">
+    <div id="app" class="relative container mx-auto p-4 md:p-8 max-w-4xl">
         
+        <div class="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+            <button id="admin-login-link" class="text-sm text-gray-500 hover:text-sky-600 hover:underline">Admin Login</button>
+        </div>
+
         <header class="text-center mb-8 md:mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-sky-600">Spielekarussell Linz</h1>
             <p class="text-lg text-gray-600 mt-2">Ein Projekt des <a href="https://spieleversum.at/" target="_blank" class="text-sky-700 underline">Spieleverein Spieleversum</a></p>
@@ -59,7 +61,7 @@
 
     </div>
 
-    <!-- Modal für die Buchung -->
+    <!-- Modals (Buchung, Impressum, Datenschutz, Admin-Login) -->
     <div id="booking-modal" class="modal-backdrop hidden">
         <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md m-4 max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold mb-4">Termin buchen</h2>
@@ -97,8 +99,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Modal für Impressum -->
     <div id="impressum-modal" class="modal-backdrop hidden">
         <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-2xl m-4 overflow-y-auto max-h-[80vh]">
             <h2 class="text-2xl font-bold mb-4">Impressum</h2>
@@ -115,26 +115,15 @@
                     Telefon: +43 677 624 639 01<br>
                     E-Mail: <a href="mailto:andreas.neuhold@gmail.com">andreas.neuhold@gmail.com</a>
                 </p>
-                <p>
-                    <strong>Projektträger:</strong><br>
-                    <a href="https://spieleversum.at/" target="_blank">Spieleverein Spieleversum</a>
-                </p>
-                <p>
-                    <strong>Ausrichtung der Webseite:</strong><br>
-                    Private, nicht-kommerzielle Plattform zur Organisation des Projekts "Spielekarussell Linz". Die Nutzung der Seite ist für die teilnehmenden Schulen und Horte kostenlos.
-                </p>
-                <p>
-                    <strong>Online-Streitbeilegung:</strong><br>
-                    Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a>. Unsere E-Mail-Adresse finden Sie oben im Impressum.
-                </p>
+                <p><strong>Projektträger:</strong><br><a href="https://spieleversum.at/" target="_blank">Spieleverein Spieleversum</a></p>
+                <p><strong>Ausrichtung der Webseite:</strong><br>Private, nicht-kommerzielle Plattform zur Organisation des Projekts "Spielekarussell Linz". Die Nutzung der Seite ist für die teilnehmenden Schulen und Horte kostenlos.</p>
+                <p><strong>Online-Streitbeilegung:</strong><br>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a>. Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
             </div>
             <div class="flex justify-end mt-6">
                  <button type="button" class="close-modal-btn px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700">Schließen</button>
             </div>
         </div>
     </div>
-
-    <!-- Modal für Datenschutz -->
     <div id="datenschutz-modal" class="modal-backdrop hidden">
         <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-2xl m-4 overflow-y-auto max-h-[80vh]">
             <h2 class="text-2xl font-bold mb-4">Datenschutzerklärung</h2>
@@ -146,26 +135,35 @@
                     4020 Linz, Österreich<br>
                     E-Mail: andreas.neuhold@gmail.com
                 </p>
-                <p>
-                    <strong>Erhebung und Verarbeitung von Daten:</strong><br>
-                    Im Rahmen der Terminbuchung für das Projekt "Spielekarussell Linz" erheben wir folgende Daten: Name der Einrichtung, Name der Ansprechperson, Adresse, Telefonnummer, E-Mail Adresse sowie allfällige Anmerkungen.
-                </p>
-                <p>
-                    <strong>Zweck der Datenverarbeitung:</strong><br>
-                    Die von Ihnen bereitgestellten Daten werden ausschließlich zur Organisation, Koordination und Durchführung der gebuchten Spieletage verwendet.
-                </p>
-                <p>
-                    <strong>Datenspeicherung:</strong><br>
-                    Ihre Daten werden in einer Firestore-Datenbank (ein Dienst von Google Cloud) gespeichert. Der Serverstandort befindet sich in Frankfurt, Deutschland. Nach Abschluss des Projekts werden alle personenbezogenen Daten gelöscht.
-                </p>
-                 <p>
-                    <strong>Ihre Rechte:</strong><br>
-                    Sie haben jederzeit das Recht auf Auskunft, Berichtigung, Löschung oder Einschränkung der Verarbeitung Ihrer gespeicherten Daten. Bitte kontaktieren Sie uns hierfür unter der oben angegebenen E-Mail-Adresse.
-                </p>
+                <p><strong>Erhebung und Verarbeitung von Daten:</strong><br>Im Rahmen der Terminbuchung für das Projekt "Spielekarussell Linz" erheben wir folgende Daten: Name der Einrichtung, Name der Ansprechperson, Adresse, Telefonnummer, E-Mail Adresse sowie allfällige Anmerkungen.</p>
+                <p><strong>Zweck der Datenverarbeitung:</strong><br>Die von Ihnen bereitgestellten Daten werden ausschließlich zur Organisation, Koordination und Durchführung der gebuchten Spieletage verwendet.</p>
+                <p><strong>Datenspeicherung:</strong><br>Ihre Daten werden in einer Firestore-Datenbank (ein Dienst von Google Cloud) gespeichert. Der Serverstandort befindet sich in Frankfurt, Deutschland. Nach Abschluss des Projekts werden alle personenbezogenen Daten gelöscht.</p>
+                 <p><strong>Ihre Rechte:</strong><br>Sie haben jederzeit das Recht auf Auskunft, Berichtigung, Löschung oder Einschränkung der Verarbeitung Ihrer gespeicherten Daten. Bitte kontaktieren Sie uns hierfür unter der oben angegebenen E-Mail-Adresse.</p>
             </div>
              <div class="flex justify-end mt-6">
                  <button type="button" class="close-modal-btn px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700">Schließen</button>
             </div>
+        </div>
+    </div>
+    <div id="admin-login-modal" class="modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-sm m-4">
+            <h2 class="text-2xl font-bold mb-4">Admin Login</h2>
+            <p class="text-gray-600 mb-6">Bitte melden Sie sich an, um den Admin-Bereich zu betreten.</p>
+            <form id="admin-login-form">
+                <div class="mb-4">
+                    <label for="admin-email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                    <input type="email" id="admin-email" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <div class="mb-6">
+                    <label for="admin-password" class="block text-sm font-medium text-gray-700 mb-1">Passwort</label>
+                    <input type="password" id="admin-password" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500" required>
+                </div>
+                <p id="admin-login-error" class="text-red-500 text-sm mb-4 hidden"></p>
+                <div class="flex justify-end gap-4">
+                    <button type="button" id="cancel-login-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Abbrechen</button>
+                    <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700">Anmelden</button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -178,11 +176,10 @@
     </footer>
 
     <script type="module">
-        // WICHTIG: Firebase SDK Importe
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, updateDoc, addDoc, serverTimestamp, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc, updateDoc, addDoc, query, where, orderBy, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // ===================================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBdQX7fc8iACTX4DqBt6KNDmt31hUfKtsA",
             authDomain: "private-c25ce.firebaseapp.com",
@@ -192,31 +189,23 @@
             appId: "1:669741086329:web:1a270f74a95d374cc146a8",
             measurementId: "G-5940R8W5F6"
         };
-        // ===================================================================================
 
-        // Firebase initialisieren
-        let app, db;
+        let app, db, auth;
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
+            auth = getAuth(app);
         } catch (e) {
             console.error("Firebase Initialisierung fehlgeschlagen:", e);
-            document.getElementById('main-content').innerHTML = `
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
-                    <strong class="font-bold">Fehler!</strong>
-                    <span class="block sm:inline">Die Firebase Konfiguration ist ungültig. Bitte trage deine Daten in der index.html ein.</span>
-                </div>`;
+            document.getElementById('main-content').innerHTML = `<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert"><strong class="font-bold">Fehler!</strong><span class="block">Die Firebase Konfiguration ist ungültig.</span></div>`;
             document.getElementById('loading-view').classList.add('hidden');
-            // Stop further execution if firebase is not configured
             throw new Error("Firebase not configured");
         }
 
         const mainContent = document.getElementById('main-content');
         const loadingView = document.getElementById('loading-view');
         const terminCollection = collection(db, "termine");
-        const ADMIN_PASSWORD = "spiele-linz-2025"; // Simples Passwort für Admin-Aktionen
 
-        // --- Hauptlogik basierend auf der URL ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('storno')) {
@@ -228,21 +217,14 @@
             }
         };
 
-        // --- Ansichten / Views ---
-        
-        // NORMALE BENUTZERANSICHT
         function displayUserView() {
             mainContent.innerHTML = `
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h2 class="text-2xl font-semibold mb-4">Verfügbare Termine</h2>
-                    <div id="termin-list" class="space-y-4">
-                        <!-- Termine werden hier geladen -->
-                    </div>
+                    <div id="termin-list" class="space-y-4"></div>
                 </div>`;
             
-            // Query is simplified to avoid composite index. Sorting is done client-side.
             const q = query(terminCollection, where("status", "==", "frei"));
-
             onSnapshot(q, (snapshot) => {
                 loadingView.classList.add('hidden');
                 const terminList = document.getElementById('termin-list');
@@ -253,10 +235,7 @@
                     return;
                 }
                 
-                // Sort documents by date client-side
-                const docs = snapshot.docs;
-                docs.sort((a, b) => a.data().datum.toDate() - b.data().datum.toDate());
-
+                const docs = snapshot.docs.sort((a, b) => a.data().datum.toDate() - b.data().datum.toDate());
                 terminList.innerHTML = '';
                 docs.forEach(doc => {
                     const termin = doc.data();
@@ -271,9 +250,7 @@
                             <p class="font-semibold text-lg">${formattedDate}</p>
                             <p class="text-gray-600">${formattedTime} Uhr</p>
                         </div>
-                        <button data-id="${doc.id}" data-date="${formattedDate}" data-time="${formattedTime}" class="buchen-btn mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">
-                            Buchen
-                        </button>`;
+                        <button data-id="${doc.id}" data-date="${formattedDate}" data-time="${formattedTime}" class="buchen-btn mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition-colors">Buchen</button>`;
                     terminList.appendChild(terminElement);
                 });
             }, (error) => {
@@ -282,42 +259,42 @@
             });
         }
 
-        // ADMIN ANSICHT
         function handleAdmin() {
-            const password = prompt("Bitte Admin-Passwort eingeben:", "");
-            if (password !== ADMIN_PASSWORD) {
-                alert("Falsches Passwort.");
-                window.location.search = ""; // Redirect to user view
-                return;
-            }
-
+            const adminLoginModal = document.getElementById('admin-login-modal');
+            adminLoginModal.classList.remove('hidden');
+        }
+        
+        function showAdminDashboard() {
+            document.getElementById('admin-login-link').classList.add('hidden');
             mainContent.innerHTML = `
+                <div id="admin-header" class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-bold">Admin-Dashboard</h2>
+                    <button id="logout-btn" class="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">Abmelden</button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h2 class="text-2xl font-semibold mb-4">Neuen Termin anlegen</h2>
+                        <h3 class="text-2xl font-semibold mb-4">Neuen Termin anlegen</h3>
                         <form id="add-termin-form" class="space-y-4">
                             <div>
                                 <label for="termin-date" class="block text-sm font-medium text-gray-700">Datum</label>
-                                <input type="date" id="termin-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" required>
+                                <input type="date" id="termin-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                             </div>
                             <div>
                                 <label for="termin-time" class="block text-sm font-medium text-gray-700">Uhrzeit</label>
-                                <input type="time" id="termin-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" required>
+                                <input type="time" id="termin-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                             </div>
                             <button type="submit" class="w-full px-4 py-2 bg-sky-600 text-white font-semibold rounded-md hover:bg-sky-700">Termin erstellen</button>
                         </form>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h2 class="text-2xl font-semibold mb-4">Alle Termine</h2>
-                        <div id="admin-termin-list" class="space-y-3 max-h-96 overflow-y-auto">
-                            <!-- Admin Terminliste -->
-                        </div>
+                        <h3 class="text-2xl font-semibold mb-4">Alle Termine</h3>
+                        <div id="admin-termin-list" class="space-y-3 max-h-96 overflow-y-auto"></div>
                     </div>
                 </div>`;
+            loadingView.classList.add('hidden');
             
             const q = query(terminCollection, orderBy("datum", "asc"));
             onSnapshot(q, (snapshot) => {
-                loadingView.classList.add('hidden');
                 const adminTerminList = document.getElementById('admin-termin-list');
                 if (!adminTerminList) return;
                 adminTerminList.innerHTML = '';
@@ -331,8 +308,8 @@
                     const element = document.createElement('div');
                     element.className = `p-3 rounded-md border ${isBooked ? 'bg-amber-50 border-amber-200' : 'bg-gray-50'}`;
                     element.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <div>
+                        <div class="flex justify-between items-start gap-2">
+                            <div class="flex-grow">
                                 <p class="font-bold">${formattedDate} - ${formattedTime} Uhr</p>
                                 <p class="text-sm ${isBooked ? 'text-amber-800' : 'text-green-700'} font-semibold">${isBooked ? 'Gebucht' : 'Frei'}</p>
                                 ${isBooked ? `<p class="text-xs text-gray-600">${termin.gebuchtVonName} (${termin.gebuchtVonEmail})</p>` : ''}
@@ -348,7 +325,10 @@
                                     </details>
                                 ` : ''}
                             </div>
-                            ${isBooked ? `<button data-id="${doc.id}" class="admin-storno-btn px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">Stornieren</button>` : ''}
+                            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+                                <button data-id="${doc.id}" class="admin-delete-btn px-3 py-1 bg-gray-500 text-white text-xs rounded-md hover:bg-gray-600">Löschen</button>
+                                ${isBooked ? `<button data-id="${doc.id}" class="admin-storno-btn px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700">Stornieren</button>` : ''}
+                            </div>
                         </div>`;
                     adminTerminList.appendChild(element);
                 });
@@ -358,17 +338,9 @@
                 e.preventDefault();
                 const date = document.getElementById('termin-date').value;
                 const time = document.getElementById('termin-time').value;
-                if (!date || !time) {
-                    alert('Bitte Datum und Uhrzeit angeben.');
-                    return;
-                }
                 const combinedDateTime = new Date(`${date}T${time}`);
-                
                 try {
-                    await addDoc(terminCollection, {
-                        datum: combinedDateTime,
-                        status: 'frei'
-                    });
+                    await addDoc(terminCollection, { datum: combinedDateTime, status: 'frei' });
                     e.target.reset();
                     alert('Termin erfolgreich erstellt!');
                 } catch (error) {
@@ -376,9 +348,13 @@
                     alert('Fehler: Termin konnte nicht erstellt werden.');
                 }
             });
+
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                await signOut(auth);
+                window.location.search = ""; // Redirect to user view
+            });
         }
         
-        // STORNO ANSICHT
         async function handleStorno(stornoId) {
             loadingView.classList.remove('hidden');
             mainContent.innerHTML = '';
@@ -424,14 +400,9 @@
             });
         }
 
-
-        // --- Aktionen & Datenbank-Funktionen ---
-        
-        // Einen Termin buchen
         async function bookAppointment(terminId, institution, person, email, address, phone, notes) {
             const terminRef = doc(db, "termine", terminId);
             try {
-                // Sicherheitscheck: Ist der Termin noch frei?
                 const terminSnap = await getDoc(terminRef);
                 if (terminSnap.exists() && terminSnap.data().status === 'frei') {
                     const stornoId = crypto.randomUUID();
@@ -455,7 +426,6 @@
             }
         }
         
-        // Einen Termin stornieren (für User und Admin)
         async function cancelAppointment(terminId) {
             const terminRef = doc(db, "termine", terminId);
              try {
@@ -476,34 +446,50 @@
             }
         }
 
+        async function deleteAppointment(terminId) {
+            const terminRef = doc(db, "termine", terminId);
+            try {
+                await deleteDoc(terminRef);
+                return true;
+            } catch (error) {
+                console.error("Fehler beim Löschen des Termins:", error);
+                return false;
+            }
+        }
 
-        // --- Event Listeners ---
-        const modal = document.getElementById('booking-modal');
+        const bookingModal = document.getElementById('booking-modal');
         
         document.body.addEventListener('click', (e) => {
-            // Buchungs-Button in der User-Liste
             if (e.target.classList.contains('buchen-btn')) {
                 const terminId = e.target.dataset.id;
                 const terminDate = e.target.dataset.date;
                 const terminTime = e.target.dataset.time;
                 document.getElementById('termin-id-input').value = terminId;
                 document.getElementById('modal-termin-info').innerText = `Termin am ${terminDate} um ${terminTime} Uhr.`;
-                modal.classList.remove('hidden');
+                bookingModal.classList.remove('hidden');
             }
-            // Admin-Storno-Button
             if (e.target.classList.contains('admin-storno-btn')) {
                 const terminId = e.target.dataset.id;
-                if(confirm('Möchtest du diesen Termin wirklich stornieren? Der Nutzer wird NICHT automatisch benachrichtigt.')){
+                if(confirm('Möchtest du diese Buchung wirklich stornieren?')){
                     cancelAppointment(terminId).then(success => {
-                       if(success) alert('Termin storniert.');
+                       if(success) alert('Buchung storniert. Der Termin ist wieder frei.');
                        else alert('Fehler beim Stornieren.');
+                    });
+                }
+            }
+            if (e.target.classList.contains('admin-delete-btn')) {
+                const terminId = e.target.dataset.id;
+                if(confirm('Diesen Termin endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden!')){
+                    deleteAppointment(terminId).then(success => {
+                       if(success) alert('Termin gelöscht.');
+                       else alert('Fehler beim Löschen.');
                     });
                 }
             }
         });
 
         document.getElementById('cancel-booking-btn').addEventListener('click', () => {
-            modal.classList.add('hidden');
+            bookingModal.classList.add('hidden');
         });
 
         document.getElementById('booking-form').addEventListener('submit', async (e) => {
@@ -519,7 +505,7 @@
             const result = await bookAppointment(terminId, institution, person, email, address, phone, notes);
 
             if (result.success) {
-                modal.classList.add('hidden');
+                bookingModal.classList.add('hidden');
                 e.target.reset();
                 const terminDate = result.terminData.datum.toDate();
                 const formattedDate = terminDate.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -529,7 +515,6 @@
                     <div class="bg-green-100 text-green-800 p-6 rounded-lg shadow-md">
                         <h2 class="text-2xl font-semibold text-center">Vielen Dank für Ihre Buchung!</h2>
                         <p class="mt-2 text-center">Ihr Termin am <strong>${formattedDate} um ${formattedTime} Uhr</strong> wurde erfolgreich reserviert.</p>
-                        
                         <div class="mt-6 text-left border-t border-green-200 pt-4">
                             <h3 class="font-bold">Nächste Schritte & Kontakt</h3>
                             <p class="text-sm mt-2">Wir werden uns in Kürze mit Ihnen in Verbindung setzen, um weitere Details zu besprechen. Bei Fragen erreichen Sie uns unter:</p>
@@ -539,7 +524,6 @@
                                 <p><strong>Telefon:</strong> +43 677 624 639 01</p>
                             </div>
                         </div>
-
                         <div class="mt-6 bg-yellow-100 text-yellow-800 p-4 rounded-lg border border-yellow-300">
                            <p class="font-bold text-lg text-center">WICHTIG: Link zur Stornierung</p>
                            <p class="mt-2 text-center">Bitte bewahren Sie diesen Link gut auf. Nur mit diesem Link können Sie Ihren Termin wieder stornieren.</p>
@@ -556,17 +540,16 @@
         
         const impressumModal = document.getElementById('impressum-modal');
         const datenschutzModal = document.getElementById('datenschutz-modal');
+        const adminLoginModal = document.getElementById('admin-login-modal');
 
         document.getElementById('impressum-link').addEventListener('click', (e) => {
             e.preventDefault();
             impressumModal.classList.remove('hidden');
         });
-
         document.getElementById('datenschutz-link').addEventListener('click', (e) => {
             e.preventDefault();
             datenschutzModal.classList.remove('hidden');
         });
-
         document.querySelectorAll('.close-modal-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 impressumModal.classList.add('hidden');
@@ -574,7 +557,44 @@
             });
         });
 
+        document.getElementById('admin-login-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            handleAdmin();
+        });
+
+        document.getElementById('cancel-login-btn').addEventListener('click', () => {
+            adminLoginModal.classList.add('hidden');
+            // Do not change url, just hide the modal
+        });
+
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            const errorElement = document.getElementById('admin-login-error');
+            errorElement.classList.add('hidden');
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                adminLoginModal.classList.add('hidden');
+                showAdminDashboard();
+            } catch (error) {
+                console.error("Admin Login failed:", error);
+                errorElement.innerText = "Login fehlgeschlagen. Bitte E-Mail und Passwort prüfen.";
+                errorElement.classList.remove('hidden');
+            }
+        });
+
+        onAuthStateChanged(auth, user => {
+            const params = new URLSearchParams(window.location.search);
+            if (user && params.has('admin')) {
+                // User is signed in and trying to access admin page
+                adminLoginModal.classList.add('hidden');
+                showAdminDashboard();
+            }
+        });
+
     </script>
 </body>
 </html>
+
 
