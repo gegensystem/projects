@@ -101,6 +101,50 @@
             padding: 5px;
             z-index: 100;
         }
+        /* Modal styles for lyrics */
+        #lyrics-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+        .modal-close-btn:hover {
+            color: #1f2937;
+        }
+        .lyrics-text {
+            white-space: pre-line;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-700">
@@ -116,6 +160,7 @@
                     <a href="#praxis" class="hover:text-blue-600 transition-colors">Praxis</a>
                     <a href="#prompting" class="hover:text-blue-600 transition-colors">Prompting</a>
                     <a href="#chatbot" class="hover:text-blue-600 transition-colors">Chatbot</a>
+                    <a href="#koopfm" class="hover:text-blue-600 transition-colors">Koop-Spiele & Musik</a>
                     <a href="#angebot" class="hover:text-blue-600 transition-colors">Angebot</a>
                     <a href="#contact" class="hover:text-blue-600 transition-colors">Kontakt</a>
                     <a href="#impressum" class="hover:text-blue-600 transition-colors">Impressum</a>
@@ -424,6 +469,32 @@
                  </div>
             </div>
         </section>
+        <!-- Section: Koop-Spiele & Musik -->
+        <section id="koopfm" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">KI-Projekte: Kooperative Brettspiele</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Card for WIFI Task -->
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 flex flex-col">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">WIFI KI Kompetenztraining</h3>
+                    <p class="mb-4 text-gray-600">Im Rahmen des Trainings durfte ich ein sehr gelungenes Praxisbeispiel umsetzen, das die Anwendung von KI in der Prozessautomatisierung veranschaulicht. Sehen Sie sich das Ergebnis im iFrame an:</p>
+                    <div class="iframe-container mt-4 rounded-lg overflow-hidden border border-gray-300">
+                        <iframe src="https://gegensystem.github.io/projects/aufgabe-wifi.html" title="WIFI KI Kompetenztraining" class="w-full h-full" frameborder="0"></iframe>
+                    </div>
+                </div>
+                <!-- Card for KI-generated Song -->
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 flex flex-col">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-generierter Song: "Freundschaft gewinnt"</h3>
+                    <p class="mb-4 text-gray-600">Als Brettspielfan nutze ich KI auch kreativ. Dieser Song über kooperative Brettspiele wurde komplett mit KI erstellt. Spielen Sie ihn ab und entdecken Sie, wie KI musikalische Ideen zum Leben erwecken kann. Ich liebe Gesellschaftsspiele und spiele sehr gerne und bin professioneller Spieleerklärer.</p>
+                    <div class="mt-4 flex flex-col items-center gap-4">
+                         <audio controls class="w-full rounded-full">
+                            <source src="https://gegensystem.github.io/projects/Freundschaft-gewinnt.mp3" type="audio/mpeg">
+                            Ihr Browser unterstützt das Audio-Element nicht.
+                        </audio>
+                        <button id="showLyricsBtn" class="w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Songtext anzeigen</button>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- Section: Angebot -->
         <section id="angebot" class="mb-20 fade-in-up">
             <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Mein Leistungsangebot: Workshops & Beratung</h2>
@@ -526,6 +597,14 @@
             </p>
         </div>
     </footer>
+    <!-- Modal for Lyrics -->
+    <div id="lyrics-modal" class="hidden">
+        <div class="modal-content">
+            <span class="modal-close-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-4 text-blue-700">"Freundschaft gewinnt"</h3>
+            <pre id="lyrics-text" class="lyrics-text text-gray-800"></pre>
+        </div>
+    </div>
     
     <script type="importmap">
         {
@@ -1135,8 +1214,65 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch(e) {
         console.error("Error in Chatbot:", e);
     }
+
+    // --- KI-generierter Song & Lyrics Pop-up ---
+    try {
+        const showLyricsBtn = document.getElementById('showLyricsBtn');
+        const lyricsModal = document.getElementById('lyrics-modal');
+        const closeModalBtn = lyricsModal.querySelector('.modal-close-btn');
+        const lyricsTextElement = document.getElementById('lyrics-text');
+
+        const lyrics = `(Strophe 1)
+Brettspielabend, die Karten liegen bereit,
+Manche wollen kämpfen, andere sind zu zweit.
+Doch Silvio, du liebst es, das ist doch ganz klar,
+Gemeinsam zum Ziel, ja, das ist wunderbar!
+
+(Refrain)
+Co-op-Spiele, da hält man zusammen,
+Kein Verlierer, nur ein großes Flammen.
+Ob Sieg, ob Niederlage, wir sind ein Team,
+Freundschaft gewinnt, das ist unser Reim!
+
+(Strophe 2)
+Ob Pandemie oder Mysterium so fein,
+Zusammen denken, Pläne schmieden, das muss sein.
+Kein Stress, kein Streit, nur ein Lachen hell und klar,
+Denn der größte Gewinn ist die Freundschaft, Jahr für Jahr.
+
+(Bridge)
+Klar, kompetitiv macht auch mal Spaß,
+Doch wenn's ums Herz geht, geben wir Gas
+Für Zusammenhalt und Freude pur,
+Co-op-Spiele, das ist die Tour!
+
+(Refrain)
+Co-op-Spiele, da hält man zusammen,
+Kein Verlierer, nur ein großes Flammen.
+Ob Sieg, ob Niederlage, wir sind ein Team,
+Freundschaft gewinnt, das ist unser Reim!`;
+        
+        if (showLyricsBtn) {
+            showLyricsBtn.addEventListener('click', () => {
+                lyricsTextElement.textContent = lyrics;
+                lyricsModal.style.display = 'flex';
+            });
+        }
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                lyricsModal.style.display = 'none';
+            });
+        }
+        // Close modal when clicking outside
+        lyricsModal.addEventListener('click', (e) => {
+            if (e.target.id === 'lyrics-modal') {
+                lyricsModal.style.display = 'none';
+            }
+        });
+    } catch(e) {
+        console.error("Error in Lyrics Modal:", e);
+    }
 });
 </script>
 </body>
 </html>
-
