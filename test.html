@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andreas Neuhold - Ihr Experte für Angewandte KI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding-top: 64px; /* Adjust for fixed navbar */
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #3b82f6; /* Tailwind blue-500 */
+            border-radius: 2px;
+        }
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Timeline specific styles */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 0.5rem; /* top-2 */
+            width: 2px; /* w-0.5 */
+            height: 100%;
+            background-color: #d1d5db; /* bg-gray-300 */
+        }
+        /* 3D Model specific styles */
+        #three-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 500px; 
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+         #three-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #three-info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            color: #333;
+            font-size: 12px;
+            pointer-events: none;
+        }
+        #three-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+        .three-control-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #btn-open { background-color: #28a745; }
+        #btn-open:hover { background-color: #218838; }
+        #btn-close { background-color: #dc3545; }
+        #btn-close:hover { background-color: #c82333; }
+        #chart-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 250px;
+            height: 125px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            z-index: 100;
+        }
+        /* Modal styles for lyrics */
+        #lyrics-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+        .modal-close-btn:hover {
+            color: #1f2937;
+        }
+        .lyrics-text {
+            white-space: pre-line;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+        }
+        /* New styles for the stock tracker */
+        .stock-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem; /* p-6 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .update-btn {
+            transition: all 0.3s ease;
+        }
+        .update-btn:hover {
+            transform: scale(1.05);
+            background-color: #2563eb; /* blue-600 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-700">
+    <!-- Navigation Bar -->
+    <nav class="bg-white/80 backdrop-blur-md shadow-md fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-center h-16">
+                <div class="flex flex-wrap justify-center gap-x-4 md:gap-x-8 text-sm md:text-base font-medium text-gray-600">
+                    <a href="#about" class="hover:text-blue-600 transition-colors">Über Mich</a>
+                    <a href="#philosophy" class="hover:text-blue-600 transition-colors">Philosophie</a>
+                    <a href="#career" class="hover:text-blue-600 transition-colors">Meilensteine</a>
+                    <a href="#interactive" class="hover:text-blue-600 transition-colors">Interaktiv</a>
+                    <a href="#praxis" class="hover:text-blue-600 transition-colors">Praxis</a>
+                    <a href="#prompting" class="hover:text-blue-600 transition-colors">Prompting</a>
+                    <a href="#chatbot" class="hover:text-blue-600 transition-colors">Chatbot</a>
+                    <a href="#koopfm" class="hover:text-blue-600 transition-colors">Koop-Spiele & Musik</a>
+                    <a href="#aktien" class="hover:text-blue-600 transition-colors">Aktien-Tracker</a>
+                    <a href="#angebot" class="hover:text-blue-600 transition-colors">Angebot</a>
+                    <a href="#contact" class="hover:text-blue-600 transition-colors">Kontakt</a>
+                    <a href="#impressum" class="hover:text-blue-600 transition-colors">Impressum</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Header Section -->
+    <header class="relative bg-white overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full z-0" id="particle-container">
+            <canvas id="particle-canvas"></canvas>
+        </div>
+        <div class="relative container mx-auto px-6 py-20 z-10">
+            <div class="flex flex-col md:flex-row items-center text-center md:text-left">
+                <div class="md:w-1/4 flex justify-center mb-8 md:mb-0">
+                    <img src="https://gegensystem.github.io/projects/Andreas.jpg" alt="Portrait von Andreas Neuhold" class="rounded-full h-48 w-48 object-cover border-4 border-blue-500 shadow-2xl">
+                </div>
+                <div class="md:w-3/4 md:pl-10">
+                    <h1 class="text-5xl md:text-6xl font-black leading-tight text-gray-900">Dipl.-Ing. Andreas Neuhold, BSc</h1>
+                    <p class="text-2xl md:text-3xl mt-2 text-blue-600 font-semibold">Experte für Angewandte Künstliche Intelligenz & Prozessoptimierung</p>
+                    <div class="mt-6 flex justify-center md:justify-start space-x-4">
+                        <a href="https://www.linkedin.com/in/andreas-e-neuhold-06605595/" target="_blank" class="text-gray-500 hover:text-blue-700 transition-colors">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/neuholdandreas" target="_blank" class="text-gray-500 hover:text-blue-600 transition-colors">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-16">
+        <!-- Section: About Me -->
+        <section id="about" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Mein Weg: Vom Messen zum Managen</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <p class="text-lg mb-4">
+                    Im Herzen bin ich ein leidenschaftlicher <strong>Mess- und Elektrotechniker</strong>. Meine berufliche Laufbahn ist geprägt von der Faszination für präzise Daten, stabile Prozesse und die Kunst, komplexe Systeme zu verstehen. Diese technische Grundlage hat mir ein tiefes Verständnis für die Logik und die Strukturen gegeben, die unsere moderne Welt antreiben.
+                </p>
+                <p class="text-lg mb-4">
+                    Der Schritt zur <strong>Künstlichen Intelligenz</strong> war für mich eine natürliche Evolution. Wo die Messtechnik aufhört – beim reinen Sammeln von Daten – fängt die KI erst richtig an. Sie ermöglicht es uns, aus diesen Daten Muster zu erkennen, Vorhersagen zu treffen und Prozesse nicht nur zu überwachen, sondern intelligent zu automatisieren.
+                </p>
+                <p class="text-lg font-semibold text-gray-800">
+                    Heute baue ich Brücken zwischen der soliden Welt des Ingenieurwesens und den grenzenlosen Möglichkeiten der KI. Mein Ziel ist es, diese transformative Technologie praktisch anwendbar und für jeden zugänglich zu machen.
+                </p>
+            </div>
+        </section>
+        
+        <!-- Section: Meine Philosophie -->
+        <section id="philosophy" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Meine Philosophie</h2>
+            <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-center">
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <div class="text-5xl text-blue-500 mb-4">🎧</div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Zuhören</h3>
+                    <p>Jedes Projekt beginnt mit genauem Hinhören, um Ihre Ziele und Herausforderungen vollständig zu erfassen.</p>
+                </div>
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <div class="text-5xl text-blue-500 mb-4">🧠</div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Verstehen</h3>
+                    <p>Durch Analyse und Empathie entwickle ich ein tiefes Verständnis für die Prozesse und den Kern des Problems.</p>
+                </div>
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <div class="text-5xl text-blue-500 mb-4">🚀</div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Handeln</h3>
+                    <p>Auf dieser Basis setze ich gezielte, KI-gestützte Lösungen um, die echten Mehrwert schaffen.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section: Detailed Career Path -->
+        <section id="career" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Wichtige Meilensteine</h2>
+            <div class="relative">
+                <!-- Timeline Item: Engel Austria -->
+                <div class="timeline-item relative pl-12 pb-12">
+                    <div class="timeline-icon absolute left-0 top-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Teamleiter Messtechnik bei Engel Austria</h3>
+                    <p class="text-lg font-semibold text-blue-600 mb-4">(Seit 2017)</p>
+                    <div class="space-y-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Praktische KI-Anwendung</h4>
+                            <p>Initiierung von <strong>50 KI-Use-Cases</strong> zur Effizienzsteigerung, z.B. ein KI-Chatbot, der 12% Zeitersparnis im Support ermöglicht.</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Hardware-unabhängige Innovation</h4>
+                            <p>Entwicklung eines patentierten <strong>Condition Monitorings</strong> zur Überwachung von Maschinenteilen ohne zusätzliche Sensoren.</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Agile Führung</h4>
+                            <p>Erfolgreiche Markteinführung einer komplexen Maschine in Rekordzeit durch agile Methoden.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item: Lektor & Trainer -->
+                <div class="timeline-item relative pl-12 pb-12">
+                    <div class="timeline-icon absolute left-0 top-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Wissensvermittlung in der Praxis</h3>
+                    <p class="text-lg font-semibold text-blue-600 mb-4">(Seit 2020)</p>
+                     <div class="space-y-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Akademische Lehre & Erwachsenenbildung</h4>
+                            <p>Dozent für Elektrotechnik an der <strong>FH OÖ (Wels)</strong> und Trainer für Messtechnik in der Erwachsenenbildung.</p>
+                        </div>
+                         <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Strategie-Coaching</h4>
+                            <p>Begleitung von NPOs und Vereinen bei der Prozessoptimierung und Zielfindung.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item: Dewetron -->
+                <div class="timeline-item relative pl-12 pb-0">
+                    <div class="timeline-icon absolute left-0 top-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.036 12.322a1.012 1.012 0 010-.639l4.433-7.447A1 1 0 017 4h10a1 1 0 01.53.175l4.433 7.447a1.012 1.012 0 010 .639l-4.433 7.447A1 1 0 0117 20H7a1 1 0 01-.53-.175L2.036 12.322z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Applikationsingenieur für Präzisionsmesstechnik</h3>
+                    <p class="text-lg font-semibold text-blue-600 mb-4">Dewetron GmbH (2013 - 2017)</p>
+                     <div class="space-y-4">
+                        <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-700">Internationale Erfahrung & Projektverantwortung</h4>
+                            <p>Durchführung von technischen Schulungen und eigenständige Abwicklung von Projekten (bis 0,6 Mio. EUR) in AT, DE & FR.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section: Vision -->
+        <section id="vision" class="mb-20 text-center fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Meine Vision: KI als fundamentaler Wandel</h2>
+            <div class="bg-blue-50/50 p-8 rounded-xl shadow-lg max-w-4xl mx-auto border border-blue-200">
+                <p class="text-2xl italic text-gray-600">
+                    "KI ist eine fundamentale Änderung der Wertschöpfungsprozesse in allen Lebensbereichen. Diese Technologie verändert jetzt alles – uns und unsere Gesellschaft auf einer ganz fundamentalen Ebene."
+                </p>
+            </div>
+        </section>
+        
+        <!-- Section: Interactive Elements -->
+        <section id="interactive" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Erleben Sie KI in Aktion</h2>
+            <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 mb-8">
+                 <h3 class="font-bold text-2xl mb-4 text-blue-700">3D-Visualisierung mit KI</h3>
+                 <p class="mb-4 text-gray-600">Dieses interaktive Modell wurde mit KI-Unterstützung konzipiert. KI kann helfen, komplexe 3D-Szenen zu generieren, Abmessungen anzupassen oder sogar Möbel für einen Raum vorzuschlagen. Ein perfektes Werkzeug für Planung und Prototyping.</p>
+                <div id="three-container" class="bg-gray-200">
+                    <div id="three-info">Linke Maustaste: Drehen | Mausrad: Zoomen | Rechte Maustaste: Verschieben</div>
+                    <div id="three-controls">
+                        <button id="btn-open" class="three-control-btn">Öffnen</button>
+                        <button id="btn-close" class="three-control-btn">Schließen</button>
+                    </div>
+                    <div id="chart-container">
+                        <canvas id="position-time-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 flex flex-col">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-gestützte Spieleentwicklung</h3>
+                    <p class="mb-4 text-gray-600">Dieses Spiel wurde mit Hilfe von KI programmiert. Es zeigt, wie jeder ohne tiefe Programmierkenntnisse klassische Spiele erschaffen und anpassen kann. KI wird zum Co-Entwickler und beschleunigt die Umsetzung von Ideen.</p>
+                    <div class="flex-grow bg-gray-100 rounded-lg p-2 aspect-video relative border">
+                        <canvas id="snakeCanvas" class="w-full h-full"></canvas>
+                        <div id="scoreBoard" class="absolute top-2 left-4 text-gray-800 font-bold text-lg">
+                            Score: <span id="score">0</span> | Highscore: <span id="highScore">0</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-3 gap-2 justify-items-center">
+                        <div></div>
+                        <button id="snake-up" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg></button>
+                        <div></div>
+                        <button id="snake-left" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                        <button id="snake-down" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
+                        <button id="snake-right" class="w-12 h-12 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                    </div>
+                </div>
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-Ideen-Generator</h3>
+                    <p class="mb-4 text-gray-600">Als Brettspielfan nutze ich KI, um kreative Spielideen zu generieren. Klicken Sie auf den Button für Inspiration!</p>
+                    <div id="idea-display" class="p-4 bg-gray-100 rounded-lg min-h-[80px] flex items-center justify-center text-center font-semibold text-gray-700">
+                        Klicken Sie...
+                    </div>
+                    <button id="generate-idea" class="mt-4 w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neue Spielidee</button>
+                </div>
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">Wissensquiz</h3>
+                    <div id="quizContainer">
+                        <!-- Quiz content will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section: Praxis -->
+        <section id="praxis" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">KI in der Praxis: Umgesetzte Projekte</h2>
+            <p class="mb-8 text-lg text-gray-600">Der wahre Wert von KI zeigt sich in der Anwendung. Hier sind Beispiele, wie ich KI zur Effizienzsteigerung und Problemlösung eingesetzt habe – mit messbaren Erfolgen von bis zu <strong>18% Effizienzsteigerung</strong>.</p>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Automatisierung & Code</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>E-Mail-Automatisierung & Korrespondenz</li>
+                        <li>Entwicklung von Webseiten (mit/ohne Firebase)</li>
+                        <li>Aufbau kompletter Plattformen inkl. Benutzerverwaltung</li>
+                        <li>Erstellung & Überarbeitung von MatLab-Code</li>
+                        <li>Entwicklung von KI-Agenten mit Trigger-Funktionen</li>
+                    </ul>
+                </div>
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Ingenieurwesen & QM</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>Einsatz in der Messtechnik & bei Messaufbauten</li>
+                        <li>Automatisierte Erstellung von Messprotokollen</li>
+                        <li>Intelligente Messdatenanalyse</li>
+                        <li>Anwendung im Qualitätswesen zur Prozessoptimierung</li>
+                    </ul>
+                </div>
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Business-Anwendungen</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>KI als Kostenrechner & Amortisationsrechner</li>
+                        <li>Nutzung als Investitionsberater</li>
+                        <li>Erstellung von Chatbots für den Kundenservice</li>
+                        <li>Übersetzungen und Content-Erstellung</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 bg-white border-l-4 border-blue-500 p-8 rounded-r-lg shadow-lg fade-in-up">
+                <h3 class="font-bold text-2xl mb-4 text-blue-700">Praxisbeispiel: Organisation aus dem Alltag</h3>
+                <p class="mb-2 text-gray-600"><strong class="text-gray-800">Die Herausforderung:</strong> Als Mieter eine 400V/16A Starkstromsteckdose für ein Plug-in-Hybrid-Auto in der Tiefgarage installieren lassen.</p>
+                <p class="text-gray-600"><strong class="text-gray-800">Die KI-Lösung:</strong></p>
+                <ul class="list-disc list-inside ml-4 mt-2 space-y-1 text-gray-600">
+                    <li>KI formuliert das Anschreiben für Kostenvoranschläge.</li>
+                    <li>KI recherchiert 12 passende Elektrotechnik-Firmen in Linz.</li>
+                    <li>KI versendet die Anfragen vollautomatisch.</li>
+                    <li>KI koordiniert die Besichtigungstermine.</li>
+                    <li>KI erstellt eine Kostenschätzung (nur 8% Abweichung).</li>
+                </ul>
+                <p class="mt-4 font-semibold text-blue-600">Ergebnis: Enorme Zeitersparnis und eine fundierte Entscheidungsgrundlage durch datengestützte Voranalyse.</p>
+            </div>
+        </section>
+        <!-- Section: Prompting -->
+        <section id="prompting" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Die Kunst des perfekten Prompts</h2>
+            <div class="space-y-8">
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Was ist Prompt Engineering?</h3>
+                    <p>Prompt Engineering ist die neue Disziplin, die sich darauf spezialisiert, Anweisungen (Prompts) für KI-Modelle so zu formulieren, dass sie präzise, relevante und kreative Ergebnisse liefern. Ein <strong>Prompt Engineer</strong> ist quasi der Übersetzer zwischen menschlicher Absicht und künstlicher Intelligenz. Die Qualität des Ergebnisses hängt direkt von der Qualität des Prompts ab.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card bg-white border border-red-300 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                         <h3 class="font-bold text-xl mb-3 text-red-700">Beispiel: Schlechter Prompt</h3>
+                         <p class="italic text-gray-500 mb-2">Vage und ohne Kontext.</p>
+                         <p class="p-4 bg-red-50 rounded-lg text-red-800">"Schreib einen LinkedIn Post über KI."</p>
+                    </div>
+                    <div class="card bg-white border border-green-300 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                        <h3 class="font-bold text-xl mb-3 text-green-700">Beispiel: Guter Prompt</h3>
+                        <p class="italic text-gray-500 mb-2">Strukturiert mit Rolle, Ziel, Kontext und Format.</p>
+                        <p class="p-4 bg-green-50 rounded-lg text-green-800">"Erstelle einen professionellen LinkedIn Post für ein technikaffines Publikum. Ziel: Mein Workshop-Angebot 'KI für KMUs' bewerben. Sprich die Leser per 'Sie' an. Hebe Vorteile wie Effizienzsteigerung hervor. Beende den Post mit einer klaren Handlungsaufforderung und passenden Hashtags."</p>
+                    </div>
+                </div>
+                 <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Was sind Halluzinationen bei der KI?</h3>
+                    <p>Halluzinationen sind KI-generierte Antworten, die plausibel klingen, aber sachlich falsch oder frei erfunden sind. Sie entstehen, weil die KI darauf trainiert ist, Muster zu vervollständigen, anstatt Fakten zu "wissen". Ein präziser, gut strukturierter Prompt mit klarem Kontext hilft, dieses Risiko zu minimieren und die KI auf den richtigen Weg zu lenken.</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Prompting in der Praxis</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                         <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                            <h4 class="font-bold text-lg mb-2">Aufgabe 1: E-Mail zusammenfassen</h4>
+                            <p class="mb-4"><strong>Typischer User-Prompt:</strong> "Fass die Mail zusammen."</p>
+                            <h4 class="font-bold text-lg mb-2 text-blue-700">Perfekter Prompt:</h4>
+                            <p class="p-4 bg-blue-50 rounded-lg text-blue-800">"<strong>Rolle:</strong> Du bist mein effizienter Assistent.<br><strong>Kontext:</strong> Ich habe diese lange E-Mail von einem Kunden erhalten \[E-Mail-Text hier einfügen\]. Ich habe nur 30 Sekunden Zeit.<br><strong>Aufgabe:</strong> Fasse die 3 wichtigsten Punkte und die dringendste offene Frage in Stichpunkten zusammen.<br><strong>Format:</strong> Gib die Antwort als kurze, prägnante Stichpunktliste aus."</p>
+                        </div>
+                        <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400">
+                            <h4 class="font-bold text-lg mb-2">Aufgabe 2: Rezept erstellen</h4>
+                            <p class="mb-4"><strong>Typischer User-Prompt:</strong> "Rezept mit Kichererbsen"</p>
+                             <h4 class="font-bold text-lg mb-2 text-blue-700">Perfekter Prompt:</h4>
+                            <p class="p-4 bg-blue-50 rounded-lg text-blue-800">"Erstelle ein vegetarisches Rezept für ein schnelles Abendessen (max. 20 Minuten). Die Hauptzutaten sollen Kichererbsen und Spinat sein. Ich habe außerdem noch Tomaten und Zwiebeln. Der Stil soll mediterran sein. Gib das Rezept als Schritt-für-Schritt-Anleitung aus, inklusive Zutatenliste für 2 Personen."</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 text-center bg-gray-100">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Weiterlernen?</h3>
+                    <p class="mb-4">Die TU Graz bietet mit der "prompting.school" einen hervorragenden, kostenfreien Kurs an, um die Grundlagen des Promptings zu erlernen und zu vertiefen.</p>
+                    <a href="https://prompting.school/" target="_blank" class="inline-block py-2 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">Zur prompting.school</a>
+                </div>
+            </div>
+        </section>
+        <!-- Section: Chatbot -->
+        <section id="chatbot" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">KI-Chatbots in der Praxis</h2>
+            <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 max-w-4xl mx-auto">
+                 <h3 class="font-bold text-xl mb-3 text-blue-700">Demo: Reparatur-Assistenz-Chatbot</h3>
+                 <p class="mb-4 text-gray-600">Dieser Chatbot simuliert, wie KI einen Techniker im Reparaturprozess unterstützen kann. Er greift auf Ticket-Daten zu, liefert KI-basierte Lösungsvorschläge und führt durch den Prozess. Geben Sie die Ticketnummer <strong>T-12345</strong>, <strong>T-67890</strong> oder <strong>F1250</strong> ein, um zu starten.</p>
+                 <div class="chatbot-container">
+                    <div id="chatbot-window" class="h-96 overflow-y-auto p-4 bg-gray-100 rounded-t-lg border-x border-t border-gray-300 flex flex-col space-y-4">
+                        <!-- Chat messages will appear here -->
+                    </div>
+                    <form id="chatbot-form" class="flex gap-2 p-4 bg-white border border-gray-300 rounded-b-lg">
+                        <input type="text" id="chatbot-input" placeholder="Ticketnummer eingeben..." class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" autocomplete="off">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">Senden</button>
+                    </form>
+                 </div>
+            </div>
+        </section>
+        <!-- Section: Koop-Spiele & Musik -->
+        <section id="koopfm" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">KI-Projekte: Kooperative Brettspiele</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Card for WIFI Task -->
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 flex flex-col">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">WIFI KI Kompetenztraining</h3>
+                    <p class="mb-4 text-gray-600">Im Rahmen des Trainings durfte ich ein sehr gelungenes Praxisbeispiel umsetzen, das die Anwendung von KI in der Prozessautomatisierung veranschaulicht. Sehen Sie sich das Ergebnis im iFrame an:</p>
+                    <div class="iframe-container mt-4 rounded-lg overflow-hidden border border-gray-300">
+                        <iframe src="https://gegensystem.github.io/projects/aufgabe-wifi.html" title="WIFI KI Kompetenztraining" class="w-full h-full" frameborder="0"></iframe>
+                    </div>
+                </div>
+                <!-- Card for KI-generated Song -->
+                <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 flex flex-col">
+                    <h3 class="font-bold text-2xl mb-4 text-blue-700">KI-generierter Song: "Freundschaft gewinnt"</h3>
+                    <p class="mb-4 text-gray-600">Als Brettspielfan nutze ich KI auch kreativ. Dieser Song über kooperative Brettspiele wurde komplett mit KI erstellt. Spielen Sie ihn ab und entdecken Sie, wie KI musikalische Ideen zum Leben erwecken kann. Ich liebe Gesellschaftsspiele und spiele sehr gerne und bin professioneller Spieleerklärer.</p>
+                    <div class="mt-4 flex flex-col items-center gap-4">
+                         <audio controls class="w-full rounded-full">
+                            <source src="https://gegensystem.github.io/projects/Freundschaft-gewinnt.mp3" type="audio/mpeg">
+                            Ihr Browser unterstützt das Audio-Element nicht.
+                        </audio>
+                        <button id="showLyricsBtn" class="w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Songtext anzeigen</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Aktien-Tracker -->
+        <section id="aktien" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">KI-gestützter Aktien-Tracker</h2>
+            <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-2xl p-8 flex flex-col items-center space-y-8">
+                <p class="text-gray-600 text-center text-sm sm:text-base max-w-md">
+                    Verfolge die Kurse deiner Lieblingsaktien. Die Daten werden jetzt live über die Alpha Vantage API abgerufen und in Euro umgerechnet.
+                </p>
+                <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Apple Stock Card -->
+                    <div id="aapl-card" class="stock-card rounded-xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xl font-semibold text-gray-800">Apple</span>
+                                <span class="text-sm font-medium text-gray-500">AAPL</span>
+                            </div>
+                            <p class="text-4xl font-extrabold mt-2 text-gray-800" id="aapl-price-usd">$ --,--</p>
+                            <p class="text-sm text-gray-400 mt-1">USD-Preis</p>
+                            <p class="text-2xl font-bold mt-2 text-green-600" id="aapl-price-eur">€ --,--</p>
+                            <p class="text-xs text-gray-400 mt-1">Umrechnung in Euro</p>
+                        </div>
+                    </div>
+                    <!-- Walt Disney Stock Card -->
+                    <div id="dis-card" class="stock-card rounded-xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xl font-semibold text-gray-800">Walt Disney</span>
+                                <span class="text-sm font-medium text-gray-500">DIS</span>
+                            </div>
+                            <p class="text-4xl font-extrabold mt-2 text-gray-800" id="dis-price-usd">$ --,--</p>
+                            <p class="text-sm text-gray-400 mt-1">USD-Preis</p>
+                            <p class="text-2xl font-bold mt-2 text-green-600" id="dis-price-eur">€ --,--</p>
+                            <p class="text-xs text-gray-400 mt-1">Umrechnung in Euro</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="update-button" class="update-btn w-full sm:w-auto px-6 py-3 rounded-full bg-blue-600 text-white font-bold shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Aktienkurse aktualisieren
+                </button>
+                <p id="exchange-rate-info" class="text-xs text-gray-500 mt-2 text-center"></p>
+                <p class="text-sm text-gray-400 text-center">Hinweis: Die Datenaktualisierungen sind durch die API-Nutzung begrenzt. Bei zu vielen Anfragen werden keine neuen Daten geladen.</p>
+            </div>
+        </section>
+        
+        <!-- Section: Angebot -->
+        <section id="angebot" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Mein Leistungsangebot: Workshops & Beratung</h2>
+            <p class="mb-8 text-lg text-gray-600">Mein Ziel: Menschen in praxisorientierten Workshops befähigen, KI als Werkzeug zu verstehen und sofort anzuwenden. Wir gehen vom "Nachdenken" direkt ins "Machen".</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card bg-blue-50/30">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Grundlagen & Strategie</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Was kann KI?</strong> Chancen, Risiken & realistische Anwendungsfälle.</li>
+                        <li><strong>Rechtssicherheit:</strong> Urheberrecht & Datenschutz verständlich erklärt.</li>
+                        <li><strong>KI für Studium & Wissenschaft:</strong> Richtig recherchieren & formulieren.</li>
+                    </ul>
+                </div>
+                <div class="card bg-blue-50/30">
+                    <h3 class="font-bold text-xl mb-3 text-blue-700">Praxis-Workshops</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>KI als Sparringspartner:</strong> Für Ingenieure, Planer & Selbstständige.</li>
+                        <li><strong>KI für Rechtsauskünfte:</strong> Gesetze schneller verstehen & anwenden.</li>
+                        <li><strong>Von der Idee zum Prototyp:</strong> Mit KI-Tools schnell Ergebnisse erzielen.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section: Contact -->
+        <section id="contact" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Kontakt aufnehmen</h2>
+            <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 max-w-3xl mx-auto">
+                <form id="contact-form" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="name" name="name" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Ihre E-Mail-Adresse</label>
+                        <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700">Nachricht</label>
+                        <textarea id="message" name="message" rows="4" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            Nachricht senden
+                        </button>
+                    </div>
+                    <p id="form-status" class="text-center font-medium"></p>
+                </form>
+            </div>
+        </section>
+        <!-- Section: Impressum & Datenschutz -->
+        <section id="impressum" class="mb-20 fade-in-up">
+            <h2 class="section-title text-4xl md:text-5xl font-black text-blue-600 tracking-tight mb-12 text-center relative pb-5">Impressum & Datenschutz</h2>
+            <div class="card bg-white border border-gray-200 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-blue-400 max-w-3xl mx-auto space-y-6">
+                <div>
+                    <h3 class="font-bold text-xl mb-2 text-gray-800">Seitenbetreiber</h3>
+                    <p>Dipl.-Ing. Ing. Andreas E. Neuhold, BSc.<br>
+                    Haushoferstraße 25<br>
+                    4020 Linz<br>
+                    Österreich</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-2 text-gray-800">Kontakt</h3>
+                    <p>Telefon: +43 677 624 639 01<br>
+                    E-Mail: andreas.neuhold@gmail.com</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-2 text-gray-800">Haftungsausschluss (Disclaimer)</h3>
+                    <p class="text-sm text-gray-600">Als Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Wir sind als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-2 text-gray-800">Datenschutzerklärung</h3>
+                    <p class="text-sm text-gray-600">Diese Webseite wurde mit dem Grundsatz der Datensparsamkeit erstellt.</p>
+                    <ul class="list-disc list-inside ml-4 mt-2 space-y-1 text-sm text-gray-600">
+                        <li><strong>Keine personenbezogenen Daten:</strong> Es werden keine personenbezogenen Daten von Besuchern gespeichert oder verarbeitet.</li>
+                        <li><strong>Keine Cookies:</strong> Diese Webseite verwendet keine Cookies.</li>
+                        <li><strong>Keine Server-Logs:</strong> Es werden keine Server-Logfiles gespeichert, die Rückschlüsse auf einzelne Besucher zulassen.</li>
+                        <li><strong>Kontakt per E-Mail:</strong> Wenn Sie über das Kontaktformular oder per E-Mail Kontakt aufnehmen, wird eine E-Mail an die angegebene Adresse generiert. Ihre Angaben werden ausschließlich zur Bearbeitung der Anfrage verwendet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-center py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center space-x-6 mb-4">
+                 <a href="https://www.linkedin.com/in/andreas-e-neuhold-06605595/" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"/></svg>
+                </a>
+                <a href="https://www.facebook.com/neuholdandreas" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
+                </a>
+            </div>
+            <p class="text-white">&copy; 2024 Andreas Neuhold</p>
+            <p class="text-sm text-gray-400 mt-1">Bereit, die Zukunft mitzugestalten.</p>
+            <p class="text-sm text-gray-400 mt-4">
+                <a href="#impressum" class="hover:text-white transition-colors">Impressum & Datenschutz</a>
+            </p>
+        </div>
+    </footer>
+    <!-- Modal for Lyrics -->
+    <div id="lyrics-modal" class="hidden">
+        <div class="modal-content">
+            <span class="modal-close-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-4 text-blue-700">"Freundschaft gewinnt"</h3>
+            <pre id="lyrics-text" class="lyrics-text text-gray-800"></pre>
+        </div>
+    </div>
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+document.addEventListener('DOMContentLoaded', () => {
+    // Define chatbotInput here to have it in the scope for the snake key listener
+    const chatbotInput = document.getElementById('chatbot-input');
+    try {
+        // --- Particle Animation for Header ---
+        const canvas = document.getElementById('particle-canvas');
+        const container = document.getElementById('particle-container');
+        if (canvas && container) {
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            const resizeCanvas = () => {
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+            };
+            const createParticles = () => {
+                particles = [];
+                let particleCount = (canvas.width * canvas.height) / 15000;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: Math.random() * 0.4 - 0.2,
+                        vy: Math.random() * 0.4 - 0.2,
+                        radius: Math.random() * 1.5 + 0.5
+                    });
+                }
+            };
+            const animateParticles = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0, 123, 255, 0.3)';
+                    ctx.fill();
+                });
+                requestAnimationFrame(animateParticles);
+            };
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                createParticles();
+            });
+            resizeCanvas();
+            createParticles();
+            animateParticles();
+        }
+    } catch (e) {
+        console.error("Error in particle animation:", e);
+    }
+    try {
+        // --- Snake Game ---
+        const snakeCanvas = document.getElementById('snakeCanvas');
+        if (snakeCanvas) {
+            const ctx = snakeCanvas.getContext('2d');
+            const scoreEl = document.getElementById('score');
+            const highScoreEl = document.getElementById('highScore');
+            
+            let gridSize = 20;
+            let tileCountX, tileCountY;
+            let snake, food, dx, dy, score, highScore = 0, gameLoop;
+            const resizeSnakeCanvas = () => {
+                const parent = snakeCanvas.parentElement;
+                snakeCanvas.width = parent.clientWidth;
+                snakeCanvas.height = parent.clientHeight;
+                tileCountX = Math.floor(snakeCanvas.width / gridSize);
+                tileCountY = Math.floor(snakeCanvas.height / gridSize);
+            };
+            const initGame = () => {
+                clearInterval(gameLoop);
+                snake = [{ x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }];
+                dx = 1; dy = 0;
+                score = 0;
+                spawnFood();
+                updateScores();
+                gameLoop = setInterval(mainLoop, 150); // Slower game speed
+            };
+            const spawnFood = () => {
+                let foodOnSnake;
+                do {
+                    foodOnSnake = false;
+                    food = {
+                        x: Math.floor(Math.random() * tileCountX),
+                        y: Math.floor(Math.random() * tileCountY)
+                    };
+                    for (const segment of snake) {
+                        if (segment.x === food.x && segment.y === food.y) {
+                            foodOnSnake = true;
+                            break;
+                        }
+                    }
+                } while (foodOnSnake);
+            };
+            const updateScores = () => {
+                scoreEl.textContent = score;
+                highScoreEl.textContent = highScore;
+            };
+            const mainLoop = () => {
+                const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+                if (head.x < 0) head.x = tileCountX - 1;
+                if (head.x >= tileCountX) head.x = 0;
+                if (head.y < 0) head.y = tileCountY - 1;
+                if (head.y >= tileCountY) head.y = 0;
+                for (let i = 1; i < snake.length; i++) {
+                    if (head.x === snake[i].x && head.y === snake[i].y) {
+                        initGame();
+                        return;
+                    }
+                }
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    if (score > highScore) highScore = score;
+                    updateScores();
+                    spawnFood();
+                } else {
+                    snake.pop();
+                }
+                draw();
+            };
+            const draw = () => {
+                ctx.fillStyle = '#f3f4f6'; // bg-gray-100
+                ctx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+                snake.forEach((segment, index) => {
+                    ctx.fillStyle = index === 0 ? '#2563eb' : '#3b82f6'; // blue-600, blue-500
+                    ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
+                });
+                ctx.fillStyle = '#ef4444'; // red-500
+                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 1, gridSize - 1);
+            };
+            
+            const changeDirection = (newDx, newDy) => {
+                // Prevent reversing
+                if (dx === -newDx && dx !== 0) return;
+                if (dy === -newDy && dy !== 0) return;
+                dx = newDx;
+                dy = newDy;
+            };
+            document.addEventListener('keydown', e => {
+                 // Don't control snake if user is typing in the chatbot input
+                if (document.activeElement === chatbotInput) {
+                    return; 
+                }
+                // Check for arrow keys and prevent default browser action (scrolling)
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                    switch (e.key) {
+                        case 'ArrowUp':    changeDirection(0, -1); break;
+                        case 'ArrowDown':  changeDirection(0, 1);  break;
+                        case 'ArrowLeft':  changeDirection(-1, 0); break;
+                        case 'ArrowRight': changeDirection(1, 0);  break;
+                    }
+                }
+            });
+            
+            document.getElementById('snake-up').addEventListener('click', () => changeDirection(0, -1));
+            document.getElementById('snake-down').addEventListener('click', () => changeDirection(0, 1));
+            document.getElementById('snake-left').addEventListener('click', () => changeDirection(-1, 0));
+            document.getElementById('snake-right').addEventListener('click', () => changeDirection(1, 0));
+            window.addEventListener('resize', () => {
+                resizeSnakeCanvas();
+                initGame();
+            });
+            resizeSnakeCanvas();
+            initGame();
+        }
+    } catch(e) {
+        console.error("Error in Snake game:", e);
+    }
+    // --- AI Quiz ---
+    try {
+        const quizContainer = document.getElementById('quizContainer');
+        if (quizContainer) {
+            const quizData = [
+                { question: "Wofür steht die Abkürzung 'KI'?", options: ["Kreative Intelligenz", "Künstliche Intelligenz", "Komplexe Interaktion"], answer: 1 },
+                { question: "Welches Unternehmen entwickelte das Sprachmodell GPT-3?", options: ["Google", "Facebook", "OpenAI"], answer: 2 },
+                { question: "Was ist ein 'Neuronales Netz' im Kontext von KI?", options: ["Ein Computervirus", "Ein biologisches Gehirn", "Ein von Gehirnen inspiriertes Berechnungsmodell"], answer: 2 },
+                { question: "Was beschreibt 'Machine Learning' am besten?", options: ["Computer, die fühlen können", "Systeme, die aus Daten lernen", "Roboter, die Maschinen bauen"], answer: 1 },
+                { question: "Wer prägte den Begriff 'Künstliche Intelligenz'?", options: ["Alan Turing", "John McCarthy", "Isaac Asimov"], answer: 1 },
+                { question: "Was ist der 'Turing-Test'?", options: ["Ein Test für Computer-Hardware", "Ein Test für die Intelligenz eines Menschen", "Ein Test, ob eine Maschine menschenähnlich denken kann"], answer: 2 }
+            ];
+            let currentQuestion = 0;
+            let quizScore = 0;
+            const loadQuiz = () => {
+                if (currentQuestion < quizData.length) {
+                    const q = quizData[currentQuestion];
+                    quizContainer.innerHTML = `
+                        <p class="font-semibold text-lg mb-4 text-gray-700">${currentQuestion + 1}. ${q.question}</p>
+                        <div class="space-y-3">
+                            ${q.options.map((opt, index) => `
+                                <button data-answer="${index}" class="quiz-option w-full text-left p-3 rounded-lg bg-gray-100 hover:bg-blue-100 border border-gray-200 transition-colors duration-200">${opt}</button>
+                            `).join('')}
+                        </div>
+                        <div id="feedback" class="mt-4 h-6"></div>
+                    `;
+                } else {
+                    quizContainer.innerHTML = `
+                        <h4 class="font-bold text-xl text-center text-blue-600">Quiz beendet!</h4>
+                        <p class="text-center my-4 text-lg">Sie haben ${quizScore} von ${quizData.length} Fragen richtig beantwortet.</p>
+                        <button id="restart-quiz" class="w-full p-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">Neustart</button>
+                    `;
+                }
+            };
+            quizContainer.addEventListener('click', e => {
+                if (e.target.classList.contains('quiz-option')) {
+                    const selectedAnswer = parseInt(e.target.dataset.answer, 10);
+                    const correctAnswer = quizData[currentQuestion].answer;
+                    const feedbackEl = document.getElementById('feedback');
+                    
+                    document.querySelectorAll('.quiz-option').forEach(btn => {
+                        btn.disabled = true;
+                        btn.classList.remove('hover:bg-blue-100');
+                    });
+                    if (selectedAnswer === correctAnswer) {
+                        quizScore++;
+                        e.target.classList.add('bg-green-100', 'border-green-400');
+                        feedbackEl.innerHTML = `<p class="text-green-600 font-semibold">Richtig!</p>`;
+                    } else {
+                        e.target.classList.add('bg-red-100', 'border-red-400');
+                        feedbackEl.innerHTML = `<p class="text-red-600 font-semibold">Falsch.</p>`;
+                        document.querySelector(`[data-answer="${correctAnswer}"]`).classList.add('bg-green-100', 'border-green-400');
+                    }
+                    currentQuestion++;
+                    setTimeout(loadQuiz, 1500);
+                }
+                if (e.target.id === 'restart-quiz') {
+                    currentQuestion = 0;
+                    quizScore = 0;
+                    loadQuiz();
+                }
+            });
+            loadQuiz();
+        }
+    } catch(e) {
+        console.error("Error in AI Quiz:", e);
+    }
+    // --- Idea Generator ---
+    try {
+        const ideaDisplay = document.getElementById('idea-display');
+        const generateIdeaBtn = document.getElementById('generate-idea');
+        if(ideaDisplay && generateIdeaBtn) {
+            const ideas = [
+                "Ein kooperatives Spiel, in dem man als Bienenstaat den Winter überleben muss.",
+                "Ein Würfelspiel, bei dem man die Schwerkraft auf fremden Planeten manipuliert.",
+                "Ein Kartenspiel über den Aufbau des verrücktesten Freizeitparks.",
+                "Ein Strategiespiel, in dem man als Pilz-Netzwerk einen Wald erobert.",
+                "Ein Deduktionsspiel: Wer hat das letzte Stück Pizza gegessen?",
+                "Ein Rennspiel, bei dem die Fahrzeuge aus Haushaltsgegenständen gebaut werden.",
+                "Ein Wirtschaftsspiel über den Handel mit exotischen Gewürzen im Weltraum.",
+                "Ein Spiel, in dem man als zeitreisender Historiker Ereignisse korrigieren muss."
+            ];
+            generateIdeaBtn.addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * ideas.length);
+                ideaDisplay.textContent = ideas[randomIndex];
+            });
+        }
+    } catch(e) {
+        console.error("Error in Idea Generator:", e);
+    }
+    // --- Contact Form ---
+    try {
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            const formStatus = document.getElementById('form-status');
+            
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                formStatus.textContent = '';
+                formStatus.classList.remove('text-green-600');
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                
+                const subject = encodeURIComponent(`Kontaktanfrage von ${name}`);
+                const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nNachricht:\n${message}`);
+                
+                window.location.href = `mailto:andreas.neuhold@gmail.com?subject=${subject}&body=${body}`;
+                
+                formStatus.textContent = 'Danke! Ihr E-Mail-Programm sollte sich jetzt öffnen.';
+                formStatus.classList.add('text-green-600');
+                
+                contactForm.reset();
+            });
+        }
+    } catch(e) {
+        console.error("Error in Contact Form:", e);
+    }
+    
+    // --- Scroll Animations ---
+    try {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+    } catch(e) {
+        console.error("Error in Scroll Animations:", e);
+    }
+    
+    // --- 3D MODEL SCRIPT ---
+    try {
+        const threeContainer = document.getElementById('three-container');
+        if (threeContainer) {
+            // === GRUNDEINSTELLUNGEN ===
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+            const camera = new THREE.PerspectiveCamera(75, threeContainer.clientWidth / threeContainer.clientHeight, 0.1, 1000);
+            camera.position.set(12, 8, 16);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.shadowMap.enabled = true;
+            threeContainer.appendChild(renderer.domElement);
+            // === STEUERUNG ===
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.target.set(0, 3, 0);
+            // === BELEUCHTUNG ===
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            directionalLight.position.set(-10, 15, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            // === MATERIALIEN ===
+            const matMachineBase = new THREE.MeshStandardMaterial({ color: 0x333333 });
+            const matMachineParts = new THREE.MeshStandardMaterial({ color: 0xeeeeee });
+            const matSafety = new THREE.MeshStandardMaterial({ color: 0xcc0000 });
+            const matTieBars = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.8, roughness: 0.2 });
+            const matToggle = new THREE.MeshStandardMaterial({ color: 0x005a9c });
+            const matMold = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.9, roughness: 0.4 });
+            // === BODEN ===
+            const ground = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), new THREE.MeshStandardMaterial({ color: 0xe0e0e0 }));
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            // === MODELLBAU ===
+            const machineGroup = new THREE.Group();
+            scene.add(machineGroup);
+            const bed = new THREE.Mesh(new THREE.BoxGeometry(20, 1.5, 6), matMachineBase);
+            bed.position.y = 0.75;
+            bed.castShadow = true;
+            machineGroup.add(bed);
+            const clampingUnit = new THREE.Group();
+            clampingUnit.position.x = -2;
+            machineGroup.add(clampingUnit);
+            const platenGeo = new THREE.BoxGeometry(1.5, 5, 5);
+            const fixedPlaten = new THREE.Mesh(platenGeo, matMachineParts);
+            fixedPlaten.position.set(-5, 3.5, 0);
+            clampingUnit.add(fixedPlaten);
+            const movablePlaten = new THREE.Mesh(platenGeo, matMachineParts);
+            movablePlaten.position.set(0, 3.5, 0);
+            clampingUnit.add(movablePlaten);
+            const moldGeo = new THREE.BoxGeometry(1.0, 4, 4);
+            const fixedMoldHalf = new THREE.Mesh(moldGeo, matMold);
+            fixedMoldHalf.position.x = 1.25;
+            fixedPlaten.add(fixedMoldHalf);
+            const movableMoldHalf = new THREE.Mesh(moldGeo, matMold);
+            movableMoldHalf.position.x = -1.25;
+            movablePlaten.add(movableMoldHalf);
+            const endPlaten = new THREE.Mesh(new THREE.BoxGeometry(2, 4.5, 4.5), matMachineParts);
+            endPlaten.position.set(6, 3.5, 0);
+            clampingUnit.add(endPlaten);
+            const tieBarGeo = new THREE.CylinderGeometry(0.2, 0.2, 11, 16);
+            const tieBarPositions = [ {y: 5.25, z: 2.25}, {y: 5.25, z: -2.25}, {y: 1.75, z: 2.25}, {y: 1.75, z: -2.25} ];
+            tieBarPositions.forEach(pos => {
+                const bar = new THREE.Mesh(tieBarGeo, matTieBars);
+                bar.rotation.z = Math.PI / 2;
+                bar.position.set(0.5, pos.y, pos.z);
+                clampingUnit.add(bar);
+            });
+            const toggleSystem = new THREE.Group();
+            toggleSystem.position.y = 3.5;
+            clampingUnit.add(toggleSystem);
+            const armLength = 3.5;
+            const armGeo = new THREE.BoxGeometry(armLength, 0.4, 0.4);
+            const rearArm = new THREE.Mesh(armGeo, matToggle);
+            const frontArm = new THREE.Mesh(armGeo, matToggle);
+            const actuator = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), matToggle);
+            toggleSystem.add(rearArm, frontArm, actuator);
+            const injectionUnit = new THREE.Group();
+            injectionUnit.position.x = 6;
+            machineGroup.add(injectionUnit);
+            const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 8, 32), matMachineParts);
+            barrel.rotation.z = Math.PI / 2;
+            barrel.position.set(0, 3.5, 0);
+            injectionUnit.add(barrel);
+            const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.2, 0.8, 32), matTieBars);
+            nozzle.rotation.z = Math.PI / 2;
+            nozzle.position.set(-4.4, 3.5, 0);
+            injectionUnit.add(nozzle);
+            const drive = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), matMachineBase);
+            drive.position.set(5, 3.5, 0);
+            injectionUnit.add(drive);
+            const safetyGuard = new THREE.Mesh(new THREE.BoxGeometry(5.2, 4.2, 5.7), matSafety);
+            safetyGuard.material.transparent = true;
+            safetyGuard.material.opacity = 0.2;
+            safetyGuard.position.set(-2.5, 3.5, 0);
+            clampingUnit.add(safetyGuard);
+            // === DIAGRAMM INITIALISIERUNG ===
+            const ctx = document.getElementById('position-time-chart').getContext('2d');
+            const positionTimeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Hub',
+                        data: [],
+                        borderColor: 'rgb(0, 90, 156)',
+                        backgroundColor: 'rgba(0, 90, 156, 0.5)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'Zeit (s)' }, min: 0 },
+                        y: { title: { display: true, text: 'Hub (mm)' }, min: 0 }
+                    },
+                    animation: false,
+                    plugins: { legend: { display: false }, title: { display: true, text: 'Weg-Zeit-Diagramm'} }
+                }
+            });
+            // === ANIMATIONSLOGIK ===
+            let targetY = 0.1;
+            const openY = 2.5;
+            const closedY = 0.1;
+            const startTime = performance.now();
+            const closedPositionX = endPlaten.position.x - 2 * Math.sqrt(armLength*armLength - closedY*closedY);
+            document.getElementById('btn-open').addEventListener('click', () => { targetY = openY; });
+            document.getElementById('btn-close').addEventListener('click', () => { targetY = closedY; });
+            // === ANIMATIONS-SCHLEIFE ===
+            function animate() {
+                requestAnimationFrame(animate);
+                const currentY = actuator.position.y;
+                const newY = THREE.MathUtils.lerp(currentY, targetY, 0.08);
+                actuator.position.y = newY;
+                const L = armLength;
+                const y = newY;
+                const half_dx = y < L ? Math.sqrt(L*L - y*y) : 0;
+                const rearPivotX = endPlaten.position.x;
+                const movablePlatenX = rearPivotX - 2 * half_dx;
+                const actuatorX = rearPivotX - half_dx;
+                movablePlaten.position.x = movablePlatenX;
+                actuator.position.x = actuatorX;
+                const rearPivotPoint = new THREE.Vector3(rearPivotX, 0, 0);
+                const frontPivotPoint = new THREE.Vector3(movablePlatenX, 0, 0);
+                const kneePoint = new THREE.Vector3(actuatorX, y, 0);
+                rearArm.position.copy(rearPivotPoint).add(kneePoint).multiplyScalar(0.5);
+                rearArm.lookAt(kneePoint);
+                frontArm.position.copy(frontPivotPoint).add(kneePoint).multiplyScalar(0.5);
+                frontArm.lookAt(kneePoint);
+                
+                // Diagramm aktualisieren
+                const currentTime = (performance.now() - startTime) / 1000;
+                const currentStroke = movablePlatenX - closedPositionX;
+                const chartData = positionTimeChart.data.datasets[0].data;
+                chartData.push({ x: currentTime, y: currentStroke });
+                if (chartData.length > 300) { chartData.shift(); }
+                if (chartData.length > 1) {
+                    positionTimeChart.options.scales.x.min = chartData[0].x;
+                    positionTimeChart.options.scales.x.max = currentTime;
+                }
+                positionTimeChart.update();
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            // === RESIZE LOGIC ===
+            const resizeRenderer = () => {
+                const { clientWidth, clientHeight } = threeContainer;
+                if(clientWidth > 0 && clientHeight > 0) {
+                    renderer.setSize(clientWidth, clientHeight);
+                    camera.aspect = clientWidth / clientHeight;
+                    camera.updateProjectionMatrix();
+                }
+            };
+            
+            window.addEventListener('resize', resizeRenderer);
+            // Initial call to set size
+            resizeRenderer();
+            animate();
+        }
+    } catch(e) {
+        console.error("Error in 3D Model:", e);
+    }
+    
+    // --- Chatbot ---
+    try {
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const chatbotForm = document.getElementById('chatbot-form');
+        // chatbotInput is already defined at the top of the script
+        let currentTicket = null;
+        if(chatbotWindow && chatbotForm && chatbotInput) {
+            const ticketData = {
+                "T-12345": {
+                    device: `Kaffeemaschine "Barista Pro"`,
+                    time: "45 Minuten",
+                    booking: "Projekt 77-Reparatur, Kostenstelle 4020",
+                    customerError: `"Maschine heizt nicht mehr richtig auf, Kaffee ist nur lauwarm. Manchmal kommt nur Wasser."`,
+                    aiAnalysis: `Problem deutet auf ein defektes Heizelement oder einen verkalkten Thermosensor hin. Wahrscheinlichkeit Heizelement: 75%. Empfohlene erste Schritte:<br>1. Widerstand des Heizelements messen (Sollwert: 25-30 Ohm).<br>2. Thermosensor auf Kalkablagerungen prüfen.`,
+                    tools: ["Multimeter (Lade 1, A2)", "Schraubendreher-Set (Lade 2, C1)", "Entkalker (Lager 5)"],
+                    instructions: `Reparaturanleitung R-78B.pdf. <strong>Sicherheitshinweis:</strong> Vor dem Öffnen des Gehäuses Gerät vom Stromnetz trennen und 5 Minuten warten!`,
+                    imageAnalysis: "Bildanalyse: Das ist die Heizelement-Ansteuerung. Prüfen Sie die Lötstellen auf Korrosion.",
+                    completion: `Qualitätstest bestanden. Protokoll P-12345-Final.pdf wurde abgelegt. Gerät ist für den Rückversand freigegeben.`
+                },
+                "T-67890": {
+                    device: `Staubsauger "CleanMax 3000"`,
+                    time: "30 Minuten",
+                    booking: "Projekt 77-Reparatur, Kostenstelle 4020",
+                    customerError: `"Der Staubsauger hat keine Saugkraft mehr, Motor klingt aber normal."`,
+                    aiAnalysis: `Problem deutet auf eine Verstopfung im Saugweg oder einen vollen/defekten Filter hin. Wahrscheinlichkeit Verstopfung: 85%. Empfohlene erste Schritte:<br>1. Alle Filter prüfen und reinigen/ersetzen.<br>2. Saugrohr und Schlauch auf Fremdkörper prüfen.`,
+                    tools: ["Druckluftspray (Lade 4, D2)", "Pfeifenreiniger (Lager 2)", "Ersatzfilter-Set (Regal 7)"],
+                    instructions: `Wartungsanleitung W-CM3K.pdf. <strong>Sicherheitshinweis:</strong> Filter nur im Freien ausklopfen.`,
+                     imageAnalysis: "Bildanalyse: Das ist der Hauptfilter. Er scheint stark verschmutzt zu sein und sollte ersetzt werden.",
+                    completion: `Qualitätstest bestanden. Protokoll P-67890-Final.pdf wurde abgelegt. Gerät ist für den Rückversand freigegeben.`
+                },
+                "F1250": {
+                    device: `Solarwechselrichter Fronius Verto`,
+                    time: "90 Minuten (erhöhte Dringlichkeit)",
+                    booking: "Projekt 81-Eskalation, Kostenstelle 5010",
+                    customerError: `"Der Wechselrichter ist schon wieder ausgefallen! Das ist das zweite Mal in einem Monat. Die ganze PV-Anlage steht still. Der Kunde ist ein Landwirt und droht mit rechtlichen Schritten."`,
+                    aiAnalysis: `<strong>Hohe Dringlichkeit!</strong> Da es sich um einen Wiederholungsfehler handelt, ist eine Standardreparatur unzureichend. Die KI-Analyse früherer Fälle deutet auf ein mögliches Problem mit der Zwischenkreiskapazität hin. Bitte prüfen Sie die Kondensatoren C5 bis C8 auf der Hauptplatine genau.`,
+                    tools: ["Oszilloskop (Lade 1, A1)", "Multimeter (Lade 1, A2)", "Lötkolben (Lade 2, B3)", "Entlötpumpe (Lade 2, B4)", "ESD-Armband (Lade 3, C1)"],
+                    instructions: `Spezialanleitung ESK-Verto-02.pdf. <strong>Sicherheitshinweis:</strong> Hochspannung! Gerät vollständig entladen lassen (mind. 15 Min. warten) bevor das Gehäuse geöffnet wird!`,
+                    imageAnalysis: "Bildanalyse: Das ist Kondensator C7. Laut Schaltplan sollte dies ein 47nF Keramikkondensator sein. Der aufgedruckte Wert '47µF' ist falsch! Dies ist die Fehlerursache.",
+                    processImprovement: "<strong>Vorschlag zur Prozessverbesserung:</strong> Um diesen Fehler zukünftig zu vermeiden, empfehle ich:<br>1. Implementierung eines visuellen Abgleichs von Bauteilen mittels Kamera vor dem Einbau.<br>2. Getrennte und klar beschriftete Lagerung von Bauteilen mit ähnlichen Bezeichnungen aber unterschiedlichen Werten (z.B. nF vs. µF).",
+                    completion: `Kritischer Fehler gefunden und behoben. Langzeittest unter Last erfolgreich. Protokoll P-F1250-Final.pdf wurde abgelegt und der Fall zur Überprüfung der Prozesssicherheit weitergeleitet.`
+                }
+            };
+            const addMessage = (message, sender) => {
+                const bubble = document.createElement('div');
+                const baseClasses = ['p-3', 'rounded-lg', 'max-w-[80%]'];
+                let senderClasses = [];
+                if (sender === 'user') {
+                    senderClasses = ['bg-blue-500', 'text-white', 'self-end'];
+                } else {
+                    senderClasses = ['bg-white', 'text-gray-800', 'self-start', 'border', 'border-gray-200'];
+                }
+                
+                bubble.classList.add(...baseClasses, ...senderClasses);
+                bubble.innerHTML = message;
+                chatbotWindow.appendChild(bubble);
+                chatbotWindow.scrollTop = chatbotWindow.scrollHeight;
+            };
+            const handleBotResponse = (userInput) => {
+                const ticketId = userInput.trim().toUpperCase();
+                
+                if (userInput.toLowerCase() === 'bild hochladen') {
+                    if (currentTicket && ticketData[currentTicket]) {
+                        addMessage(ticketData[currentTicket].imageAnalysis, 'bot');
+                    } else {
+                        addMessage("Bitte rufen Sie zuerst ein Ticket auf, bevor Sie ein Bild zur Analyse hochladen.", 'bot');
+                    }
+                    return;
+                }
+                const data = ticketData[ticketId];
+                currentTicket = data ? ticketId : null;
+                if (data) {
+                    setTimeout(() => addMessage(`Okay, ich rufe die Daten für Ticket <strong>${ticketId}</strong> auf...`, 'bot'), 500);
+                    setTimeout(() => addMessage(`<strong>Gerät:</strong> ${data.device}<br><strong>Zeitvorgabe:</strong> ${data.time}<br><strong>Zeitbuchung:</strong> ${data.booking}`, 'bot'), 1500);
+                    setTimeout(() => addMessage(`<strong>Fehlerbeschreibung des Kunden:</strong><br>${data.customerError}`, 'bot'), 2500);
+                    setTimeout(() => addMessage(`<strong>KI-Analyse & Vorschläge:</strong><br>${data.aiAnalysis}`, 'bot'), 4000);
+                    setTimeout(() => addMessage(`<strong>Benötigte Werkzeuge:</strong><br>${data.tools.join(', ')}`, 'bot'), 5000);
+                    setTimeout(() => addMessage(`<strong>Anleitung & Sicherheit:</strong><br>${data.instructions}<br><br>Wenn Sie bei einem Bauteil unsicher sind, geben Sie <strong>'bild hochladen'</strong> ein.`, 'bot'), 6500);
+                    
+                    if(data.processImprovement) {
+                        setTimeout(() => addMessage(`<strong>KI-Vorschlag zur Prozessoptimierung:</strong><br>${data.processImprovement}`, 'bot'), 8000);
+                    }
+                    setTimeout(() => addMessage(`Nach Abschluss der Reparatur und Qualitätsprüfung:<br><strong>Status:</strong> ${data.completion}`, 'bot'), data.processImprovement ? 9500 : 8000);
+                } else {
+                     setTimeout(() => addMessage(`Entschuldigung, zur Ticketnummer "${userInput}" konnte ich keine Daten finden. Bitte versuchen Sie es mit <strong>T-12345</strong>, <strong>T-67890</strong> oder <strong>F1250</strong>.`, 'bot'), 500);
+                }
+            };
+            
+            chatbotForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userInput = chatbotInput.value;
+                if(!userInput.trim()) return;
+                addMessage(userInput, 'user');
+                chatbotInput.value = '';
+                handleBotResponse(userInput);
+            });
+            addMessage("Hallo! Ich bin Ihr Reparatur-Assistent. Bitte geben Sie eine Ticketnummer ein, um die Auftragsdetails zu erhalten.", "bot");
+        }
+    } catch(e) {
+        console.error("Error in Chatbot:", e);
+    }
+
+    // --- KI-generierter Song & Lyrics Pop-up ---
+    try {
+        const showLyricsBtn = document.getElementById('showLyricsBtn');
+        const lyricsModal = document.getElementById('lyrics-modal');
+        const closeModalBtn = lyricsModal.querySelector('.modal-close-btn');
+        const lyricsTextElement = document.getElementById('lyrics-text');
+
+        const lyrics = `(Strophe 1)
+Brettspielabend, die Karten liegen bereit,
+Manche wollen kämpfen, andere sind zu zweit.
+Doch Silvio, du liebst es, das ist doch ganz klar,
+Gemeinsam zum Ziel, ja, das ist wunderbar!
+
+(Refrain)
+Co-op-Spiele, da hält man zusammen,
+Kein Verlierer, nur ein großes Flammen.
+Ob Sieg, ob Niederlage, wir sind ein Team,
+Freundschaft gewinnt, das ist unser Reim!
+
+(Strophe 2)
+Ob Pandemie oder Mysterium so fein,
+Zusammen denken, Pläne schmieden, das muss sein.
+Kein Stress, kein Streit, nur ein Lachen hell und klar,
+Denn der größte Gewinn ist die Freundschaft, Jahr für Jahr.
+
+(Bridge)
+Klar, kompetitiv macht auch mal Spaß,
+Doch wenn's ums Herz geht, geben wir Gas
+Für Zusammenhalt und Freude pur,
+Co-op-Spiele, das ist die Tour!
+
+(Refrain)
+Co-op-Spiele, da hält man zusammen,
+Kein Verlierer, nur ein großes Flammen.
+Ob Sieg, ob Niederlage, wir sind ein Team,
+Freundschaft gewinnt, das ist unser Reim!`;
+        
+        if (showLyricsBtn) {
+            showLyricsBtn.addEventListener('click', () => {
+                lyricsTextElement.textContent = lyrics;
+                lyricsModal.style.display = 'flex';
+            });
+        }
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                lyricsModal.style.display = 'none';
+            });
+        }
+        // Close modal when clicking outside
+        lyricsModal.addEventListener('click', (e) => {
+            if (e.target.id === 'lyrics-modal') {
+                lyricsModal.style.display = 'none';
+            }
+        });
+    } catch(e) {
+        console.error("Error in Lyrics Modal:", e);
+    }
+
+    // --- Stock Tracker ---
+    try {
+        const aaplPriceUsdElement = document.getElementById('aapl-price-usd');
+        const aaplPriceEurElement = document.getElementById('aapl-price-eur');
+        const disPriceUsdElement = document.getElementById('dis-price-usd');
+        const disPriceEurElement = document.getElementById('dis-price-eur');
+        const updateButton = document.getElementById('update-button');
+        const exchangeRateInfoElement = document.getElementById('exchange-rate-info');
+        
+        // Dein persönlicher API-Schlüssel. Hinweis: Dies ist ein öffentlicher Schlüssel und kann die API-Rate-Limits schnell erreichen.
+        const API_KEY = 'TFUS1P9V0DQUDSWM';
+        
+        // Alpha Vantage API-URLs
+        const aaplApiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=${API_KEY}`;
+        const disApiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=DIS&apikey=${API_KEY}`;
+        const exchangeRateApiUrl = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=EUR&apikey=${API_KEY}`;
+        
+        const fetchStockAndExchangeData = async () => {
+            try {
+                // Gleichzeitiges Abrufen der Daten für beide Aktien und den Wechselkurs
+                const [aaplResponse, disResponse, exchangeRateResponse] = await Promise.all([
+                   fetch(aaplApiUrl),
+                   fetch(disApiUrl),
+                   fetch(exchangeRateApiUrl)
+                ]);
+                
+                const aaplData = await aaplResponse.json();
+                const disData = await disResponse.json();
+                const exchangeRateData = await exchangeRateResponse.json();
+                
+                // Check for API-Fehler (z.B. tägliches Limit erreicht)
+                if (aaplData['Note'] || disData['Note'] || exchangeRateData['Note']) {
+                     throw new Error('API-Fehler: Das tägliche Abfrage-Limit wurde erreicht. Bitte versuchen Sie es später erneut.');
+                }
+                
+                // Überprüfen, ob die Daten und der Wechselkurs verfügbar sind
+                if (aaplData['Global Quote'] && disData['Global Quote'] && exchangeRateData['Realtime Currency Exchange Rate']) {
+                    const aaplPriceUsd = parseFloat(aaplData['Global Quote']['05. price']).toFixed(2);
+                    const disPriceUsd = parseFloat(disData['Global Quote']['05. price']).toFixed(2);
+                    const exchangeRate = parseFloat(exchangeRateData['Realtime Currency Exchange Rate']['5. Exchange Rate']);
+                    
+                    const aaplPriceEur = (aaplPriceUsd * exchangeRate).toFixed(2);
+                    const disPriceEur = (disPriceUsd * exchangeRate).toFixed(2);
+                    
+                    return { 
+                        aaplUsd: aaplPriceUsd, 
+                        disUsd: disPriceUsd,
+                        aaplEur: aaplPriceEur,
+                        disEur: disPriceEur,
+                        rate: exchangeRate.toFixed(4)
+                    };
+                } else {
+                     throw new Error('Fehler beim Abrufen der Daten. Die Antwort der API war unerwartet.');
+                }
+            } catch (error) {
+                console.error('Fehler beim Abrufen der echten Daten:', error);
+                // Im Fehlerfall werfen wir den Fehler erneut, damit er im UI angezeigt werden kann
+                throw error;
+            }
+        };
+
+        const updatePrices = async () => {
+            if (updateButton) {
+                updateButton.textContent = 'Wird aktualisiert...';
+                updateButton.disabled = true;
+            }
+
+            try {
+                const data = await fetchStockAndExchangeData();
+                if (aaplPriceUsdElement) aaplPriceUsdElement.textContent = `$ ${data.aaplUsd}`;
+                if (disPriceUsdElement) disPriceUsdElement.textContent = `$ ${data.disUsd}`;
+                if (aaplPriceEurElement) aaplPriceEurElement.textContent = `€ ${data.aaplEur}`;
+                if (disPriceEurElement) disPriceEurElement.textContent = `€ ${data.disEur}`;
+                if (exchangeRateInfoElement) exchangeRateInfoElement.textContent = `Aktueller Wechselkurs: 1 USD = ${data.rate} EUR`;
+
+            } catch (error) {
+                if (aaplPriceUsdElement) aaplPriceUsdElement.textContent = 'Fehler';
+                if (disPriceUsdElement) disPriceUsdElement.textContent = 'Fehler';
+                if (aaplPriceEurElement) aaplPriceEurElement.textContent = 'Fehler';
+                if (disPriceEurElement) disPriceEurElement.textContent = 'Fehler';
+                if (exchangeRateInfoElement) exchangeRateInfoElement.textContent = error.message || 'Fehler beim Abrufen des Wechselkurses.';
+                console.error('Anzeigefehler:', error);
+            } finally {
+                if (updateButton) {
+                    updateButton.textContent = 'Aktienkurse aktualisieren';
+                    updateButton.disabled = false;
+                }
+            }
+        };
+
+        if (updateButton) {
+            updateButton.addEventListener('click', updatePrices);
+        }
+
+        // Initiales Laden der Preise beim Öffnen der Seite
+        updatePrices();
+    } catch(e) {
+        console.error("Error in Stock Tracker:", e);
+    }
+});
+</script>
+</body>
+</html>
