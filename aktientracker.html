@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktienkurs-Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .stock-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .update-btn {
+            transition: all 0.3s ease;
+        }
+        .update-btn:hover {
+            transform: scale(1.05);
+            background-color: #1a73e8;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-2xl bg-gray-800 rounded-xl shadow-2xl p-8 flex flex-col items-center space-y-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-white">Mein Aktienkurs-Tracker</h1>
+        <p class="text-gray-400 text-center text-sm sm:text-base max-w-md">
+            Verfolge die Kurse deiner Lieblingsaktien. Die Daten werden jetzt live über die Alpha Vantage API abgerufen und in Euro umgerechnet.
+        </p>
+
+        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+            <!-- Apple Stock Card -->
+            <div id="aapl-card" class="stock-card bg-gray-700 rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-semibold text-gray-200">Apple</span>
+                        <span class="text-sm font-medium text-gray-500">AAPL</span>
+                    </div>
+                    <p class="text-4xl font-extrabold mt-2 text-white" id="aapl-price-usd">$ --,--</p>
+                    <p class="text-sm text-gray-400 mt-1">USD-Preis</p>
+                    <p class="text-2xl font-bold mt-2 text-green-400" id="aapl-price-eur">€ --,--</p>
+                    <p class="text-xs text-gray-400 mt-1">Umrechnung in Euro</p>
+                </div>
+            </div>
+
+            <!-- Walt Disney Stock Card -->
+            <div id="dis-card" class="stock-card bg-gray-700 rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-semibold text-gray-200">Walt Disney</span>
+                        <span class="text-sm font-medium text-gray-500">DIS</span>
+                    </div>
+                    <p class="text-4xl font-extrabold mt-2 text-white" id="dis-price-usd">$ --,--</p>
+                    <p class="text-sm text-gray-400 mt-1">USD-Preis</p>
+                    <p class="text-2xl font-bold mt-2 text-green-400" id="dis-price-eur">€ --,--</p>
+                    <p class="text-xs text-gray-400 mt-1">Umrechnung in Euro</p>
+                </div>
+            </div>
+        </div>
+
+        <button id="update-button" class="update-btn w-full sm:w-auto px-6 py-3 rounded-full bg-blue-600 text-white font-bold shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            Aktienkurse aktualisieren
+        </button>
+        <p id="exchange-rate-info" class="text-xs text-gray-500 mt-2 text-center"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const aaplPriceUsdElement = document.getElementById('aapl-price-usd');
+            const aaplPriceEurElement = document.getElementById('aapl-price-eur');
+            const disPriceUsdElement = document.getElementById('dis-price-usd');
+            const disPriceEurElement = document.getElementById('dis-price-eur');
+            const updateButton = document.getElementById('update-button');
+            const exchangeRateInfoElement = document.getElementById('exchange-rate-info');
+            
+            // Dein persönlicher API-Schlüssel
+            const API_KEY = 'TFUS1P9V0DQUDSWM';
+            
+            // Alpha Vantage API-URLs
+            const aaplApiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=${API_KEY}`;
+            const disApiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=DIS&apikey=${API_KEY}`;
+            const exchangeRateApiUrl = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=EUR&apikey=${API_KEY}`;
+            
+            const fetchStockAndExchangeData = async () => {
+                try {
+                    // Gleichzeitiges Abrufen der Daten für beide Aktien und den Wechselkurs
+                    const [aaplResponse, disResponse, exchangeRateResponse] = await Promise.all([
+                       fetch(aaplApiUrl),
+                       fetch(disApiUrl),
+                       fetch(exchangeRateApiUrl)
+                    ]);
+                    
+                    const aaplData = await aaplResponse.json();
+                    const disData = await disResponse.json();
+                    const exchangeRateData = await exchangeRateResponse.json();
+                    
+                    // Überprüfen, ob die Daten und der Wechselkurs verfügbar sind
+                    if (aaplData['Global Quote'] && disData['Global Quote'] && exchangeRateData['Realtime Currency Exchange Rate']) {
+                        const aaplPriceUsd = parseFloat(aaplData['Global Quote']['05. price']).toFixed(2);
+                        const disPriceUsd = parseFloat(disData['Global Quote']['05. price']).toFixed(2);
+                        const exchangeRate = parseFloat(exchangeRateData['Realtime Currency Exchange Rate']['5. Exchange Rate']);
+                        
+                        const aaplPriceEur = (aaplPriceUsd * exchangeRate).toFixed(2);
+                        const disPriceEur = (disPriceUsd * exchangeRate).toFixed(2);
+                        
+                        return { 
+                            aaplUsd: aaplPriceUsd, 
+                            disUsd: disPriceUsd,
+                            aaplEur: aaplPriceEur,
+                            disEur: disPriceEur,
+                            rate: exchangeRate.toFixed(4)
+                        };
+                    } else {
+                         throw new Error('Fehler beim Abrufen der Daten. Möglicherweise hat die API eine Abfragegrenze erreicht oder die Symbole sind ungültig.');
+                    }
+                } catch (error) {
+                    console.error('Fehler beim Abrufen der echten Daten:', error);
+                    // Im Fehlerfall werfen wir den Fehler erneut, damit er im UI angezeigt werden kann
+                    throw error;
+                }
+            };
+
+            const updatePrices = async () => {
+                updateButton.textContent = 'Wird aktualisiert...';
+                updateButton.disabled = true;
+
+                try {
+                    const data = await fetchStockAndExchangeData();
+                    aaplPriceUsdElement.textContent = `$ ${data.aaplUsd}`;
+                    disPriceUsdElement.textContent = `$ ${data.disUsd}`;
+                    aaplPriceEurElement.textContent = `€ ${data.aaplEur}`;
+                    disPriceEurElement.textContent = `€ ${data.disEur}`;
+                    exchangeRateInfoElement.textContent = `Aktueller Wechselkurs: 1 USD = ${data.rate} EUR`;
+
+                } catch (error) {
+                    aaplPriceUsdElement.textContent = 'Fehler';
+                    disPriceUsdElement.textContent = 'Fehler';
+                    aaplPriceEurElement.textContent = 'Fehler';
+                    disPriceEurElement.textContent = 'Fehler';
+                    exchangeRateInfoElement.textContent = 'Fehler beim Abrufen des Wechselkurses.';
+                    console.error('Anzeigefehler:', error);
+                } finally {
+                    updateButton.textContent = 'Aktienkurse aktualisieren';
+                    updateButton.disabled = false;
+                }
+            };
+
+            updateButton.addEventListener('click', updatePrices);
+
+            // Initiales Laden der Preise beim Öffnen der Seite
+            updatePrices();
+        });
+    </script>
+</body>
+</html>
